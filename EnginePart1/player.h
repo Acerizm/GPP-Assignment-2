@@ -6,7 +6,6 @@
 //#include "textureManager.h"
 //#include "image.h"
 //#include "lastManStanding.h"
-#include "bullet.h"
 #include <list>
 #include "entity.h"
 #include "constants.h"
@@ -15,8 +14,6 @@
 #define Vector2Normalize D3DXVec2Normalize
 
 using namespace std;
-
-// I have refactored all codes as they need to be inherited from the entity class
 
 namespace playerNS
 {
@@ -39,27 +36,12 @@ class Player : public Entity
 {
 private:
 	//TextureManager PLAYER_SHOOTING_TEXTURE;
-	Image PLAYER_SHOOTING_IMAGE;
+	/*Image PLAYER_SHOOTING_IMAGE;*/
 	//vector<Bullet*> bulletList;
-	Bullet *newBullet;
-	list<Bullet*> BULLET_LIST;
-	friend class LastManStanding;
-	friend class Camera;
-	//take in lastManStanding to use graphics xd
-	//LastManStanding last_Man_Standing;
-	int zombieKillCount;
-	Image PLAYER_SHOOTING_TILE_IMAGE;
-	float playerCurrentHp;
 
 public:
 	Player();
 	~Player();
-	//void shootBullet(Graphics*graphics,TextureManager &texture,Image &image);
-	void shootBullet(TextureManager &bulletTexture, Player *mainPlayer, Game *gameptr, float angle);
-	//void moveBullet(Image &playerImage, float gameWidth, float frameTime);
-	void moveBullet(float frameTime);
-	void drawBullets();
-	//void initialize(Graphics *graphics, TextureManager &texture, Image &image);
 	void setPositionVector(float x,float y) {
 		this->setX(x);
 		this->setY(y);

@@ -30,16 +30,6 @@ Player::~Player() {
 //
 //};
 
-void Player::shootBullet(TextureManager &bulletTexture, Player *mainPlayer, Game *gamePtr, float playerAngle) 
-{
-	//create the bullet here
-	newBullet = new Bullet();
-
-	newBullet->initialize(gamePtr, bulletNS::BULLET_WIDTH, bulletNS::BULLET_HEIGHT, 0, &bulletTexture, playerAngle);
-	BULLET_LIST.push_back(newBullet);
-	newBullet->setPositionVector(mainPlayer->getCenterX(), mainPlayer->getCenterY());
-
-}
 
 //void Player::moveBullet(Image &playerImage, float gameWidth, float frameTime) 
 //{
@@ -49,13 +39,6 @@ void Player::shootBullet(TextureManager &bulletTexture, Player *mainPlayer, Game
 //
 //	}
 //}
-
-void Player::moveBullet(float frameTime) {
-	for each (Bullet * bullet in BULLET_LIST) {
-		bullet->move(frameTime);
-	}
-}
-
 
 
 //void Player::drawBullets() {
@@ -82,36 +65,6 @@ void Player::moveBullet(float frameTime) {
 //	}
 //}
 
-void Player::drawBullets() 
-{
-	try {
-		if (BULLET_LIST.size() != 0) {
-			for (list<Bullet*>::iterator it = BULLET_LIST.begin(); it != BULLET_LIST.end(); ) {
-				if ((*it)->BULLET_IMAGE.getX() > GAME_WIDTH || (*it)->BULLET_IMAGE.getX() < 0 || (*it)->BULLET_IMAGE.getY() > GAME_HEIGHT || (*it)->BULLET_IMAGE.getY() < 0)
-				{
-					SAFE_DELETE(*it);
-					it = BULLET_LIST.erase(it);
-					//just to check here
-					int check = BULLET_LIST.size();
-					//bool test = false;
-				}
-				else {
-					it++;
-				}
-			}
-
-			//when all okay go and draw the bullet
-			for each(Bullet* bullet in BULLET_LIST)
-			{
-				bullet->draw();
-			}
-		}
-	}
-	catch (exception e) {
-		throw(e);
-	}
-
-}
 
 //void Player::initialize(Graphics *graphics, TextureManager &texture, Image &image) {
 //	if (!texture.initialize(graphics, PLAYER_SHOOTING_TILE))
@@ -124,12 +77,7 @@ void Player::drawBullets()
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-	//PLAYER_SHOOTING_IMAGE.initialize(gamePtr->getGraphics(), width, height, ncols, textureM);
-	this->setFrames(playerNS::PLAYER_SHOOTING_START_FRAME, playerNS::PLAYER_SHOOTING_END_FRAME);
-	this->setCurrentFrame(playerNS::PLAYER_SHOOTING_START_FRAME);
-	this->setFrameDelay(playerNS::PLAYER_SHOOTING_ANIMATION_DELAY);
-	this->setLoop(true);                  // do not loop animation
-	zombieKillCount = 0;
+
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 

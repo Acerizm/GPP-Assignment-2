@@ -1,35 +1,23 @@
-﻿  lastManStanding.cpp
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\bullet.h(16): warning C4305: 'initializing': truncation from 'double' to 'float'
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\bullet.h(76): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\bullet.h(79): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(20): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(37): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(38): warning C4244: 'argument': conversion from 'float' to 'const _Ty', possible loss of data
-          with
-          [
-              _Ty=int
-          ]
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(172): warning C4018: '<': signed/unsigned mismatch
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(383): warning C4244: 'argument': conversion from 'LONG' to 'FLOAT', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(396): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(422): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(441): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(459): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(477): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(493): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(774): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(775): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(913): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(944): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(944): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(949): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(956): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(956): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(957): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(976): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(977): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(978): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(985): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(1031): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\darre\onedrive\documents\gppassignment1\gpp-project-assignment-1\enginepart1\lastmanstanding.cpp(1131): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-  EnginePart1.vcxproj -> C:\Users\Darre\OneDrive\Documents\GppAssignment1\GPP-Project-Assignment-1\EnginePart1\Debug\EnginePart1.exe
+﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  winmain.cpp
+  textureManager.cpp
+  textDX.cpp
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\textdx.cpp(19): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\textdx.cpp(20): warning C4244: '=': conversion from 'float' to 'LONG', possible loss of data
+  player.cpp
+  lastManStanding.cpp
+  input.cpp
+  image.cpp
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\image.cpp(125): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  graphics.cpp
+  game.cpp
+  entity.cpp
+  obstacle.cpp
+  camera.cpp
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\camera.cpp(11): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\camera.cpp(23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\camera.cpp(24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+  background.cpp
+  Generating Code...
+background.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  EnginePart1.vcxproj -> C:\Users\Haiqel\Documents\GitHub\GPP-Assignment-2\EnginePart1\Debug\EnginePart1.exe
