@@ -7,11 +7,9 @@
 #include "textureManager.h"
 #include "image.h"
 #include "player.h"
-#include "textDX.h"
 #include <list>
 #include "obstacle.h"
 #include <vector>
-#include "camera.h"
 #include "background.h"
 using namespace std;
 
@@ -27,10 +25,15 @@ protected:
 	/*TextureManager LEVEL1_TILE_TEXTURE;*/
 	//Image LEVEL1_TILE_IMAGE;
 
-	TextureManager PLAYER_SHOOTING_TILE_TEXTURE;
+	//TextureManager PLAYER_SHOOTING_TILE_TEXTURE;
 	//Image PLAYER_SHOOTING_TILE_IMAGE;
 	
-	Camera *camera;
+	TextureManager BackgroundTexture;
+	Image BackgroundImage;
+
+	TextureManager Player1Texture;
+	Image Player1Image;
+
 
 public:
 	// Constructor

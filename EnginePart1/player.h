@@ -17,17 +17,17 @@ using namespace std;
 
 namespace playerNS
 {
-	const int PLAYER_SHOOTING_START_FRAME = 0;
-	const int PLAYER_SHOOTING_END_FRAME = 2;
-	const float PLAYER_SHOOTING_ANIMATION_DELAY = 0.2f;
-	const int PLAYER_SHOOTING_TEXTURE_COLS = 3;
-	const int PLAYER_SHOOTING_HEIGHT = 206;
-	const int PLAYER_SHOOTING_WIDTH = 312;
-	const float PLAYER_SHOOTING_SCALE = 0.3f;
-	const int X = GAME_WIDTH / 2 - PLAYER_SHOOTING_WIDTH / 2;   // location on screen
-	const int Y = GAME_HEIGHT / 2 - PLAYER_SHOOTING_HEIGHT / 2;
+	const int PLAYER_START_FRAME = 0;
+	const int PLAYER_END_FRAME = 2;
+	const float PLAYER_ANIMATION_DELAY = 0.2f;
+	const int PLAYER_TEXTURE_COLS = 3;
+	const int PLAYER_HEIGHT = 206;
+	const int PLAYER_WIDTH = 312;
+	const float PLAYER_SCALE = 0.3f;
+	//const int X = GAME_WIDTH / 2 - PLAYER_SHOOTING_WIDTH / 2;   // location on screen
+	//const int Y = GAME_HEIGHT / 2 - PLAYER_SHOOTING_HEIGHT / 2;
 	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const float PLAYER_MOVEMENTSPEED = 200.0f;
+	//const float PLAYER_MOVEMENTSPEED = 200.0f;
 
 }
 

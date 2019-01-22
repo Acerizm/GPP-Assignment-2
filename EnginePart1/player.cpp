@@ -5,9 +5,9 @@
 Player::Player() :Entity()
 {
 	collisionType = entityNS::CIRCLE;
-	spriteData.width = playerNS::PLAYER_SHOOTING_WIDTH;
-	spriteData.height = playerNS::PLAYER_SHOOTING_HEIGHT;
-	spriteData.scale = playerNS::PLAYER_SHOOTING_SCALE;
+	spriteData.width = playerNS::PLAYER_WIDTH;
+	spriteData.height = playerNS::PLAYER_HEIGHT;
+	spriteData.scale = playerNS::PLAYER_SCALE;
 	spriteData.x = 0;
 	spriteData.y = 0;
 	//spriteData.
@@ -66,12 +66,6 @@ Player::~Player() {
 //}
 
 
-//void Player::initialize(Graphics *graphics, TextureManager &texture, Image &image) {
-//	if (!texture.initialize(graphics, PLAYER_SHOOTING_TILE))
-//		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing texture"));
-//	if (!image.initialize(graphics, playerNS::PLAYER_SHOOTING_WIDTH, playerNS::PLAYER_SHOOTING_HEIGHT, playerNS::PLAYER_SHOOTING_COLS, &texture))
-//		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing "));
-//}
 
 
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,

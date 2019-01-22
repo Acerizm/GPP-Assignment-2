@@ -1,6 +1,5 @@
 #include "lastManStanding.h"
 #include "player.h"
-#include "textDX.h"
 #include <string>
 #include <Mmsystem.h>
 #include <mciapi.h>
@@ -26,10 +25,6 @@ LastManStanding::LastManStanding()
 //=============================================================================
 LastManStanding::~LastManStanding()
 {
-	if (camera) {
-		delete camera;
-		camera = nullptr;
-	}
 	releaseAll();           // call onLostDevice() for every graphics item
 }
 //=============================================================================
@@ -43,13 +38,17 @@ void LastManStanding::initialize(HWND hwnd)
 	//create the camera
 	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
 
-	//// main player textures
-	//if (!PLAYER_SHOOTING_TILE_TEXTURE.initialize(graphics, PLAYER_SHOOTING_TILE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game textures"));
-	//if(!mainPlayer.initialize(this, playerNS::PLAYER_SHOOTING_WIDTH, playerNS::PLAYER_SHOOTING_HEIGHT, playerNS::PLAYER_SHOOTING_TEXTURE_COLS, &PLAYER_SHOOTING_TILE_TEXTURE))
-	//	throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player"));
+	if (!BackgroundTexture.initialize(graphics, Background))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
+	if (!BackgroundImage.initialize(graphics, backgroundWidth, backgroundHeight, 0, &BackgroundTexture)) {
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
+	}
+	BackgroundImage.setCurrentFrame(0);
 
-
+	BackgroundImage.setX(0);
+	BackgroundImage.setY(0);
+	BackgroundImage.setScale(0.1);
+	//BackgroundImage.setRect();
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -71,7 +70,7 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
-	
+	BackgroundImage.update(frameTime);
 }
 
 
@@ -125,7 +124,7 @@ void LastManStanding::render()
 {
 	
 	graphics->spriteBegin();                // begin drawing sprites
-	
+	BackgroundImage.draw();
 	
 	
 	graphics->spriteEnd();                  // end drawing sprites

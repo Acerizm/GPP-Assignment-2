@@ -91,7 +91,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="background.cpp" />
-    <ClCompile Include="camera.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="game.cpp" />
@@ -100,13 +99,11 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="lastManStanding.cpp" />
     <ClCompile Include="player.cpp" />
-    <ClCompile Include="textDX.cpp" />
     <ClCompile Include="textureManager.cpp" />
     <ClCompile Include="winmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="background.h" />
-    <ClInclude Include="camera.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="constants.h" />
     <ClInclude Include="entity.h" />
@@ -117,7 +114,6 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="lastManStanding.h" />
     <ClInclude Include="player.h" />
-    <ClInclude Include="textDX.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>

@@ -27,9 +27,9 @@
 // window
 const char CLASS_NAME[] = "LastManStanding";
 const char GAME_TITLE[] = "LastManStanding";
-const bool FULLSCREEN = true;              // windowed or fullscreen
-const UINT GAME_WIDTH =  800;               // width of game in pixels
-const UINT GAME_HEIGHT = 600;               // height of game in pixels
+const bool FULLSCREEN = false;              // windowed or fullscreen
+const UINT GAME_WIDTH =  1280;               // width of game in pixels
+const UINT GAME_HEIGHT = 720;               // height of game in pixels
  
 // game
 const double PI = 3.14159265;
@@ -51,59 +51,44 @@ const UCHAR SHIP_DOWN_KEY = VK_DOWN;
 
 // graphic images
 // add the tile heres
-const char LEVEL1_TILE[] = "pictures\\GameTile.png";
-const int LEVEL1_TILE_HEIGHT = 1024;
-const int LEVEL1_TILE_WIDTH = 1024;
-const float LEVEL1_TILE_SCALE = 2.0;
+const char Background[] = "pictures\\Background.png";
+const int backgroundHeight = 720;
+const int backgroundWidth = 1280;
+//const float LEVEL1_TILE_SCALE = 2.0;
 
 //instruction image
-const char INSTRUCTION_IMAGE[] = "pictures\\GameInstruction.png";
-const int INSTRUCTION_HEIGHT = 600;
-const int INSTRUCTION_WIDTH = 800;
+//const char INSTRUCTION_IMAGE[] = "pictures\\GameInstruction.png";
+//const int INSTRUCTION_HEIGHT = 600;
+//const int INSTRUCTION_WIDTH = 800;
 
 //cursor Image
-const char CURSOR_IMAGE[] = "pictures\\NewCursor.png";
-const int cursor_HEIGHT = 397;
-const int cursor_WIDTH = 416;
-const float cursor_Scale = 0.15f;
+//const char CURSOR_IMAGE[] = "pictures\\NewCursor.png";
+//const int cursor_HEIGHT = 397;
+//const int cursor_WIDTH = 416;
+//const float cursor_Scale = 0.15f;
 
 
 //Health Bar
-const char HEALTHBARGREEN_IMAGE[] = "pictures\\healthbarGreen.png";
-const char HEALTHBARRED_IMAGE[] = "pictures\\healthbarRed.png";
-const char HEALTHBARBACKGROUND_IMAGE[] = "pictures\\healthbarBackGround.png";
-const char PLAYER_SHOOTING_TILE[] = "pictures\\PlayerShooting.png";
-
+//const char HEALTHBARGREEN_IMAGE[] = "pictures\\healthbarGreen.png";
+//const char HEALTHBARRED_IMAGE[] = "pictures\\healthbarRed.png";
+//const char HEALTHBARBACKGROUND_IMAGE[] = "pictures\\healthbarBackGround.png";
+//const char PLAYER_SHOOTING_TILE[] = "pictures\\PlayerShooting.png";
+//
 
 //player reloading
-const char PLAYER_RELOADING_TILE[] = "pictures\\PlayerReloading.png";
-const int PLAYER_RELOADING_START_FRAME = 0;
-const int PLAYER_RELOADING_END_FRAME = 19;
-const float PLAYER_RELOADING_ANIMATION_DELAY = 0.2f;
-const int PLAYER_RELOADING_COLS = 3;
-const int PLAYER_RELOADING_HEIGHT = 217;
-const int PLAYER_RELOADING_WIDTH = 322;
-const float PLAYER_RELOADING_SCALE = 0.3f;
+//const char PLAYER_RELOADING_TILE[] = "pictures\\PlayerReloading.png";
+//const int PLAYER_RELOADING_START_FRAME = 0;
+//const int PLAYER_RELOADING_END_FRAME = 19;
+//const float PLAYER_RELOADING_ANIMATION_DELAY = 0.2f;
+//const int PLAYER_RELOADING_COLS = 3;
+//const int PLAYER_RELOADING_HEIGHT = 217;
+//const int PLAYER_RELOADING_WIDTH = 322;
+//const float PLAYER_RELOADING_SCALE = 0.3f;
 
-//zombie moving
-const char ZOMBIE_MOVING_TILE[] = "pictures\\ZombieMoveSet1.png";
-const char BARREL_EXPLOSION_IMAGE[] = "pictures\\BarrelExplode\\explosion.png";
+
 
 //HP Bar
-const float PLAYER_MAXHP = 100.0f;
-
-//Bullet 
-const char BULLET_TILE[] = "pictures\\bullet.png";
-
-
-/////////////////////////////////////////////////////////////////
-// Wx Here
-
-const char BARREL_TILE[] = "pictures\\tnt_barrel.png";
-const char OBS1_TILE[] = "pictures\\OBS1.png";
-
-
-////////////////////////////////////////////////////////////////
+//const float PLAYER_MAXHP = 100.0f;
 
 
 

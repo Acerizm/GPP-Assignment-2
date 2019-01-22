@@ -5,7 +5,6 @@
 #include "entity.h"
 #include "player.h"
 #include <cmath>
-#include "textDX.h"
 using namespace std;
 
 namespace obstacleNS {
