@@ -1,4 +1,17 @@
 ﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  background.cpp
+  Generating Code...
+  Compiling...
+  player.cpp
   lastManStanding.cpp
 c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(50): warning C4305: 'argument': truncation from 'double' to 'float'
+  Generating Code...
+  Skipping... (no relevant changes detected)
+  winmain.cpp
+  textureManager.cpp
+  obstacle.cpp
+  image.cpp
+  graphics.cpp
+  game.cpp
+  entity.cpp
   EnginePart1.vcxproj -> C:\Users\Haiqel\Documents\GitHub\GPP-Assignment-2\EnginePart1\Debug\EnginePart1.exe

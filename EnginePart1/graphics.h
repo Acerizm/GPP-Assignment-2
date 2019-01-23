@@ -202,7 +202,8 @@ public:
 	LP_SPRITE   getSprite() { return sprite; }
 	void spriteBegin()
 	{
-		sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+		//sprite->Begin(D3DXSPRITE_ALPHABLEND | D3DXSPRITE_OBJECTSPACE);
+		sprite->Begin(D3DXSPRITE_ALPHABLEND);
 	}
 
 	//=============================================================================
