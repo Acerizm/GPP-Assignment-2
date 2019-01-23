@@ -47,7 +47,7 @@ void LastManStanding::initialize(HWND hwnd)
 
 	BackgroundImage.setX(0);
 	BackgroundImage.setY(0);
-	BackgroundImage.setScale(0.1);
+	//BackgroundImage.setScale(0.1);
 	//BackgroundImage.setRect();
 	///////////////////////////////////////////////////////////////////////////////////////////////
 
