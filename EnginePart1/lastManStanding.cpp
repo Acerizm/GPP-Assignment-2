@@ -34,7 +34,7 @@ LastManStanding::~LastManStanding()
 void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
-
+	player1 = new Player();
 	//create the camera
 	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
 
@@ -43,13 +43,27 @@ void LastManStanding::initialize(HWND hwnd)
 	if (!BackgroundImage.initialize(graphics, backgroundWidth, backgroundHeight, 0, &BackgroundTexture)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
 	}
+
 	BackgroundImage.setCurrentFrame(0);
 
 	BackgroundImage.setX(0);
 	BackgroundImage.setY(0);
-	//BackgroundImage.setScale(0.1);
-	//BackgroundImage.setRect();
-	///////////////////////////////////////////////////////////////////////////////////////////////
+	if (!Player1Texture.initialize(graphics, PLAYER))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
+	if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture)) 
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+	}
+
+	/*player1->setX(GAME_WIDTH / 2);
+	player1->setY(GAME_HEIGHT / 2);*/
+	player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
+	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
+	//player1->setCurrentFrame(0);
+	player1->setScale(1);
+
 
 
 	//damn annoying when debug so many times Xddd
@@ -71,6 +85,18 @@ std::string to_format(const int number) {
 void LastManStanding::update(Timer *gameTimer)
 {
 	BackgroundImage.update(frameTime);
+	player1->update(frameTime);
+
+	if (input->wasKeyPressed('W')) 
+	{
+		player1->setX(player1->getX() + 10);
+		player1->setY(player1->getY() - 10);
+
+	}
+	
+	//Add gravity here with acceleration if the player does not press anything
+	// can use projectile formula
+	player1->setY(player1->getY() + 0.05);
 }
 
 
@@ -125,7 +151,7 @@ void LastManStanding::render()
 	
 	graphics->spriteBegin();                // begin drawing sprites
 	BackgroundImage.draw();
-	
+	player1->draw();
 	
 	graphics->spriteEnd();                  // end drawing sprites
 

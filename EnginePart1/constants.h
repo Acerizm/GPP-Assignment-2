@@ -76,7 +76,7 @@ const int backgroundWidth = 1280;
 //
 
 //player reloading
-//const char PLAYER_RELOADING_TILE[] = "pictures\\PlayerReloading.png";
+const char PLAYER[] = "pictures\\Player.png";
 //const int PLAYER_RELOADING_START_FRAME = 0;
 //const int PLAYER_RELOADING_END_FRAME = 19;
 //const float PLAYER_RELOADING_ANIMATION_DELAY = 0.2f;

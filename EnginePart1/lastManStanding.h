@@ -32,7 +32,8 @@ protected:
 	Image BackgroundImage;
 
 	TextureManager Player1Texture;
-	Image Player1Image;
+
+	Player *player1;
 
 
 public:
