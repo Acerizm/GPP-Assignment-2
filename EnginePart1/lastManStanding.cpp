@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include "background.h"
+#include <math.h>
 #pragma comment(lib, "Winmm.lib")
 
 
@@ -50,8 +51,12 @@ void LastManStanding::initialize(HWND hwnd)
 	//BackgroundImage.setScale(0.1);
 	//BackgroundImage.setRect();
 	///////////////////////////////////////////////////////////////////////////////////////////////
-
-
+	if(!Player1Texture.initialize(graphics,PLAYER_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing playerTexture"));
+	if(!player1.initialize(this,playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT,playerNS::PLAYER_TEXTURE_COLS, &Player1Texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing playerImage"));
+	player1.setX(GAME_WIDTH / 2);
+	player1.setY(GAME_HEIGHT / 2);
 	//damn annoying when debug so many times Xddd
 	/*mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
 	mciSendString("open \"audio\\backGroundMusic.wav\" type waveaudio alias backGroundMusic", NULL, 0, NULL);*/
@@ -70,7 +75,27 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+
 	BackgroundImage.update(frameTime);
+	player1.update(frameTime);
+	//make player face mouse
+	VECTOR2 playerPosition = VECTOR2(player1.getCenterX(), player1.getCenterY());
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
+	float dx = playerPosition.x - (mousePosVector.x);
+	float dy = playerPosition.y - (mousePosVector.y);
+	float rotation = (atan2(dy, dx)) * 180 / PI;
+	player1.setDegrees(rotation + 180);
+
+
+	if (input->wasKeyPressed(VK_SPACE))
+	{
+		float currentAngle = player1.getRadians();
+		player1.startJump(currentAngle);
+		
+	}
+	player1.jump(frameTime);
 }
 
 
@@ -125,8 +150,7 @@ void LastManStanding::render()
 	
 	graphics->spriteBegin();                // begin drawing sprites
 	BackgroundImage.draw();
-	
-	
+	player1.draw();
 	graphics->spriteEnd();                  // end drawing sprites
 
 }

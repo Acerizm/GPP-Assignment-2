@@ -34,7 +34,8 @@ protected:
 	TextureManager Player1Texture;
 	Image Player1Image;
 
-
+	TextureManager player1Texture;
+	Player player1;
 public:
 	// Constructor
 	LastManStanding();

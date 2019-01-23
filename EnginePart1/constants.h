@@ -54,6 +54,8 @@ const UCHAR SHIP_DOWN_KEY = VK_DOWN;
 const char Background[] = "pictures\\Background.png";
 const int backgroundHeight = 720;
 const int backgroundWidth = 1280;
+
+const char PLAYER_IMAGE[] = "pictures\\Player1.png";
 //const float LEVEL1_TILE_SCALE = 2.0;
 
 //instruction image

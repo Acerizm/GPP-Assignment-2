@@ -90,3 +90,27 @@ void Player::setSpriteDataXnY(float x, float y)
 	spriteData.x = x;
 	spriteData.y = y;
 }
+
+void Player::jump(float frameTime)
+{
+	
+	if (this->isJumping == true)
+	{
+		float velocity = playerNS::playerJumpVelocity * frameTime;
+		float vx = velocity * cos(currentAngle);
+		float vy = velocity * sin(currentAngle);
+		vy += 10.0f*frameTime;
+		this->setX(this->getX() + vx);
+		this->setY(this->getY()  + vy); 
+		
+		if (this->getY() + this->getHeight() >= GAME_HEIGHT)
+		{
+			this->isJumping = false;
+		}
+	}
+}
+void Player::startJump(float currentAngle)
+{
+	this->isJumping = true;
+	this->currentAngle = currentAngle;
+}
