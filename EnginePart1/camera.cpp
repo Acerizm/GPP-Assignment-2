@@ -6,7 +6,7 @@ Camera::Camera(int width, int height, float angle, DirectX::XMFLOAT3 scaleFactor
 	this->width = width;
 	this->height = height;
 	this->angle = angle;
-	this->cameraHorizontalSpeed = 1.0f;
+	this->cameraHorizontalSpeed = 0.3f;
 	this->scaleFactors = scaleFactors;
 	this->cameraX = GAME_WIDTH / 2;
 	this->cameraY = GAME_HEIGHT / 2;

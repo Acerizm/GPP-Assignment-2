@@ -69,7 +69,7 @@ void LastManStanding::initialize(HWND hwnd)
 	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 	//player1->setCurrentFrame(0);
 	player1->setScale(1);
-	player1.setY(620 - player1.getHeight());
+	player1->setY(620 - player1->getHeight());
 
 
 	//damn annoying when debug so many times Xddd
@@ -92,29 +92,29 @@ void LastManStanding::update(Timer *gameTimer)
 {
 
 	BackgroundImage.update(frameTime);
-	player1.update(frameTime);
+	player1->update(frameTime);
 	//make player face mouse
-	VECTOR2 playerPosition = VECTOR2(player1.getCenterX(), player1.getCenterY());
+	VECTOR2 playerPosition = VECTOR2(player1->getCenterX(), player1->getCenterY());
 	POINT mousePos;
 	GetCursorPos(&mousePos);
 	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
 	float dx = playerPosition.x - (mousePosVector.x);
 	float dy = playerPosition.y - (mousePosVector.y);
 	float rotation = (atan2(dy, dx)) * 180 / PI;
-	player1.setDegrees(rotation + 180);
+	player1->setDegrees(rotation + 180);
 
 
 	if (input->wasKeyPressed(VK_SPACE))
 	{
-		float currentAngle = player1.getRadians();
-		player1.startJump(currentAngle,frameTime);
+		float currentAngle = player1->getRadians();
+		player1->startJump(currentAngle,frameTime);
 		
 	}
 	if (camera) {
 		camera->Update();
 	}
 
-	player1.jump(frameTime);
+	player1->jump(frameTime);
 }
 
 
