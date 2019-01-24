@@ -6,6 +6,7 @@
 #include <sstream>
 #include <iomanip>
 #include "background.h"
+#include <math.h>
 #pragma comment(lib, "Winmm.lib")
 
 
@@ -68,7 +69,7 @@ void LastManStanding::initialize(HWND hwnd)
 	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 	//player1->setCurrentFrame(0);
 	player1->setScale(1);
-
+	player1.setY(620 - player1.getHeight());
 
 
 	//damn annoying when debug so many times Xddd
@@ -89,23 +90,31 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+
 	BackgroundImage.update(frameTime);
-	player1->update(frameTime);
+	player1.update(frameTime);
+	//make player face mouse
+	VECTOR2 playerPosition = VECTOR2(player1.getCenterX(), player1.getCenterY());
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
+	float dx = playerPosition.x - (mousePosVector.x);
+	float dy = playerPosition.y - (mousePosVector.y);
+	float rotation = (atan2(dy, dx)) * 180 / PI;
+	player1.setDegrees(rotation + 180);
 
-	if (input->wasKeyPressed('W')) 
+
+	if (input->wasKeyPressed(VK_SPACE))
 	{
-		player1->setX(player1->getX() + 10);
-		player1->setY(player1->getY() - 10);
-
+		float currentAngle = player1.getRadians();
+		player1.startJump(currentAngle,frameTime);
+		
 	}
-
 	if (camera) {
 		camera->Update();
 	}
-	
-	//Add gravity here with acceleration if the player does not press anything
-	// can use projectile formula
-	player1->setY(player1->getY() + 0.05);
+
+	player1.jump(frameTime);
 }
 
 

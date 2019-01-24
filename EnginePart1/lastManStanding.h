@@ -38,7 +38,8 @@ protected:
 
 	Camera *camera;
 
-
+	TextureManager player1Texture;
+	Player player1;
 public:
 	// Constructor
 	LastManStanding();
