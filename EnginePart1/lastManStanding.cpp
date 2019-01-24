@@ -93,7 +93,7 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		float currentAngle = player1.getRadians();
 		player1.startJump(currentAngle,frameTime);
-		audio->playCue(BEEP3);
+		
 	}
 	player1.jump(frameTime);
 }

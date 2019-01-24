@@ -100,12 +100,12 @@ LRESULT WINAPI WinProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		//tell Windows to kill this program
 		
 		case WM_CREATE:
-			//mciSendString("open \"audio\\backGroundMusic.wav\" type waveaudio alias backGroundMusic", NULL, 0, NULL);
-			//mciSendString("play backGroundMusic notify", NULL, 0, hwnd);
+			mciSendString("open \"audio\\backGroundMusic.wav\" type waveaudio alias backGroundMusic", NULL, 0, NULL);
+			mciSendString("play backGroundMusic notify", NULL, 0, hwnd);
 			break;
 		case MM_MCINOTIFY:
-			//mciSendString("seek backGroundMusic to start", NULL, 0, NULL);
-			//mciSendString("play backGroundMusic notify", NULL, 0, hwnd);
+			mciSendString("seek backGroundMusic to start", NULL, 0, NULL);
+			mciSendString("play backGroundMusic notify", NULL, 0, hwnd);
 			break;
 	default:
 		break;
