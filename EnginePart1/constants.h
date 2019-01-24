@@ -69,42 +69,14 @@ const char BEEP3[] = "beep3";
 const char BEEP4[] = "beep4";
 const char HIT[] = "hit";
 
-
-//const float LEVEL1_TILE_SCALE = 2.0;
-
-//instruction image
-//const char INSTRUCTION_IMAGE[] = "pictures\\GameInstruction.png";
-//const int INSTRUCTION_HEIGHT = 600;
-//const int INSTRUCTION_WIDTH = 800;
-
-//cursor Image
-//const char CURSOR_IMAGE[] = "pictures\\NewCursor.png";
-//const int cursor_HEIGHT = 397;
-//const int cursor_WIDTH = 416;
-//const float cursor_Scale = 0.15f;
-
-
-//Health Bar
-//const char HEALTHBARGREEN_IMAGE[] = "pictures\\healthbarGreen.png";
-//const char HEALTHBARRED_IMAGE[] = "pictures\\healthbarRed.png";
-//const char HEALTHBARBACKGROUND_IMAGE[] = "pictures\\healthbarBackGround.png";
-//const char PLAYER_SHOOTING_TILE[] = "pictures\\PlayerShooting.png";
-//
-
 //player reloading
 const char PLAYER[] = "pictures\\Player.png";
-//const int PLAYER_RELOADING_START_FRAME = 0;
-//const int PLAYER_RELOADING_END_FRAME = 19;
-//const float PLAYER_RELOADING_ANIMATION_DELAY = 0.2f;
-//const int PLAYER_RELOADING_COLS = 3;
-//const int PLAYER_RELOADING_HEIGHT = 217;
-//const int PLAYER_RELOADING_WIDTH = 322;
-//const float PLAYER_RELOADING_SCALE = 0.3f;
+
+//obs1
+const char OBS1[] = "pictures\\OBS1.png";
 
 
 
-//HP Bar
-//const float PLAYER_MAXHP = 100.0f;
 
 
 

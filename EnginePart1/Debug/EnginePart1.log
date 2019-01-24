@@ -1,4 +1,6 @@
 ﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  camera.cpp
-c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\camera.cpp(13): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  lastManStanding.cpp
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(69): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(105): warning C4244: 'argument': conversion from 'LONG' to 'FLOAT', possible loss of data
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(108): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   EnginePart1.vcxproj -> C:\Users\Haiqel\Documents\GitHub\GPP-Assignment-2\EnginePart1\Debug\EnginePart1.exe

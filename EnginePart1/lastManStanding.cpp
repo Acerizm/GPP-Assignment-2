@@ -61,20 +61,24 @@ void LastManStanding::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
 	}
 
-	/*player1->setX(GAME_WIDTH / 2);
-	player1->setY(GAME_HEIGHT / 2);*/
 	player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
 	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
-	//player1->setCurrentFrame(0);
 	player1->setScale(1);
 	player1->setY(620 - player1->getHeight());
 
+	if(!ObsTexture.initialize(graphics,OBS1))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+	if (!Obs1Image.initialize(graphics, 32, 32, 0, &ObsTexture)) {
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing obs1Image"));
+	}
 
-	//damn annoying when debug so many times Xddd
-	/*mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
-	mciSendString("open \"audio\\backGroundMusic.wav\" type waveaudio alias backGroundMusic", NULL, 0, NULL);*/
+	Obs1Image.setX(GAME_WIDTH);
+	Obs1Image.setY(0);
+	Obs1Image.setScale(10);
+	Obs1Image.setFrames(0, 0);
+
 
 	return;
 }
@@ -92,6 +96,7 @@ void LastManStanding::update(Timer *gameTimer)
 {
 
 	BackgroundImage.update(frameTime);
+	Obs1Image.update(frameTime);
 	player1->update(frameTime);
 	//make player face mouse
 	VECTOR2 playerPosition = VECTOR2(player1->getCenterX(), player1->getCenterY());
@@ -170,6 +175,7 @@ void LastManStanding::render()
 	graphics->spriteBegin();                // begin drawing sprites
 	BackgroundImage.draw();
 	player1->draw();
+	Obs1Image.draw();
 	if (camera)
 	{
 		camera->setTransform(graphics);

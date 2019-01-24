@@ -36,6 +36,9 @@ protected:
 
 	Player *player1;
 
+	TextureManager ObsTexture;
+	Image Obs1Image;
+
 	Camera *camera;
 public:
 	// Constructor
