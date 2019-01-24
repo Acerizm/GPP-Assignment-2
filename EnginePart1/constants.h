@@ -56,6 +56,23 @@ const int backgroundHeight = 720;
 const int backgroundWidth = 1280;
 
 const char PLAYER_IMAGE[] = "pictures\\Player1.png";
+
+
+//audio files here
+// audio files required by audio.cpp
+// WAVE_BANK must be location of .xwb file.
+const char WAVE_BANK[] = "audio\\Win\\WavesExample1.xwb";
+// SOUND_BANK must be location of .xsb file.
+const char SOUND_BANK[] = "audio\\Win\\SoundsExample1.xsb";
+
+// audio cues
+const char BEEP1[] = "beep1";
+const char BEEP2[] = "beep2";
+const char BEEP3[] = "beep3";
+const char BEEP4[] = "beep4";
+const char HIT[] = "hit";
+
+
 //const float LEVEL1_TILE_SCALE = 2.0;
 
 //instruction image

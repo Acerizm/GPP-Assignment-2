@@ -9,6 +9,7 @@
 #include "input.h"
 #include "constants.h"
 #include "gameError.h"
+#include "audio.h"
 #include "timer.h"
 class Game
 {
@@ -27,6 +28,7 @@ protected:
     bool    paused;             // true if game is paused
     bool    initialized;
 	Timer *currentGameTimeCpp;
+	Audio   *audio;
 
 public:
     // Constructor
@@ -89,6 +91,9 @@ public:
     // Call graphics->spriteEnd();
     //   draw non-sprites
     virtual void render() = 0;
+	// Return pointer to Audio.
+	Audio* getAudio() { return audio; }
+
 };
 
 #endif

@@ -12,6 +12,7 @@ Game::Game()
     // additional initialization is handled in later call to input->initialize()
     paused = false;             // game is not paused
     graphics = NULL;
+	audio = NULL;
     initialized = false;
 }
 
@@ -95,7 +96,17 @@ void Game::initialize(HWND hw)
 {
 	currentGameTimeCpp = new Timer();
     hwnd = hw;                                  // save window handle
-
+	audio = new Audio();
+	if (*WAVE_BANK != '\0' && *SOUND_BANK != '\0')  // if sound files defined
+	{
+		if (FAILED(hr = audio->initialize()))
+		{
+			if (hr == HRESULT_FROM_WIN32(ERROR_FILE_NOT_FOUND))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize sound system because media file not found."));
+			else
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to initialize sound system."));
+		}
+	}
     // initialize graphics
     graphics = new Graphics();
     // throws GameError

@@ -92,8 +92,8 @@ void LastManStanding::update(Timer *gameTimer)
 	if (input->wasKeyPressed(VK_SPACE))
 	{
 		float currentAngle = player1.getRadians();
-		player1.startJump(currentAngle);
-		
+		player1.startJump(currentAngle,frameTime);
+		audio->playCue(BEEP3);
 	}
 	player1.jump(frameTime);
 }
