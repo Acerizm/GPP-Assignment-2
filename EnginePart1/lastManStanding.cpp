@@ -56,7 +56,7 @@ void LastManStanding::initialize(HWND hwnd)
 	if(!player1.initialize(this,playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT,playerNS::PLAYER_TEXTURE_COLS, &Player1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing playerImage"));
 	player1.setX(GAME_WIDTH / 2);
-	player1.setY(GAME_HEIGHT / 2);
+	player1.setY(620 - player1.getHeight());
 	//damn annoying when debug so many times Xddd
 	/*mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
 	mciSendString("open \"audio\\backGroundMusic.wav\" type waveaudio alias backGroundMusic", NULL, 0, NULL);*/

@@ -24,7 +24,7 @@ namespace playerNS
 	const int PLAYER_HEIGHT = 32;
 	const int PLAYER_WIDTH = 32;
 	const float PLAYER_SCALE = 1.0f;
-	const float playerJumpVelocity = 50.0f;
+	const float playerJumpVelocity = 100.0f;
 	//const int X = GAME_WIDTH / 2 - PLAYER_SHOOTING_WIDTH / 2;   // location on screen
 	//const int Y = GAME_HEIGHT / 2 - PLAYER_SHOOTING_HEIGHT / 2;
 	const int   TEXTURE_COLS = 0;           // texture has 8 columns
@@ -41,7 +41,7 @@ private:
 	bool isJumping = false;
 	float currentAngle;
 	float velocityY = 0;
-	float gravity = 10.0f;
+	float gravity = 100.0f;
 public:
 	Player();
 	~Player();
