@@ -66,11 +66,11 @@ void LastManStanding::initialize(HWND hwnd)
 	player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
-	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
-	//player1->setCurrentFrame(0);
+	player1->setFrameDelay(AnimationDelayStop);
+	player1->setCurrentFrame(0);
 	player1->setScale(1);
 	player1->setY(620 - player1->getHeight());
-
+	player1->setDegrees(315);
 
 	//damn annoying when debug so many times Xddd
 	/*mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
@@ -93,28 +93,37 @@ void LastManStanding::update(Timer *gameTimer)
 
 	BackgroundImage.update(frameTime);
 	player1->update(frameTime);
-	//make player face mouse
-	VECTOR2 playerPosition = VECTOR2(player1->getCenterX(), player1->getCenterY());
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
-	float dx = playerPosition.x - (mousePosVector.x);
-	float dy = playerPosition.y - (mousePosVector.y);
-	float rotation = (atan2(dy, dx)) * 180 / PI;
-	player1->setDegrees(rotation + 180);
+	float cameraDifferenceX = 0;
+	float cameraDifferenceY = 0;
+	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+	{
+		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+	}
+	if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+	{
+		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+	}
+
 
 
 	if (input->wasKeyPressed(VK_SPACE))
 	{
 		float currentAngle = player1->getRadians();
 		player1->startJump(currentAngle,frameTime);
+		player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
+		
 		
 	}
 	if (camera) {
 		camera->Update();
 	}
-
-	player1->jump(frameTime);
+	if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+	{
+		player1->setFrameDelay(AnimationDelayStop);
+		player1->setCurrentFrame(0);
+	}
+	
+	player1->jump(frameTime,cameraDifferenceX,cameraDifferenceY);
 }
 
 

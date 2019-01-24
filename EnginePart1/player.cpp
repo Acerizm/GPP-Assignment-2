@@ -91,28 +91,35 @@ void Player::setSpriteDataXnY(float x, float y)
 	spriteData.y = y;
 }
 
-void Player::jump(float frameTime)
+void Player::jump(float frameTime, float cameraDifferenceX, float cameraDifferenceY)
 {
-	velocityY += 0.5 * gravity * frameTime * frameTime;
+ 	velocityY += 0.5 * gravity * frameTime * frameTime;
 	if (this->isJumping == true)
 	{
-		this->setX(this->getX() + (playerNS::playerJumpVelocity*frameTime) * cos(currentAngle));
+		this->setX(this->getX() + velocityX);
 		this->setY(this->getY() + velocityY);
 	}
-	if ((this->getY() + this->getHeight() >= 620))
+	if ((this->getY() + this->getHeight() >= 620)) //620 is the ground for now.
 	{
 		this->isJumping = false;
+	}
+	if (this->getY() <= 95) // 95 is the ceiling for now.
+	{
+		this->setY(this->getY() - velocityY);
+	}
+	if (this->getX() + this->getWidth() >= (GAME_WIDTH + cameraDifferenceX)) // check if player is trying to go faster than the camera.
+	{
+		this->setX(this->getX() - velocityX);
 	}
 
 }
 void Player::startJump(float currentAngle, float frameTime)
 {
-	if (this->isJumping == false)
-	{
+
 		audio->playCue(BEEP4);
 		this->isJumping = true;
 		this->currentAngle = currentAngle;
 		this->velocityY = playerNS::playerJumpVelocity*frameTime * sin(currentAngle);
-	}
+		this->velocityX = (playerNS::playerJumpVelocity*frameTime) * cos(currentAngle);
 
 }
