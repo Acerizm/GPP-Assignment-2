@@ -51,9 +51,9 @@ const UCHAR SHIP_DOWN_KEY = VK_DOWN;
 
 // graphic images
 // add the tile heres
-const char Background[] = "pictures\\Background.png";
+const char Background[] = "pictures\\main.jpg";
 const int backgroundHeight = 720;
-const int backgroundWidth = 1280;
+const int backgroundWidth = 12800;
 //const float LEVEL1_TILE_SCALE = 2.0;
 
 //instruction image

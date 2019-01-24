@@ -1,18 +1,4 @@
 ﻿cl : Command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
-  winmain.cpp
-  textureManager.cpp
-  player.cpp
-  obstacle.cpp
-  lastManStanding.cpp
-c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(99): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-  input.cpp
-  image.cpp
-c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\image.cpp(125): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
-  graphics.cpp
-  game.cpp
-  entity.cpp
-  background.cpp
-  Generating Code...
-  LINK : C:\Users\Haiqel\Documents\GitHub\GPP-Assignment-2\EnginePart1\Debug\EnginePart1.exe not found or not built by the last incremental link; performing full link
-background.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
+  camera.cpp
+c:\users\haiqel\documents\github\gpp-assignment-2\enginepart1\camera.cpp(13): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
   EnginePart1.vcxproj -> C:\Users\Haiqel\Documents\GitHub\GPP-Assignment-2\EnginePart1\Debug\EnginePart1.exe

@@ -11,6 +11,7 @@
 #include "obstacle.h"
 #include <vector>
 #include "background.h"
+#include "camera.h"
 using namespace std;
 
 //=============================================================================
@@ -34,6 +35,8 @@ protected:
 	TextureManager Player1Texture;
 
 	Player *player1;
+
+	Camera *camera;
 
 
 public:

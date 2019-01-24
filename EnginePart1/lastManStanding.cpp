@@ -25,6 +25,10 @@ LastManStanding::LastManStanding()
 //=============================================================================
 LastManStanding::~LastManStanding()
 {
+	if (camera) {
+		delete camera;
+		camera = nullptr;
+	}
 	releaseAll();           // call onLostDevice() for every graphics item
 }
 //=============================================================================
@@ -35,6 +39,7 @@ void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
 	player1 = new Player();
+	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	//create the camera
 	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
 
@@ -92,6 +97,10 @@ void LastManStanding::update(Timer *gameTimer)
 		player1->setX(player1->getX() + 10);
 		player1->setY(player1->getY() - 10);
 
+	}
+
+	if (camera) {
+		camera->Update();
 	}
 	
 	//Add gravity here with acceleration if the player does not press anything
@@ -152,7 +161,10 @@ void LastManStanding::render()
 	graphics->spriteBegin();                // begin drawing sprites
 	BackgroundImage.draw();
 	player1->draw();
-	
+	if (camera)
+	{
+		camera->setTransform(graphics);
+	}
 	graphics->spriteEnd();                  // end drawing sprites
 
 }
