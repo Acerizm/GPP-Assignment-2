@@ -93,24 +93,25 @@ void Player::setSpriteDataXnY(float x, float y)
 
 void Player::jump(float frameTime)
 {
-	
+	velocityY += 0.5 * 50.0f * frameTime * frameTime;
 	if (this->isJumping == true)
 	{
-		float velocity = playerNS::playerJumpVelocity * frameTime;
-		float vx = velocity * cos(currentAngle);
-		float vy = velocity * sin(currentAngle);
-		vy += 10.0f*frameTime;
-		this->setX(this->getX() + vx);
-		this->setY(this->getY()  + vy); 
-		
-		if (this->getY() + this->getHeight() >= GAME_HEIGHT)
-		{
-			this->isJumping = false;
-		}
+		this->setX(this->getX() + (playerNS::playerJumpVelocity*frameTime) * cos(currentAngle));
+		this->setY(this->getY() + velocityY);
 	}
+	if ((this->getY() + this->getHeight() >= GAME_HEIGHT))
+	{
+		this->isJumping = false;
+	}
+
 }
-void Player::startJump(float currentAngle)
+void Player::startJump(float currentAngle, float frameTime)
 {
-	this->isJumping = true;
-	this->currentAngle = currentAngle;
+	if (this->isJumping == false)
+	{
+		this->isJumping = true;
+		this->currentAngle = currentAngle;
+		this->velocityY = playerNS::playerJumpVelocity*frameTime * sin(currentAngle);
+	}
+
 }

@@ -40,7 +40,8 @@ private:
 	//vector<Bullet*> bulletList;
 	bool isJumping = false;
 	float currentAngle;
-
+	float velocityY = 0;
+	float gravity = 10.0f;
 public:
 	Player();
 	~Player();
@@ -54,7 +55,7 @@ public:
 	void update(float frameTime);
 	void setSpriteDataXnY(float x,float y);
 	void jump(float frametime);
-	void startJump(float currentAngle);
+	void startJump(float currentAngle,float frameTime);
 	//void setSpriteDataY(float y);
 };
 
