@@ -7,6 +7,7 @@
 #include <iomanip>
 #include "background.h"
 #include <math.h>
+#include "heart.h"
 #pragma comment(lib, "Winmm.lib")
 
 
@@ -50,8 +51,11 @@ void LastManStanding::initialize(HWND hwnd)
 	if (!BackgroundImage.initialize(graphics, backgroundWidth, backgroundHeight, 0, &BackgroundTexture)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
 	}
+	if(!heartTexture.initialize(graphics, HEART_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
 
 	BackgroundImage.setCurrentFrame(0);
+	
 
 	BackgroundImage.setX(0);
 	BackgroundImage.setY(0);
@@ -65,15 +69,27 @@ void LastManStanding::initialize(HWND hwnd)
 	player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
-	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
+	player1->setFrameDelay(AnimationDelayStop);
+	player1->setCurrentFrame(0);
 	player1->setScale(1);
 	player1->setY(620 - player1->getHeight());
+	player1->setDegrees(315);
 
-	if(!ObsTexture.initialize(graphics,OBS1))
+	for (int i = 0; i < player1->getNumberOfLifes(); i++)
+	{
+		Heart *heartTemp = new Heart();
+		if (!heartTemp->initialize(this,heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
+		heartTemp->setY(0);
+		heartTemp->setHeartNo(i);
+		heartTemp->setScale(heartNS::HEART_SCALE);
+		heartTemp->setX(GAME_WIDTH / 20 * i);
+		heartList.push_back(heartTemp);
+	}
+	if (!ObsTexture.initialize(graphics, OBS1))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 	if (!Obstacle1->initialize(this, &ObsTexture, 900, 500, 1))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
-
 
 	return;
 }
@@ -93,28 +109,49 @@ void LastManStanding::update(Timer *gameTimer)
 	BackgroundImage.update(frameTime);
 	Obstacle1->update(frameTime);
 	player1->update(frameTime);
-	//make player face mouse
-	VECTOR2 playerPosition = VECTOR2(player1->getCenterX(), player1->getCenterY());
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
-	float dx = playerPosition.x - (mousePosVector.x);
-	float dy = playerPosition.y - (mousePosVector.y);
-	float rotation = (atan2(dy, dx)) * 180 / PI;
-	player1->setDegrees(rotation + 180);
+	float cameraDifferenceX = 0;
+	float cameraDifferenceY = 0;
+	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+	{
+		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+	}
+	if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+	{
+		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+	}
+	for each (Heart *heartTemp in heartList)
+	{
+		heartTemp->setX(cameraDifferenceX + GAME_WIDTH/20 *heartTemp->getHeartNo());
+		heartTemp->update(frameTime);
+		
+	}
+	for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
+	{
+		if (heartList.size() > 0)
+		{
+			heartList.pop_back();
+		}
+	}
 
 
 	if (input->wasKeyPressed(VK_SPACE))
 	{
 		float currentAngle = player1->getRadians();
 		player1->startJump(currentAngle,frameTime);
+		player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
+		
 		
 	}
 	if (camera) {
 		camera->Update();
 	}
-
-	player1->jump(frameTime);
+	if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+	{
+		player1->setFrameDelay(AnimationDelayStop);
+		player1->setCurrentFrame(0);
+	}
+	
+	player1->jump(frameTime,cameraDifferenceX,cameraDifferenceY);
 }
 
 
@@ -183,6 +220,10 @@ void LastManStanding::render()
 	if (camera)
 	{
 		camera->setTransform(graphics);
+	}
+	for each (Heart *heartTemp in heartList)
+	{
+		heartTemp->draw();
 	}
 	graphics->spriteEnd();                  // end drawing sprites
 

@@ -37,7 +37,7 @@ const float FRAME_RATE  = 200.0f;               // the target frame rate (frames
 const float MIN_FRAME_RATE = 10.0f;             // the minimum frame rate
 const float MIN_FRAME_TIME = 1.0f/FRAME_RATE;   // minimum desired time for 1 frame
 const float MAX_FRAME_TIME = 1.0f/MIN_FRAME_RATE; // maximum time used in calculations
-
+const int AnimationDelayStop = 999;
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used
 // it would be possible to save and restore key mappings from a data file.
@@ -55,6 +55,8 @@ const char Background[] = "pictures\\main.jpg";
 const int backgroundHeight = 720;
 const int backgroundWidth = 12800;
 
+const int heartWidth = 136;
+const int heartHeight = 120;
 //audio files here
 // audio files required by audio.cpp
 // WAVE_BANK must be location of .xwb file.
@@ -67,11 +69,12 @@ const char BEEP1[] = "beep1";
 const char BEEP2[] = "beep2";
 const char BEEP3[] = "beep3";
 const char BEEP4[] = "beep4";
+const char SCREAM6[] = "scream6";
 const char HIT[] = "hit";
 
 //player reloading
 const char PLAYER[] = "pictures\\Player.png";
-
+const char HEART_IMAGE[] = "pictures\\heart.png";
 //obs1
 const char OBS1[] = "pictures\\OBS1.png";
 
