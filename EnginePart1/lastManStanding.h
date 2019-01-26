@@ -53,6 +53,8 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+	void obstaclesInitialize(bool value);
+	void obstaclesMovement();
 	void update(Timer *gameTimer);      // must override pure virtual from Game
 	void ai(Timer *gameTimer);          // "
 	void collisions(Timer *gameTimer);  // "
