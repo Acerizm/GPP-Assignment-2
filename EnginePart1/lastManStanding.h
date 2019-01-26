@@ -7,6 +7,7 @@
 #include "textureManager.h"
 #include "image.h"
 #include "player.h"
+#include "heart.h"
 #include <list>
 #include "obstacle.h"
 #include <vector>
@@ -31,11 +32,11 @@ protected:
 	
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;
+	TextureManager heartTexture;
 
 	TextureManager Player1Texture;
-
+	list <Heart*>  heartList;
 	Player *player1;
-
 	Camera *camera;
 public:
 	// Constructor

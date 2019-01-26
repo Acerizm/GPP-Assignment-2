@@ -7,6 +7,7 @@
 #include <iomanip>
 #include "background.h"
 #include <math.h>
+#include "heart.h"
 #pragma comment(lib, "Winmm.lib")
 
 
@@ -49,8 +50,11 @@ void LastManStanding::initialize(HWND hwnd)
 	if (!BackgroundImage.initialize(graphics, backgroundWidth, backgroundHeight, 0, &BackgroundTexture)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
 	}
+	if(!heartTexture.initialize(graphics, HEART_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
 
 	BackgroundImage.setCurrentFrame(0);
+	
 
 	BackgroundImage.setX(0);
 	BackgroundImage.setY(0);
@@ -71,6 +75,19 @@ void LastManStanding::initialize(HWND hwnd)
 	player1->setScale(1);
 	player1->setY(620 - player1->getHeight());
 	player1->setDegrees(315);
+
+	for (int i = 0; i < player1->getNumberOfLifes(); i++)
+	{
+		Heart *heartTemp = new Heart();
+		if (!heartTemp->initialize(this,heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
+		heartTemp->setY(0);
+		heartTemp->setHeartNo(i);
+		heartTemp->setScale(heartNS::HEART_SCALE);
+		heartTemp->setX(GAME_WIDTH / 20 * i);
+		heartList.push_back(heartTemp);
+
+	}
 
 	//damn annoying when debug so many times Xddd
 	/*mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
@@ -103,7 +120,19 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
 	}
-
+	for each (Heart *heartTemp in heartList)
+	{
+		heartTemp->setX(cameraDifferenceX + GAME_WIDTH/20 *heartTemp->getHeartNo());
+		heartTemp->update(frameTime);
+		
+	}
+	for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
+	{
+		if (heartList.size() > 0)
+		{
+			heartList.pop_back();
+		}
+	}
 
 
 	if (input->wasKeyPressed(VK_SPACE))
@@ -182,6 +211,10 @@ void LastManStanding::render()
 	if (camera)
 	{
 		camera->setTransform(graphics);
+	}
+	for each (Heart *heartTemp in heartList)
+	{
+		heartTemp->draw();
 	}
 	graphics->spriteEnd();                  // end drawing sprites
 

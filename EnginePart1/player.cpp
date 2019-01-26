@@ -91,9 +91,9 @@ void Player::setSpriteDataXnY(float x, float y)
 	spriteData.y = y;
 }
 
-void Player::jump(float frameTime, float cameraDifferenceX, float cameraDifferenceY)
+void Player::jump(float frameTime, float cameraDifferenceX, float cameraDifferenceY) // isnt actually jump should be update but lazy change leh.
 {
- 	velocityY += 0.5 * gravity * frameTime * frameTime;
+ 	velocityY += 0.5 * playerNS::gravity * frameTime * frameTime;
 	if (this->isJumping == true)
 	{
 		this->setX(this->getX() + velocityX);
@@ -111,6 +111,14 @@ void Player::jump(float frameTime, float cameraDifferenceX, float cameraDifferen
 	{
 		this->setX(this->getX() - velocityX);
 	}
+	if (this->getX() + this->getWidth() <= (0 + cameraDifferenceX)) // check if player hit left side of map aka loses a life here..
+	{
+		this->minusLife();
+		this->setX(cameraDifferenceX + GAME_WIDTH / 2);
+		this->setY(GAME_HEIGHT/2);
+		this->isJumping = true;
+
+	}
 
 }
 void Player::startJump(float currentAngle, float frameTime)
@@ -122,4 +130,16 @@ void Player::startJump(float currentAngle, float frameTime)
 		this->velocityY = playerNS::playerJumpVelocity*frameTime * sin(currentAngle);
 		this->velocityX = (playerNS::playerJumpVelocity*frameTime) * cos(currentAngle);
 
+}
+
+void Player::minusLife()
+{
+	numberOflifes -= 1;
+}
+
+int Player::getNumberOfLifes()
+{
+	
+		return numberOflifes;
+	
 }

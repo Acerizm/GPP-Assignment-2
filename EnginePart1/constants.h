@@ -55,6 +55,8 @@ const char Background[] = "pictures\\main.jpg";
 const int backgroundHeight = 720;
 const int backgroundWidth = 12800;
 
+const int heartWidth = 136;
+const int heartHeight = 120;
 //audio files here
 // audio files required by audio.cpp
 // WAVE_BANK must be location of .xwb file.
@@ -93,6 +95,7 @@ const char HIT[] = "hit";
 
 //player reloading
 const char PLAYER[] = "pictures\\Player.png";
+const char HEART_IMAGE[] = "pictures\\heart.png";
 //const int PLAYER_RELOADING_START_FRAME = 0;
 //const int PLAYER_RELOADING_END_FRAME = 19;
 //const float PLAYER_RELOADING_ANIMATION_DELAY = 0.2f;

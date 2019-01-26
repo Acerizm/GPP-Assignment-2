@@ -24,7 +24,8 @@ namespace playerNS
 	const int PLAYER_HEIGHT = 32;
 	const int PLAYER_WIDTH = 32;
 	const float PLAYER_SCALE = 1.0f;
-	const float playerJumpVelocity = 300.0f;
+	const float playerJumpVelocity = 100.0f;
+	const float gravity = 100.0f;
 	//const int X = GAME_WIDTH / 2 - PLAYER_SHOOTING_WIDTH / 2;   // location on screen
 	//const int Y = GAME_HEIGHT / 2 - PLAYER_SHOOTING_HEIGHT / 2;
 	const int   TEXTURE_COLS = 0;           // texture has 8 columns
@@ -42,7 +43,7 @@ private:
 	float currentAngle;
 	float velocityY = 0;
 	float velocityX = 0;
-	float gravity = 300.0f;
+	int numberOflifes = 3;
 public:
 	Player();
 	~Player();
@@ -58,6 +59,9 @@ public:
 	void jump(float frametime, float cameraDifferenceX, float cameraDifferenceY);
 	void startJump(float currentAngle,float frameTime);
 	//void setSpriteDataY(float y);
+	void minusLife();
+	int getNumberOfLifes();
+
 };
 
 
