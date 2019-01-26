@@ -40,6 +40,7 @@ void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
 	player1 = new Player();
+	Obstacle1 = new Obstacle();
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	//create the camera
 	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
@@ -70,14 +71,8 @@ void LastManStanding::initialize(HWND hwnd)
 
 	if(!ObsTexture.initialize(graphics,OBS1))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
-	if (!Obs1Image.initialize(graphics, 32, 32, 0, &ObsTexture)) {
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing obs1Image"));
-	}
-
-	Obs1Image.setX(GAME_WIDTH);
-	Obs1Image.setY(0);
-	Obs1Image.setScale(10);
-	Obs1Image.setFrames(0, 0);
+	if (!Obstacle1->initialize(this, &ObsTexture, 900, 500, 1))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 
 	return;
@@ -96,7 +91,7 @@ void LastManStanding::update(Timer *gameTimer)
 {
 
 	BackgroundImage.update(frameTime);
-	Obs1Image.update(frameTime);
+	Obstacle1->update(frameTime);
 	player1->update(frameTime);
 	//make player face mouse
 	VECTOR2 playerPosition = VECTOR2(player1->getCenterX(), player1->getCenterY());
@@ -164,6 +159,15 @@ void LastManStanding::collisions(Timer *gameTimer) {
 		}
 	}*/
 	//////////////////////////////////////////////////////////////////////////////////////////////
+	VECTOR2 collisionVector;
+	//Event/Scenario:
+	// 1) The player collided with Osbtacle1
+	if (player1->collidesWith(*Obstacle1, collisionVector)) 
+	{
+		//what happens after collision
+		player1->setY(100);
+
+	}
 }
 
 //=============================================================================
@@ -175,7 +179,7 @@ void LastManStanding::render()
 	graphics->spriteBegin();                // begin drawing sprites
 	BackgroundImage.draw();
 	player1->draw();
-	Obs1Image.draw();
+	Obstacle1->draw();
 	if (camera)
 	{
 		camera->setTransform(graphics);

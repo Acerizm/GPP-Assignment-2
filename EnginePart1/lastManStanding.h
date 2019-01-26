@@ -37,7 +37,9 @@ protected:
 	Player *player1;
 
 	TextureManager ObsTexture;
-	Image Obs1Image;
+	//Image Obs1Image;
+
+	Obstacle *Obstacle1;
 
 	Camera *camera;
 public:
