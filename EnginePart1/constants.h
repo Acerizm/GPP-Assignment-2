@@ -69,6 +69,7 @@ const char BEEP1[] = "beep1";
 const char BEEP2[] = "beep2";
 const char BEEP3[] = "beep3";
 const char BEEP4[] = "beep4";
+const char SCREAM6[] = "scream6";
 const char HIT[] = "hit";
 
 

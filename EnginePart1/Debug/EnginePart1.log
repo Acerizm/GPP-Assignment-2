@@ -3,12 +3,22 @@ c:\users\pc\documents\github\gpp-assignment-2\enginepart1\player.cpp(96): warnin
   Generating Code...
   Compiling...
   winmain.cpp
+  textureManager.cpp
   obstacle.cpp
   lastManStanding.cpp
 c:\users\pc\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(76): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
 c:\users\pc\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(87): warning C4244: 'argument': conversion from 'UINT' to 'float', possible loss of data
 c:\users\pc\documents\github\gpp-assignment-2\enginepart1\lastmanstanding.cpp(129): warning C4018: '<': signed/unsigned mismatch
+  input.cpp
+  image.cpp
+c:\users\pc\documents\github\gpp-assignment-2\enginepart1\image.cpp(125): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+  heart.cpp
+  graphics.cpp
+  game.cpp
+  entity.cpp
   camera.cpp
 c:\users\pc\documents\github\gpp-assignment-2\enginepart1\camera.cpp(13): warning C4244: 'argument': conversion from 'int' to 'FLOAT', possible loss of data
+  background.cpp
+  audio.cpp
   Generating Code...
   EnginePart1.vcxproj -> C:\Users\pc\Documents\GitHub\GPP-Assignment-2\EnginePart1\Debug\EnginePart1.exe

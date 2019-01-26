@@ -117,6 +117,7 @@ void Player::jump(float frameTime, float cameraDifferenceX, float cameraDifferen
 		this->setX(cameraDifferenceX + GAME_WIDTH / 2);
 		this->setY(GAME_HEIGHT/2);
 		this->isJumping = true;
+		audio->playCue(SCREAM6);
 
 	}
 
