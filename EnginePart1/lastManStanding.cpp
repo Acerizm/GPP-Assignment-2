@@ -41,7 +41,6 @@ void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
 	player1 = new Player();
-	Obstacle1 = new Obstacle();
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	//create the camera
 	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
@@ -74,6 +73,7 @@ void LastManStanding::initialize(HWND hwnd)
 	player1->setScale(1);
 	player1->setY(620 - player1->getHeight());
 	player1->setDegrees(315);
+	//player1->setCollisionRadius(30.0f);
 
 	for (int i = 0; i < player1->getNumberOfLifes(); i++)
 	{
@@ -86,12 +86,29 @@ void LastManStanding::initialize(HWND hwnd)
 		heartTemp->setX(GAME_WIDTH / 20 * i);
 		heartList.push_back(heartTemp);
 	}
-	if (!ObsTexture.initialize(graphics, OBS1))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
-	if (!Obstacle1->initialize(this, &ObsTexture, 900, 500, 1))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
+	obstaclesInitialize(true);
 	return;
+}
+
+void LastManStanding::obstaclesInitialize(bool value) 
+{
+	if (value == true) 
+	{
+		//Attributes
+		Obstacle1 = new Obstacle();
+
+		//methods || functions
+
+		if (!ObsTexture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+		if (!Obstacle1->initialize(this, &ObsTexture, GAME_WIDTH / 4 * 3, GAME_HEIGHT/10 * 7.4, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		//set the states here
+		Obstacle1->setMovementState("UP");
+	}
+
 }
 
 std::string to_format(const int number) {
@@ -107,7 +124,6 @@ void LastManStanding::update(Timer *gameTimer)
 {
 
 	BackgroundImage.update(frameTime);
-	Obstacle1->update(frameTime);
 	player1->update(frameTime);
 	float cameraDifferenceX = 0;
 	float cameraDifferenceY = 0;
@@ -152,10 +168,29 @@ void LastManStanding::update(Timer *gameTimer)
 	}
 	
 	player1->jump(frameTime,cameraDifferenceX,cameraDifferenceY);
+
+	obstaclesMovement();
 }
 
 
+void LastManStanding::obstaclesMovement() 
+{
+	Obstacle1->update(frameTime);
 
+
+	// 1) Obstacle1 moves up and down ez
+	//  change the states here
+	if (Obstacle1->getY() >= (GAME_HEIGHT / 10 * 7))
+		Obstacle1->setMovementState("UP");
+	else if (Obstacle1->getY() <= (GAME_HEIGHT / 10 * 3))
+		Obstacle1->setMovementState("DOWN");
+
+	if (Obstacle1->getMovementState() == "UP")
+		Obstacle1->setY(Obstacle1->getY() - obstacleNS::OBS1_MOVEMENT_SPEED*frameTime);
+	else if (Obstacle1->getMovementState() == "DOWN")
+		Obstacle1->setY(Obstacle1->getY() + obstacleNS::OBS1_MOVEMENT_SPEED*frameTime);
+
+}
 //=============================================================================
 // Handle collisions
 //=============================================================================
@@ -202,7 +237,7 @@ void LastManStanding::collisions(Timer *gameTimer) {
 	if (player1->collidesWith(*Obstacle1, collisionVector)) 
 	{
 		//what happens after collision
-		player1->setY(100);
+		player1->setX(player1->getX() -collisionVector.x*frameTime*2);
 
 	}
 }

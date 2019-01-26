@@ -17,7 +17,7 @@ namespace obstacleNS {
 	const int OBS1_HEIGHT = 32;
 	const int OBS1_WIDTH = 32;
 	const float OBS1_SCALE = 3.0f;
-
+	const float OBS1_MOVEMENT_SPEED = 100.0f;
 	
 	
 }
@@ -28,6 +28,9 @@ class Obstacle : public Entity
 private:
 	Image OBSTACLE_IMAGE;
 	bool isCollided = false;
+	string MOVEMENT_STATES[4] = { "UP", "DOWN","LEFT","RIGHT" };
+	//add states here
+	string MOVEMENT_STATE = "";
 	friend class LastManStanding;
 
 public:
@@ -58,6 +61,14 @@ public:
 
 	void setIsCollided(bool value) {
 		isCollided = value;
+	}
+
+	string getMovementState() {
+		return MOVEMENT_STATE;
+	}
+
+	void setMovementState(string value) {
+		this->MOVEMENT_STATE = value;
 	}
 };
 
