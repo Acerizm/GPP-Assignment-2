@@ -40,6 +40,7 @@ void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
 	player1 = new Player();
+	Obstacle1 = new Obstacle();
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	//create the camera
 	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
@@ -61,20 +62,18 @@ void LastManStanding::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
 	}
 
-	/*player1->setX(GAME_WIDTH / 2);
-	player1->setY(GAME_HEIGHT / 2);*/
 	player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
 	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
 	player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
-	//player1->setCurrentFrame(0);
 	player1->setScale(1);
 	player1->setY(620 - player1->getHeight());
 
+	if(!ObsTexture.initialize(graphics,OBS1))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+	if (!Obstacle1->initialize(this, &ObsTexture, 900, 500, 1))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
-	//damn annoying when debug so many times Xddd
-	/*mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
-	mciSendString("open \"audio\\backGroundMusic.wav\" type waveaudio alias backGroundMusic", NULL, 0, NULL);*/
 
 	return;
 }
@@ -92,6 +91,7 @@ void LastManStanding::update(Timer *gameTimer)
 {
 
 	BackgroundImage.update(frameTime);
+	Obstacle1->update(frameTime);
 	player1->update(frameTime);
 	//make player face mouse
 	VECTOR2 playerPosition = VECTOR2(player1->getCenterX(), player1->getCenterY());
@@ -159,6 +159,15 @@ void LastManStanding::collisions(Timer *gameTimer) {
 		}
 	}*/
 	//////////////////////////////////////////////////////////////////////////////////////////////
+	VECTOR2 collisionVector;
+	//Event/Scenario:
+	// 1) The player collided with Osbtacle1
+	if (player1->collidesWith(*Obstacle1, collisionVector)) 
+	{
+		//what happens after collision
+		player1->setY(100);
+
+	}
 }
 
 //=============================================================================
@@ -170,6 +179,7 @@ void LastManStanding::render()
 	graphics->spriteBegin();                // begin drawing sprites
 	BackgroundImage.draw();
 	player1->draw();
+	Obstacle1->draw();
 	if (camera)
 	{
 		camera->setTransform(graphics);
