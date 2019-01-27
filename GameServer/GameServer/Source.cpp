@@ -1,29 +1,60 @@
 //Server
 
 #pragma comment(lib,"ws2_32.lib")
+#define _WINSOCK_DEPRECIATED_NO_WARNINGS
 #pragma warning(disable:4996) 
 #include <WinSock2.h>
 #include <iostream>
 
 
 SOCKET Connections[100];
-int ConnectionCounter = 0; //Holds the other connections
+int TotalConnections = 0; //Holds the other connections
 
+enum Packet {
+	P_ChatMessage
 
-void ClientHandlerThread(int index) {
-	char buffer[256];
-	while (true) {
+};
+
+bool ProcessPacket(int ID, Packet packettype) 
+{
+	switch (packettype)
+	{
+	case P_ChatMessage:
+	{
+		int bufferlength;
 		//receive the connection
-		recv(Connections[index], buffer, sizeof(buffer), NULL);
-		for (int i = 0; i < ConnectionCounter; i++) {
-			if (i == index) {
-				//skip the user who sends the message
+		recv(Connections[ID], (char*)&bufferlength, sizeof(int), NULL); //get bufferlength
+		char *buffer = new char[bufferlength]; //Allocate buffer
+		recv(Connections[ID], buffer, bufferlength, NULL); //get buffer message from client
+		for (int i = 0; i < TotalConnections; i++) { //For each client connection
+			if (i == ID) //skip the user who sends the message
 				continue;
-			}
-			send(Connections[i], buffer, sizeof(buffer), NULL);
-
+			Packet chatmessagepacket = P_ChatMessage; //create chat message packet to be sent
+			send(Connections[ID], (char*)&chatmessagepacket, sizeof(Packet), NULL); //send chat message packet
+			send(Connections[i], (char*)&bufferlength, sizeof(int), NULL); //send the buffer length
+			send(Connections[i], buffer, sizeof(buffer), NULL); //send the chat message to the client
 		}
+		delete[] buffer;
+		break;
 	}
+	default:
+		std::cout << "Unrecognizable packet" << packettype << std::endl;
+	}
+	return true;
+}
+
+void ClientHandlerThread(int ID) {
+	Packet packettype;
+
+	while (true) 
+	{
+		recv(Connections[ID], (char*)&packettype, sizeof(Packet), NULL); //Receive packet type from client
+
+		if (!ProcessPacket(ID, packettype)) //if the packet is not properly processed
+			break; //break out of our client handler loop
+	}
+
+	closesocket(Connections[ID]); //close the socket that was being used by the client;
 }
 
 int main() {
@@ -48,6 +79,7 @@ int main() {
 	//connection. NOTE:: SOMAXCONN = Socket Outstanding 
 
 	SOCKET newConnection; //Socket to hold the client's connection
+	int connectionCounter = 0; // client's ID
 	//Add multiple connections
 	for (int i = 0; i < 100; i++)
 	{
@@ -59,11 +91,15 @@ int main() {
 		else //if client connection properly accepted
 		{
 			std::cout << "Client Connected!" << std::endl;
-			char MOTD[256] = " Welcome! This is the message of the day"; // Create buffer with message of the day
-			send(newConnection, MOTD, sizeof(MOTD), NULL); //Send MOTD buffer;
-			Connections[i] = newConnection;
-			ConnectionCounter += 1;
-			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandlerThread, (LPVOID)(i), NULL, NULL); 
+			Connections[i] = newConnection; //set socket in array to be the newest connection before creating the thread to handle the client's request
+			TotalConnections++;
+			CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientHandlerThread, (LPVOID)(i), NULL, NULL);
+			Packet chatmessagepacket = P_ChatMessage;
+			send(Connections[i], (char*)&chatmessagepacket, sizeof(Packet), NULL); //send chat message packet
+			std::string buftest = "Welcome!";
+			int size = buftest.size();
+			send(newConnection, (char*)&size,sizeof(int), NULL); //send size of message
+			send(newConnection, buftest.c_str(), buftest.size(), NULL); //Send Message
 			//Create thread to handle this client
 		}
 	}
