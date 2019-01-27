@@ -13,6 +13,7 @@
 #include <vector>
 #include "background.h"
 #include "camera.h"
+#include "textDX.h"
 using namespace std;
 
 //=============================================================================
@@ -44,6 +45,14 @@ protected:
 	Obstacle *Obstacle1;
 
 	Camera *camera;
+
+	//menu options here 
+	TextDX *startText;
+	TextDX *instructionsText;
+	TextDX *quitText;
+	int menuOptionNo;
+	bool menuOn;
+
 public:
 	// Constructor
 	LastManStanding();

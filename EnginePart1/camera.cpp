@@ -57,3 +57,8 @@ float Camera::getCameraY()
 {
 	return cameraY;
 }
+
+void Camera::setCameraHorizontalSpeed(float i)
+{
+	cameraHorizontalSpeed = i;
+}

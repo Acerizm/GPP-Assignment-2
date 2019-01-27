@@ -20,6 +20,11 @@ LastManStanding::LastManStanding()
 	/*srand(time(NULL));
 	hpText = new TextDX();
 */
+	menuOn = true;
+	startText = new TextDX();
+	instructionsText = new TextDX();
+	quitText = new TextDX();
+	menuOptionNo = 2;
 }
 
 //=============================================================================
@@ -52,6 +57,15 @@ void LastManStanding::initialize(HWND hwnd)
 	}
 	if(!heartTexture.initialize(graphics, HEART_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
+
+	// init the texts for menu 
+	if (startText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+	if (instructionsText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+	if (quitText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+
 
 	BackgroundImage.setCurrentFrame(0);
 	
@@ -122,54 +136,130 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
-
-	BackgroundImage.update(frameTime);
-	player1->update(frameTime);
-	float cameraDifferenceX = 0;
-	float cameraDifferenceY = 0;
-	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+	if (menuOn)
 	{
-		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
-	}
-	if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
-	{
-		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
-	}
-	for each (Heart *heartTemp in heartList)
-	{
-		heartTemp->setX(cameraDifferenceX + GAME_WIDTH/20 *heartTemp->getHeartNo());
-		heartTemp->update(frameTime);
-		
-	}
-	for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
-	{
-		if (heartList.size() > 0)
+		camera->setCameraHorizontalSpeed(0.0f);
+		if (menuOptionNo == 2)
 		{
-			heartList.pop_back();
+			startText->setFontColor(graphicsNS::YELLOW);
+			instructionsText->setFontColor(graphicsNS::BLACK);
+			quitText->setFontColor(graphicsNS::BLACK);
 		}
+		if (menuOptionNo == 1)
+		{
+			startText->setFontColor(graphicsNS::BLACK);
+			instructionsText->setFontColor(graphicsNS::YELLOW);
+			quitText->setFontColor(graphicsNS::BLACK);
+		}
+		if (menuOptionNo == 0)
+		{
+			startText->setFontColor(graphicsNS::BLACK);
+			instructionsText->setFontColor(graphicsNS::BLACK);
+			quitText->setFontColor(graphicsNS::YELLOW);
+		}
+
+		if (input->wasKeyPressed(VK_DOWN))
+		{
+			if (menuOptionNo != 0)
+			{
+				menuOptionNo -= 1;
+			}
+		}
+		if (input->wasKeyPressed(VK_UP))
+		{
+			if (menuOptionNo != 2)
+			{
+				menuOptionNo += 1;
+			}
+		}
+		if (input->wasKeyPressed(VK_RETURN))
+		{
+			if (menuOptionNo == 2)
+			{
+				menuOn = !menuOn;
+				camera->setCameraHorizontalSpeed(0.3f);
+			}
+			else if (menuOptionNo == 1)
+			{
+				//show instructions here
+				//showInstruction = true;
+				if (input->wasKeyPressed(VK_ESCAPE))
+				{
+					//showInstruction = false;
+				}
+			}
+			else if (menuOptionNo == 0)
+			{
+				PostQuitMessage(0);
+			}
+		}
+		/*if (showInstruction)
+		{
+			if (input->wasKeyPressed(VK_ESCAPE))
+			{
+				showInstruction = false;
+			}
+		}
+		*/
 	}
+		BackgroundImage.update(frameTime);
+		player1->update(frameTime);
+		if (camera) {
+			camera->Update();
+		}
+		if (!menuOn)
+		{
+			float cameraDifferenceX = 0;
+			float cameraDifferenceY = 0;
+			if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+			{
+				cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+			}
+			if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+			{
+				cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+			}
+			for each (Heart *heartTemp in heartList)
+			{
+				heartTemp->setX(cameraDifferenceX + GAME_WIDTH / 20 * heartTemp->getHeartNo());
+				heartTemp->update(frameTime);
+
+			}
+			for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
+			{
+				if (heartList.size() > 0)
+				{
+					heartList.pop_back();
+				}
+			}
 
 
-	if (input->wasKeyPressed(VK_SPACE))
-	{
-		float currentAngle = player1->getRadians();
-		player1->startJump(currentAngle,frameTime);
-		player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
-		
-		
-	}
-	if (camera) {
-		camera->Update();
-	}
-	if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
-	{
-		player1->setFrameDelay(AnimationDelayStop);
-		player1->setCurrentFrame(0);
-	}
+			if (input->wasKeyPressed(VK_SPACE))
+			{
+				float currentAngle = player1->getRadians();
+				player1->startJump(currentAngle, frameTime);
+				player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
+
+
+			}
+			
+			if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+			{
+				player1->setFrameDelay(AnimationDelayStop);
+				player1->setCurrentFrame(0);
+			}
+			if (input->wasKeyPressed(VK_ESCAPE))
+			{
+				menuOn = !menuOn;
+			}
+
+			player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
+
+			obstaclesMovement();
+
+		}
+
 	
-	player1->jump(frameTime,cameraDifferenceX,cameraDifferenceY);
-
-	obstaclesMovement();
 }
 
 
@@ -259,6 +349,12 @@ void LastManStanding::render()
 	for each (Heart *heartTemp in heartList)
 	{
 		heartTemp->draw();
+	}
+	if (menuOn)
+	{
+		startText->print("START", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() - GAME_HEIGHT / 2);
+		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 30 - GAME_HEIGHT / 2);
+		quitText->print("QUIT GAME", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 60 - GAME_HEIGHT / 2);
 	}
 	graphics->spriteEnd();                  // end drawing sprites
 
