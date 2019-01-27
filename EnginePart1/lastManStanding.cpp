@@ -8,6 +8,10 @@
 #include "background.h"
 #include <math.h>
 #include "heart.h"
+#include <stdio.h>
+#include <iostream>
+#include <chrono>
+#include <ctime>    
 #pragma comment(lib, "Winmm.lib")
 
 
@@ -25,6 +29,8 @@ LastManStanding::LastManStanding()
 	instructionsText = new TextDX();
 	quitText = new TextDX();
 	menuOptionNo = 2;
+	countDownOn = false;
+	
 }
 
 //=============================================================================
@@ -58,6 +64,9 @@ void LastManStanding::initialize(HWND hwnd)
 	if(!heartTexture.initialize(graphics, HEART_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
 
+
+	fontBig.initialize(graphics, 256, false, false, "Arial Bold");
+	fontBig.setFontColor(graphicsNS::RED);
 	// init the texts for menu 
 	if (startText->initialize(graphics, 30, false, false, "Arial") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
@@ -136,6 +145,26 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+	long int timePassedint = static_cast<long int> (timePassed);
+	if (countDownOn)
+	{
+		countDownTimer = COUNT_DOWN - timePassedint;
+		if (countDownTimer <= 0)
+		{
+			countDownOn = false;
+			camera->setCameraHorizontalSpeed(0.3f);
+		}
+	}
+	float cameraDifferenceX = 0;
+	float cameraDifferenceY = 0;
+	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+	{
+		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+	}
+	if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+	{
+		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+	}
 	if (menuOn)
 	{
 		camera->setCameraHorizontalSpeed(0.0f);
@@ -177,7 +206,7 @@ void LastManStanding::update(Timer *gameTimer)
 			if (menuOptionNo == 2)
 			{
 				menuOn = !menuOn;
-				camera->setCameraHorizontalSpeed(0.3f);
+				t = std::time(0);
 			}
 			else if (menuOptionNo == 1)
 			{
@@ -202,36 +231,15 @@ void LastManStanding::update(Timer *gameTimer)
 		}
 		*/
 	}
+		timePassed = std::time(0) - t;
 		BackgroundImage.update(frameTime);
 		player1->update(frameTime);
 		if (camera) {
 			camera->Update();
 		}
-		if (!menuOn)
+		if (!menuOn) // basically all code for unpaused game should be place inside here boiis
 		{
-			float cameraDifferenceX = 0;
-			float cameraDifferenceY = 0;
-			if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
-			{
-				cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
-			}
-			if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
-			{
-				cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
-			}
-			for each (Heart *heartTemp in heartList)
-			{
-				heartTemp->setX(cameraDifferenceX + GAME_WIDTH / 20 * heartTemp->getHeartNo());
-				heartTemp->update(frameTime);
-
-			}
-			for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
-			{
-				if (heartList.size() > 0)
-				{
-					heartList.pop_back();
-				}
-			}
+			this->startGame(cameraDifferenceX, cameraDifferenceY);
 
 
 			if (input->wasKeyPressed(VK_SPACE))
@@ -258,6 +266,7 @@ void LastManStanding::update(Timer *gameTimer)
 			obstaclesMovement();
 
 		}
+	
 
 	
 }
@@ -357,6 +366,18 @@ void LastManStanding::render()
 		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 30 - GAME_HEIGHT / 2);
 		quitText->print("QUIT GAME", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 60 - GAME_HEIGHT / 2);
 	}
+	if (countDownOn)
+	{
+		if (countDownTimer - timePassed > 0)
+		{
+			fontBig.print(to_string(countDownTimer - timePassed), camera->getCameraX(), camera->getCameraY());
+		}
+		else if (countDownTimer - timePassed == 0)
+		{
+			fontBig.print("GO!", camera->getCameraX(), camera->getCameraY());
+		}
+	}
+
 	graphics->spriteEnd();                  // end drawing sprites
 
 }
@@ -387,5 +408,24 @@ void LastManStanding::resetAll()
 {
 	return;
 
+}
+void LastManStanding::startGame(float cameraDifferenceX, float cameraDifferenceY)
+{
+	
+	for each (Heart *heartTemp in heartList)
+	{
+		heartTemp->setX(cameraDifferenceX + GAME_WIDTH / 20 * heartTemp->getHeartNo());
+		heartTemp->update(frameTime);
+
+	}
+	for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
+	{
+		if (heartList.size() > 0)
+		{
+			heartList.pop_back();
+		}
+	}
+	countDownTimer = COUNT_DOWN;
+	countDownOn = true;
 }
 

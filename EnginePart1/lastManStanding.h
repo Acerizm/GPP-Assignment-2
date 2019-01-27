@@ -45,14 +45,18 @@ protected:
 	Obstacle *Obstacle1;
 
 	Camera *camera;
-
+	TextDX  fontBig;
 	//menu options here 
 	TextDX *startText;
 	TextDX *instructionsText;
 	TextDX *quitText;
 	int menuOptionNo;
 	bool menuOn;
-
+	bool countDownOn;
+	const int COUNT_DOWN = 3;
+	int countDownTimer;
+	time_t t;
+	time_t timePassed;
 public:
 	// Constructor
 	LastManStanding();
@@ -70,6 +74,8 @@ public:
 	void render();      // "
 	void releaseAll();
 	void resetAll();
+
+	void startGame(float cameraDifferenceX, float cameraDifferenceY);
 
 };
 
