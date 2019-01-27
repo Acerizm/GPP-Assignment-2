@@ -28,6 +28,7 @@ LastManStanding::LastManStanding()
 	startText = new TextDX();
 	instructionsText = new TextDX();
 	quitText = new TextDX();
+	scoreText = new TextDX();
 	menuOptionNo = 2;
 	countDownOn = false;
 	
@@ -74,6 +75,9 @@ void LastManStanding::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
 	if (quitText->initialize(graphics, 30, false, false, "Arial") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+
+	if (scoreText->initialize(graphics,30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing scoreText font"));
 
 
 	BackgroundImage.setCurrentFrame(0);
@@ -149,7 +153,7 @@ void LastManStanding::update(Timer *gameTimer)
 	if (countDownOn)
 	{
 		countDownTimer = COUNT_DOWN - timePassedint;
-		if (countDownTimer <= 0)
+		if (countDownTimer < 0)
 		{
 			countDownOn = false;
 			camera->setCameraHorizontalSpeed(0.3f);
@@ -157,6 +161,11 @@ void LastManStanding::update(Timer *gameTimer)
 	}
 	float cameraDifferenceX = 0;
 	float cameraDifferenceY = 0;
+	int tempScore = 0;
+	int distanceTravelled = 0;
+	
+
+
 	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
 	{
 		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
@@ -165,6 +174,14 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
 	}
+	for (int i = 0; i < cameraDifferenceX; i++)
+	{
+		tempScore = player1->getNumberOfLifes();
+		player1->setScore(player1->getScore() + tempScore);
+	}
+	//scoring system boiis
+	
+
 	if (menuOn)
 	{
 		camera->setCameraHorizontalSpeed(0.0f);
@@ -207,6 +224,7 @@ void LastManStanding::update(Timer *gameTimer)
 			{
 				menuOn = !menuOn;
 				t = std::time(0);
+				countDownOn = true;
 			}
 			else if (menuOptionNo == 1)
 			{
@@ -240,9 +258,15 @@ void LastManStanding::update(Timer *gameTimer)
 		if (!menuOn) // basically all code for unpaused game should be place inside here boiis
 		{
 			this->startGame(cameraDifferenceX, cameraDifferenceY);
+				
+			
+			if (input->wasKeyPressed(VK_ESCAPE))
+			{
+				menuOn = !menuOn;
+			}
 
-
-			if (input->wasKeyPressed(VK_SPACE))
+			player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
+			if (input->wasKeyPressed(VK_SPACE) && !countDownOn)
 			{
 				float currentAngle = player1->getRadians();
 				player1->startJump(currentAngle, frameTime);
@@ -250,22 +274,19 @@ void LastManStanding::update(Timer *gameTimer)
 
 
 			}
-			
+
 			if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
 			{
 				player1->setFrameDelay(AnimationDelayStop);
 				player1->setCurrentFrame(0);
 			}
-			if (input->wasKeyPressed(VK_ESCAPE))
-			{
-				menuOn = !menuOn;
-			}
-
-			player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
 
 			obstaclesMovement();
 
 		}
+		
+		
+		
 	
 
 	
@@ -351,6 +372,7 @@ void LastManStanding::render()
 	BackgroundImage.draw();
 	player1->draw();
 	Obstacle1->draw();
+	scoreText->print("Score: "+ to_string(player1->getScore()), camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
 	if (camera)
 	{
 		camera->setTransform(graphics);
@@ -426,6 +448,6 @@ void LastManStanding::startGame(float cameraDifferenceX, float cameraDifferenceY
 		}
 	}
 	countDownTimer = COUNT_DOWN;
-	countDownOn = true;
+	
 }
 

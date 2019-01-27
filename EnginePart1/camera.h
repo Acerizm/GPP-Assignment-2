@@ -33,6 +33,7 @@ public:
 	float getCameraX();
 	float getCameraY();
 	void setCameraHorizontalSpeed(float i);
+	float returnCameraDifferenceX();
 
 };
 

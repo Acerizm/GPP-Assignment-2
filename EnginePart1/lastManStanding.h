@@ -50,6 +50,7 @@ protected:
 	TextDX *startText;
 	TextDX *instructionsText;
 	TextDX *quitText;
+	TextDX *scoreText;
 	int menuOptionNo;
 	bool menuOn;
 	bool countDownOn;

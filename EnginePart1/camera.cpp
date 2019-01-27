@@ -62,3 +62,13 @@ void Camera::setCameraHorizontalSpeed(float i)
 {
 	cameraHorizontalSpeed = i;
 }
+
+float Camera::returnCameraDifferenceX()
+{
+	int i = 0;
+	if ((this->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+	{
+		i = (this->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+	}
+	return i;
+}
