@@ -142,19 +142,19 @@ void LastManStanding::update(Timer *gameTimer)
 		if (menuOptionNo == 2)
 		{
 			startText->setFontColor(graphicsNS::YELLOW);
-			instructionsText->setFontColor(graphicsNS::BLACK);
-			quitText->setFontColor(graphicsNS::BLACK);
+			instructionsText->setFontColor(graphicsNS::WHITE);
+			quitText->setFontColor(graphicsNS::WHITE);
 		}
 		if (menuOptionNo == 1)
 		{
-			startText->setFontColor(graphicsNS::BLACK);
+			startText->setFontColor(graphicsNS::WHITE);
 			instructionsText->setFontColor(graphicsNS::YELLOW);
-			quitText->setFontColor(graphicsNS::BLACK);
+			quitText->setFontColor(graphicsNS::WHITE);
 		}
 		if (menuOptionNo == 0)
 		{
-			startText->setFontColor(graphicsNS::BLACK);
-			instructionsText->setFontColor(graphicsNS::BLACK);
+			startText->setFontColor(graphicsNS::WHITE);
+			instructionsText->setFontColor(graphicsNS::WHITE);
 			quitText->setFontColor(graphicsNS::YELLOW);
 		}
 
@@ -352,6 +352,7 @@ void LastManStanding::render()
 	}
 	if (menuOn)
 	{
+		BackgroundImage.draw();
 		startText->print("START", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() - GAME_HEIGHT / 2);
 		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 30 - GAME_HEIGHT / 2);
 		quitText->print("QUIT GAME", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 60 - GAME_HEIGHT / 2);
