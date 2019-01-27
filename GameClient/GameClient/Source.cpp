@@ -4,6 +4,16 @@
 #include <WinSock2.h>
 #include <iostream>
 
+SOCKET Connection;
+
+void ClientThread() {
+	char buffer[256];
+	while (true) {
+		recv(Connection, buffer, sizeof(buffer), NULL);
+		std::cout << buffer << std::endl;
+	}
+}
+
 int main() {
 
 	//Winsock Startup
@@ -20,7 +30,7 @@ int main() {
 	addr.sin_port = htons(1111); //port
 	addr.sin_family = AF_INET; //IPv4 socket
 
-	SOCKET Connection = socket(AF_INET, SOCK_STREAM, NULL); //Set connection socket
+	Connection = socket(AF_INET, SOCK_STREAM, NULL); //Set connection socket
 	if (connect(Connection, (SOCKADDR*)&addr, sizeofaddr) != 0) {
 		//if we are unable to connect
 		MessageBoxA(NULL, "Failed to Connect", "Error", MB_OK | MB_ICONERROR);
@@ -28,10 +38,13 @@ int main() {
 	}
 
 	std::cout << "Connected" << std::endl;
-	char MOTD[256];
-	recv(Connection, MOTD, sizeof(MOTD), NULL); //Receive Message of the day buffer into the MOTD array
-	std::cout << "MOTD: " << MOTD << std::endl;
-	system("pause");
-
+	CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)ClientThread, NULL, NULL, NULL);
+	
+	char buffer[256];
+	while (true) {
+		std::cin.getline(buffer, sizeof(buffer));
+		send(Connection, buffer, sizeof(buffer),NULL);
+		Sleep(10);
+	}
 	return 0;
 }
