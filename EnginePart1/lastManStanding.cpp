@@ -162,9 +162,6 @@ void LastManStanding::update(Timer *gameTimer)
 	float cameraDifferenceX = 0;
 	float cameraDifferenceY = 0;
 	int tempScore = 0;
-	int distanceTravelled = 0;
-	
-
 
 	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
 	{
@@ -174,11 +171,8 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
 	}
-	for (int i = 0; i < cameraDifferenceX; i++)
-	{
-		tempScore = player1->getNumberOfLifes();
-		player1->setScore(player1->getScore() + tempScore);
-	}
+
+	
 	//scoring system boiis
 	
 
@@ -258,7 +252,23 @@ void LastManStanding::update(Timer *gameTimer)
 		if (!menuOn) // basically all code for unpaused game should be place inside here boiis
 		{
 			this->startGame(cameraDifferenceX, cameraDifferenceY);
-				
+			
+			//scoring system created by your boy
+			if (i == cameraDifferenceX)
+			{
+				counted = true;
+			}
+			if (i < cameraDifferenceX)
+			{
+				counted = false;
+				i = i + 50;  // adding the damn score every 50 pixels bois
+			}
+			while (counted == false)
+			{
+				tempScore = player1->getNumberOfLifes();
+				player1->setScore(player1->getScore() + tempScore);
+				counted = true;
+			}
 			
 			if (input->wasKeyPressed(VK_ESCAPE))
 			{

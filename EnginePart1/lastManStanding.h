@@ -58,6 +58,8 @@ protected:
 	int countDownTimer;
 	time_t t;
 	time_t timePassed;
+	bool counted = false;
+	int i = 0;
 public:
 	// Constructor
 	LastManStanding();
