@@ -384,9 +384,17 @@ void LastManStanding::render()
 	if (menuOn)
 	{
 		BackgroundImage.draw();
-		startText->print("START", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() - GAME_HEIGHT / 2);
-		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 30 - GAME_HEIGHT / 2);
-		quitText->print("QUIT GAME", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + 60 - GAME_HEIGHT / 2);
+		int textWidthStart = startText->GetTextWidth("START", startText->getFont());
+		int textHeightStart = startText->GetTextHeight("START", startText->getFont());
+		startText->print("START", camera->getCameraX() - textWidthStart/2, camera->getCameraY() - textHeightStart/2);
+
+		int textWidthInstructions = instructionsText->GetTextWidth("INSTRUCTIONS", instructionsText->getFont());
+		int textHeightInstructions = instructionsText->GetTextHeight("INSTRUCTIONS", instructionsText->getFont());
+		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - textWidthInstructions / 2, camera->getCameraY() + 30 - textHeightInstructions / 2);
+
+		int textWidthQuit = quitText->GetTextWidth("QUIT GAME", quitText->getFont());
+		int textHeightQuit = quitText->GetTextHeight("QUIT GAME", quitText->getFont());
+		quitText->print("QUIT GAME", camera->getCameraX() - (textWidthQuit / 2), camera->getCameraY() + 60 - textHeightQuit / 2);
 	}
 	if (countDownOn)
 	{
