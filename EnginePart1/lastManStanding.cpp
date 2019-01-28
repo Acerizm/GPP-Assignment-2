@@ -27,6 +27,7 @@ LastManStanding::LastManStanding()
 	/*srand(time(NULL));
 	hpText = new TextDX();
 */
+	currentGameState = "IN-LOBBY";
 }
 
 //=============================================================================
@@ -47,58 +48,27 @@ LastManStanding::~LastManStanding()
 void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
-	player1 = new Player();
-	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
-	//create the camera
-	//camera = new Camera(GAME_WIDTH,GAME_HEIGHT,0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f),&mainPlayer);
-
-	if (!BackgroundTexture.initialize(graphics, Background))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
-	if (!BackgroundImage.initialize(graphics, backgroundWidth, backgroundHeight, 0, &BackgroundTexture)) {
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
-	}
-	if(!heartTexture.initialize(graphics, HEART_IMAGE))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
-
-	BackgroundImage.setCurrentFrame(0);
-	
-
-	BackgroundImage.setX(0);
-	BackgroundImage.setY(0);
-	if (!Player1Texture.initialize(graphics, PLAYER))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
-	if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture)) 
-	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
-	}
-
-	player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-	player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
-	player1->setFrameDelay(AnimationDelayStop);
-	player1->setCurrentFrame(0);
-	player1->setScale(1);
-	player1->setY(620 - player1->getHeight());
-	player1->setDegrees(315);
-	//player1->setCollisionRadius(30.0f);
-
-	for (int i = 0; i < player1->getNumberOfLifes(); i++)
-	{
-		Heart *heartTemp = new Heart();
-		if (!heartTemp->initialize(this,heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
-		heartTemp->setY(0);
-		heartTemp->setHeartNo(i);
-		heartTemp->setScale(heartNS::HEART_SCALE);
-		heartTemp->setX(GAME_WIDTH / 20 * i);
-		heartList.push_back(heartTemp);
-	}
-
 	obstaclesInitialize(true);
 
+	// Connect to the server //////////////////////////////////////////////////////////////
 	gameClient = new GameClient();
 	gameClient->createClient();
 	gameClient->ConnectToServer();
+	/////////////////////////////////////////////////////////////////////////////////////////
+
+	//Initialize the background for the main menu
+	if (!LobbyBackgroundTexture.initialize(graphics, LobbyBackground))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
+	if (!LobbyBackgroundImage.initialize(graphics, LobbyBackgroundWidth, LobbyBackgroundHeight, 0, &LobbyBackgroundTexture)) {
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbybackgroundImage"));
+	}
+	LobbyBackgroundImage.setCurrentFrame(0);
+	LobbyBackgroundImage.setX(0);
+	LobbyBackgroundImage.setY(0);
+
+	//create the camera
+	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
 	return;
 }
 
@@ -133,6 +103,42 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+
+	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
+	{
+		player1 = new Player();
+		if (!Player1Texture.initialize(graphics, PLAYER))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
+		if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture))
+		{
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+		}
+
+		player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+		player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+		player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
+		player1->setFrameDelay(AnimationDelayStop);
+		player1->setCurrentFrame(0);
+		player1->setScale(1);
+		player1->setY(620 - player1->getHeight());
+		player1->setDegrees(315);
+
+		if (!heartTexture.initialize(graphics, HEART_IMAGE))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
+
+		for (int i = 0; i < player1->getNumberOfLifes(); i++)
+		{
+			Heart *heartTemp = new Heart();
+			if (!heartTemp->initialize(this, heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
+			heartTemp->setY(0);
+			heartTemp->setHeartNo(i);
+			heartTemp->setScale(heartNS::HEART_SCALE);
+			heartTemp->setX(GAME_WIDTH / 20 * i);
+			heartList.push_back(heartTemp);
+		}
+
+	} // end of if statement
 	gameClient->sendData("Haiqel Test");
 	if (gameClient->getCurrentClient()->getData() != "")
 		string test = gameClient->getCurrentClient()->getData();
@@ -229,7 +235,7 @@ void LastManStanding::render()
 {
 	
 	graphics->spriteBegin();                // begin drawing sprites
-	BackgroundImage.draw();
+	LobbyBackgroundImage.draw();
 	player1->draw();
 	Obstacle1->draw();
 	if (camera)

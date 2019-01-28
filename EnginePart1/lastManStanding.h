@@ -19,6 +19,11 @@ using namespace std;
 //=============================================================================
 // Create game class
 //=============================================================================
+
+namespace GameStates {
+
+};
+
 class LastManStanding : public Game
 {
 protected:
@@ -47,6 +52,13 @@ protected:
 	Camera *camera;
 
 	GameClient *gameClient;
+
+	//I need to store the game's state
+	string currentGameState;
+
+	TextureManager LobbyBackgroundTexture;
+	Image LobbyBackgroundImage;
+
 public:
 	// Constructor
 	LastManStanding();

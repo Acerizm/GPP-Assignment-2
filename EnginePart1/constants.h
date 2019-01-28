@@ -55,6 +55,10 @@ const char Background[] = "pictures\\main.jpg";
 const int backgroundHeight = 720;
 const int backgroundWidth = 12800;
 
+const char LobbyBackground[] = "pictures\\LobbyBackground.jpg";
+const int LobbyBackgroundHeight = 720;
+const int LobbyBackgroundWidth = 1280;
+
 const int heartWidth = 136;
 const int heartHeight = 120;
 //audio files here
