@@ -106,8 +106,16 @@ void LastManStanding::update(Timer *gameTimer)
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
 	{
 		LobbyBackgroundImage.update(frameTime);
+		if (camera) {
+			camera->Update();
+		}
+
+	} // end of if statement for currentGameState = "IN-LOBBY"
+
+	if (currentGameState == "LOADING-GAME") 
+	{
+		//add an algorithm here to check how many players are there in the server
 		player1 = new Player();
-		//create the camera
 		if (!Player1Texture.initialize(graphics, PLAYER))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
 		if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture))
@@ -139,11 +147,8 @@ void LastManStanding::update(Timer *gameTimer)
 			heartList.push_back(heartTemp);
 		}
 
-		if (camera) {
-			camera->Update();
-		}
+	}
 
-	} // end of if statement
 	if (currentGameState == "IN-GAME") 
 	{
 		gameClient->sendData("Haiqel Test");
@@ -196,7 +201,8 @@ void LastManStanding::update(Timer *gameTimer)
 		player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
 
 		obstaclesMovement();
-	}
+		
+	} //end of if statement for currentGameState == "IN-GAME"
 }
 
 
