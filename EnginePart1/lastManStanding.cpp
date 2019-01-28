@@ -48,6 +48,8 @@ LastManStanding::~LastManStanding()
 void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
+	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+
 	obstaclesInitialize(true);
 
 	// Connect to the server //////////////////////////////////////////////////////////////
@@ -66,8 +68,6 @@ void LastManStanding::initialize(HWND hwnd)
 	LobbyBackgroundImage.setX(0);
 	LobbyBackgroundImage.setY(0);
 
-	//create the camera
-	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 	return;
 }
@@ -106,7 +106,9 @@ void LastManStanding::update(Timer *gameTimer)
 
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
 	{
+		LobbyBackgroundImage.update(frameTime);
 		player1 = new Player();
+		//create the camera
 		if (!Player1Texture.initialize(graphics, PLAYER))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
 		if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture))
@@ -139,57 +141,59 @@ void LastManStanding::update(Timer *gameTimer)
 		}
 
 	} // end of if statement
-	gameClient->sendData("Haiqel Test");
-	if (gameClient->getCurrentClient()->getData() != "")
-		string test = gameClient->getCurrentClient()->getData();
+	if (currentGameState == "IN-GAME") 
+	{
+		gameClient->sendData("Haiqel Test");
+		if (gameClient->getCurrentClient()->getData() != "")
+			string test = gameClient->getCurrentClient()->getData();
 
-	BackgroundImage.update(frameTime);
-	player1->update(frameTime);
-	float cameraDifferenceX = 0;
-	float cameraDifferenceY = 0;
-	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
-	{
-		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
-	}
-	if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
-	{
-		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
-	}
-	for each (Heart *heartTemp in heartList)
-	{
-		heartTemp->setX(cameraDifferenceX + GAME_WIDTH/20 *heartTemp->getHeartNo());
-		heartTemp->update(frameTime);
-		
-	}
-	for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
-	{
-		if (heartList.size() > 0)
+		player1->update(frameTime);
+		float cameraDifferenceX = 0;
+		float cameraDifferenceY = 0;
+		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
 		{
-			heartList.pop_back();
+			cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
 		}
-	}
+		if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+		{
+			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+		}
+		for each (Heart *heartTemp in heartList)
+		{
+			heartTemp->setX(cameraDifferenceX + GAME_WIDTH / 20 * heartTemp->getHeartNo());
+			heartTemp->update(frameTime);
+
+		}
+		for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
+		{
+			if (heartList.size() > 0)
+			{
+				heartList.pop_back();
+			}
+		}
 
 
-	if (input->wasKeyPressed(VK_SPACE))
-	{
-		float currentAngle = player1->getRadians();
-		player1->startJump(currentAngle,frameTime);
-		player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
-		
-		
-	}
-	if (camera) {
-		camera->Update();
-	}
-	if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
-	{
-		player1->setFrameDelay(AnimationDelayStop);
-		player1->setCurrentFrame(0);
-	}
-	
-	player1->jump(frameTime,cameraDifferenceX,cameraDifferenceY);
+		if (input->wasKeyPressed(VK_SPACE))
+		{
+			float currentAngle = player1->getRadians();
+			player1->startJump(currentAngle, frameTime);
+			player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 
-	obstaclesMovement();
+
+		}
+		if (camera) {
+			camera->Update();
+		}
+		if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+		{
+			player1->setFrameDelay(AnimationDelayStop);
+			player1->setCurrentFrame(0);
+		}
+
+		player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
+
+		obstaclesMovement();
+	}
 }
 
 
@@ -236,16 +240,16 @@ void LastManStanding::render()
 	
 	graphics->spriteBegin();                // begin drawing sprites
 	LobbyBackgroundImage.draw();
-	player1->draw();
-	Obstacle1->draw();
+	//player1->draw();
+	//Obstacle1->draw();
 	if (camera)
 	{
 		camera->setTransform(graphics);
 	}
-	for each (Heart *heartTemp in heartList)
+	/*for each (Heart *heartTemp in heartList)
 	{
 		heartTemp->draw();
-	}
+	}*/
 	graphics->spriteEnd();                  // end drawing sprites
 
 }
