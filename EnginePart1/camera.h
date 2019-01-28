@@ -4,7 +4,7 @@
 
 #include <DirectXMath.h>
 #include "player.h"
-
+#include <string>
 class Camera
 {
 private:
@@ -16,6 +16,7 @@ private:
 	float cameraX;
 	float cameraY;
 	float cameraHorizontalSpeed;
+	string cameraState;
 
 public:
 	Player * mainPlayer;
@@ -32,6 +33,12 @@ public:
 
 	float getCameraX();
 	float getCameraY();
+	void setCameraState(string value) {
+		this->cameraState = value;
+	}
+	string getCameraState() {
+		return this->cameraState;
+	}
 
 };
 

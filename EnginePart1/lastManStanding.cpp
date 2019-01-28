@@ -48,7 +48,6 @@ LastManStanding::~LastManStanding()
 void LastManStanding::initialize(HWND hwnd)
 {
 	Game::initialize(hwnd); // throws GameError
-	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 	obstaclesInitialize(true);
 
@@ -68,7 +67,7 @@ void LastManStanding::initialize(HWND hwnd)
 	LobbyBackgroundImage.setX(0);
 	LobbyBackgroundImage.setY(0);
 
-
+	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	return;
 }
 
@@ -138,6 +137,10 @@ void LastManStanding::update(Timer *gameTimer)
 			heartTemp->setScale(heartNS::HEART_SCALE);
 			heartTemp->setX(GAME_WIDTH / 20 * i);
 			heartList.push_back(heartTemp);
+		}
+
+		if (camera) {
+			camera->Update();
 		}
 
 	} // end of if statement
@@ -239,9 +242,9 @@ void LastManStanding::render()
 {
 	
 	graphics->spriteBegin();                // begin drawing sprites
-	LobbyBackgroundImage.draw();
 	//player1->draw();
 	//Obstacle1->draw();
+	LobbyBackgroundImage.draw();
 	if (camera)
 	{
 		camera->setTransform(graphics);
