@@ -11,6 +11,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 #include <stdlib.h>
+#include "GameClient.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -94,6 +95,10 @@ void LastManStanding::initialize(HWND hwnd)
 	}
 
 	obstaclesInitialize(true);
+
+	gameClient = new GameClient();
+	gameClient->createClient();
+	gameClient->ConnectToServer();
 	return;
 }
 
@@ -128,6 +133,9 @@ std::string to_format(const int number) {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+	gameClient->sendData("Haiqel Test");
+	if (gameClient->getCurrentClient()->getData() != "")
+		string test = gameClient->getCurrentClient()->getData();
 
 	BackgroundImage.update(frameTime);
 	player1->update(frameTime);
@@ -202,40 +210,6 @@ void LastManStanding::obstaclesMovement()
 //=============================================================================
 void LastManStanding::collisions(Timer *gameTimer) {
 	
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////
-	//Scenario : zombie collided with one another
-	// Darren
-	/*for each (Zombie *zombie in zombieList) 
-	{
-		for each (Zombie *zombie2 in zombieList) 
-		{
-			if (zombie == zombie2)
-				continue;
-			else 
-			{
-				if (zombie->collidesWith(*zombie2, collisionVector)) 
-				{
-					VECTOR2 unitCollisionVector;
-					(zombie)->bounce(collisionVector, *zombie2);
-					Vector2Normalize(&unitCollisionVector, &collisionVector);
-
-					(zombie)->setX(zombie->getX() - unitCollisionVector.x*frameTime * 300.0f);
-					(zombie)->setSpriteDataX(zombie->getX());
-					(zombie)->setY(zombie->getY() - unitCollisionVector.y*frameTime * 300.0f);
-					(zombie)->setSpriteDataY(zombie->getY());
-					(zombie2)->bounce(collisionVector, *zombie);
-					Vector2Normalize(&unitCollisionVector, &collisionVector);
-
-					(zombie2)->setX(zombie2->getX() + unitCollisionVector.x*frameTime * 300.0f);
-					(zombie2)->setSpriteDataX(zombie2->getX());
-					(zombie2)->setY(zombie2->getY() + unitCollisionVector.y*frameTime * 300.0f);
-					(zombie2)->setSpriteDataY(zombie2->getY());
-
-				}
-			}
-		}
-	}*/
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	VECTOR2 collisionVector;
 	//Event/Scenario:

@@ -12,7 +12,10 @@ bool Client::ProcessPacketType(PacketType packetType)
 		std::string Message; //string to store our message we received
 		if (!GetString(Message)) //Get the chat message and store it in variable: Message
 			return false; //If we do not properly get the chat message, return false
-		std::cout << Message << std::endl; //Display the message to the user
+		//change the function here
+
+		//std::cout << Message << std::endl; //Display the message to the user
+		setData(Message);
 		break;
 	}
 	case PacketType::FileTransferByteBuffer:
@@ -56,8 +59,9 @@ void Client::ClientThread(Client & client)
 			break;
 		if (!client.GetPacketType(PacketType)) //Get PacketType type
 			break; //If there is an issue getting the PacketType type, exit this loop
-		if (!client.ProcessPacketType(PacketType)) //Process PacketType (PacketType type)
+		if (!client.ProcessPacketType(PacketType)) { //Process PacketType (PacketType type)		
 			break; //If there is an issue processing the PacketType, exit this loop
+		}
 	}
 	std::cout << "Lost connection to the server.\n";
 	client.m_terminateThreads = true;

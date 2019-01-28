@@ -3,6 +3,7 @@
 #include <string> //For std::string
 #include "FileTransferData.h" //For FileTransferData class
 #include "PacketManager.h" //For PacketManager class
+#include <string>
 
 class Client
 {
@@ -12,6 +13,12 @@ public: //Public functions
 	void Disconnect();
 	void SendString(const std::string & str);
 	bool RequestFile(const std::string & fileName);
+	void setData(std::string value) {
+		this->data = value;
+	}
+	std::string getData() {
+		return this->data;
+	}
 	~Client();
 private: //Private functions
 	bool CloseConnection();
@@ -25,6 +32,7 @@ private: //Private functions
 	bool Getint32_t(std::int32_t & int32_t);
 	bool GetPacketType(PacketType & packetType);
 	bool GetString(std::string & str);
+
 private: //Private variables
 	bool m_terminateThreads = false;
 	bool m_isConnected = false;
@@ -35,4 +43,5 @@ private: //Private variables
 
 	std::thread m_pst; //Create thread to send packets
 	std::thread m_ct; //Create thread to listen to server
+	std::string data; //store the data here
 };

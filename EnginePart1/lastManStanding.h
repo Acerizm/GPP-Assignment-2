@@ -13,6 +13,7 @@
 #include <vector>
 #include "background.h"
 #include "camera.h"
+#include "GameClient.h"
 using namespace std;
 
 //=============================================================================
@@ -44,6 +45,8 @@ protected:
 	Obstacle *Obstacle1;
 
 	Camera *camera;
+
+	GameClient *gameClient;
 public:
 	// Constructor
 	LastManStanding();
