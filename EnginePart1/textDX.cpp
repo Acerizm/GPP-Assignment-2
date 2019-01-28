@@ -114,3 +114,34 @@ void TextDX::onResetDevice()
 		return;
 	dxFont->OnResetDevice();
 }
+int TextDX::GetTextWidth(const std::string &str, LP_DXFONT pFont)
+{
+	RECT rcRect = { 0,0,0,0 };
+	if (pFont)
+	{
+		// calculate required rect
+		dxFont->DrawTextA(graphics->getSprite(), str.c_str(), -1, &rcRect, DT_CALCRECT, color);
+	}
+
+	// return width
+	return rcRect.right - rcRect.left;
+}
+
+int TextDX::GetTextHeight(const std::string & str, LP_DXFONT pFont)
+{
+	RECT rcRect = { 0,0,0,0 };
+	if (pFont)
+	{
+		// calculate required rect
+		dxFont->DrawTextA(graphics->getSprite(), str.c_str(), -1, &rcRect, DT_CALCRECT, color);
+	}
+
+	// return width
+	return  rcRect.bottom - rcRect.top;
+}
+
+LP_DXFONT TextDX::getFont()
+{
+	return dxFont;
+}
+

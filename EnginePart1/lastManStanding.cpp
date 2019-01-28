@@ -392,11 +392,15 @@ void LastManStanding::render()
 	{
 		if (countDownTimer - timePassed > 0)
 		{
-			fontBig.print(to_string(countDownTimer - timePassed), camera->getCameraX(), camera->getCameraY());
+			int textWidth = fontBig.GetTextWidth(to_string(countDownTimer - timePassed), fontBig.getFont());
+			int textHeight = fontBig.GetTextHeight(to_string(countDownTimer - timePassed), fontBig.getFont());
+			fontBig.print(to_string(countDownTimer - timePassed), camera->getCameraX() - textWidth/2, camera->getCameraY() - textHeight/2);
 		}
 		else if (countDownTimer - timePassed == 0)
 		{
-			fontBig.print("GO!", camera->getCameraX(), camera->getCameraY());
+			int textWidth = fontBig.GetTextWidth("GO!", fontBig.getFont());
+			int textHeight = fontBig.GetTextHeight("GO!", fontBig.getFont());
+			fontBig.print("GO!", camera->getCameraX() - textWidth / 2, camera->getCameraY() - textHeight / 2);
 		}
 	}
 
