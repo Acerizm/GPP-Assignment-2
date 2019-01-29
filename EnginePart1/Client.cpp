@@ -2,7 +2,6 @@
 #include <Ws2tcpip.h> //for inet_pton
 #pragma comment(lib,"ws2_32.lib") //Required for WinSock
 #include <iostream> //for std::cout
-
 bool Client::ProcessPacketType(PacketType packetType)
 {
 	switch (packetType)
@@ -15,6 +14,9 @@ bool Client::ProcessPacketType(PacketType packetType)
 		//change the function here
 
 		//std::cout << Message << std::endl; //Display the message to the user
+
+		//serialize the data here
+
 		setData(Message);
 		break;
 	}

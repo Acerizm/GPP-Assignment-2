@@ -149,6 +149,9 @@
     <ClInclude Include="GameClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SocketData.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram1.cd" />

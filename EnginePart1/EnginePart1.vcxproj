@@ -134,6 +134,7 @@
     <ClInclude Include="PacketStructs.h" />
     <ClInclude Include="PacketType.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="SocketData.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="timer.h" />
   </ItemGroup>

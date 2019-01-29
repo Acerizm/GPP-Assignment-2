@@ -28,6 +28,7 @@ LastManStanding::LastManStanding()
 	hpText = new TextDX();
 */
 	currentGameState = "IN-LOBBY";
+	socketData = new SocketData();
 }
 
 //=============================================================================
@@ -118,7 +119,10 @@ void LastManStanding::update(Timer *gameTimer)
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
 	{
 		//send what data to the other clients
-		gameClient->sendData();
+
+		//before i send the data; add it to the SocketData class
+		socketData->setID(1);
+
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
 			camera->Update();

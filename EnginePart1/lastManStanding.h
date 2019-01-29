@@ -14,6 +14,8 @@
 #include "background.h"
 #include "camera.h"
 #include "GameClient.h"
+#include "SocketData.h"
+
 using namespace std;
 
 //=============================================================================
@@ -56,6 +58,8 @@ protected:
 
 	TextureManager ID1Texture;
 	Image ID1Image;
+
+	SocketData *socketData;
 
 public:
 	// Constructor
