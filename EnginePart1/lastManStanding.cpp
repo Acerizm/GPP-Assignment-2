@@ -130,13 +130,17 @@ void LastManStanding::update(Timer *gameTimer)
 		socketData->setYCoordinate(100);
 		//Send the data to the server with the JsonFormatted
 		gameClient->sendData(socketData->getJsonData());
+		string test = socketData->getJsonData();
 		string receivedJson = gameClient->getCurrentClient()->getData();
 		//Use the document dom from rapidJson to access the dictionary
 		//Create a new SocketData object for the received data
 		tempSocketData = new SocketData();
-		Document document = tempSocketData->getDocument(receivedJson);
-		tempSocketData->setID(stoi(document["ID"].GetString()));
-		int fakeId = tempSocketData->getID();
+		if (receivedJson != "") {
+			Document document = tempSocketData->getDocument(receivedJson);
+			string s1 = document["ID"].GetString();
+			tempSocketData->setID(stoi(document["ID"].GetString()));
+			int fakeId = tempSocketData->getID();
+		}
 
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
