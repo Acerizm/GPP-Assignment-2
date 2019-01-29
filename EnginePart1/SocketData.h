@@ -14,9 +14,9 @@ class SocketData {
 private:
 
 	//attributes
-	int ID;
-	float XCoordinate;
-	float YCoordinate;
+	int ID = 0;
+	float XCoordinate = 0;
+	float YCoordinate = 0;
 
 
 

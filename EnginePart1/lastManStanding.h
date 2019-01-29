@@ -62,6 +62,8 @@ protected:
 	SocketData *socketData;
 	SocketData *tempSocketData;
 
+	int currentPlayerID =0;
+
 public:
 	// Constructor
 	LastManStanding();

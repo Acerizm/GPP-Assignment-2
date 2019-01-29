@@ -122,32 +122,32 @@ void LastManStanding::update(Timer *gameTimer)
 
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
 	{
-		//send what data to the other clients
-
-		//before i send the data; add it to the SocketData class
-		socketData->setID(1);
-		socketData->setXCoordinate(100);
-		socketData->setYCoordinate(100);
-		//Send the data to the server with the JsonFormatted
-		gameClient->sendData(socketData->getJsonData());
-		string test = socketData->getJsonData();
+		//1. Check if there is data coming from other clients
 		string receivedJson = gameClient->getCurrentClient()->getData();
-		//Use the document dom from rapidJson to access the dictionary
 		//Create a new SocketData object for the received data
 		tempSocketData = new SocketData();
 		if (receivedJson != "") {
 			Document document = tempSocketData->getDocument(receivedJson);
-			int s1 = document["id"].GetInt();
-			tempSocketData->setID(stoi(document["ID"].GetString()));
-			int fakeId = tempSocketData->getID();
-		}
+			//int s1 = document["id"].GetInt();
+			tempSocketData->setID(document["id"].GetInt());
+			//tempID is the other player's connection
+			int tempID = tempSocketData->getID();
 
+			//check if the ID has been taken up
+			// since this is in a loop, no need to for-loop to check
+			// this code is broken must fix in next patch
+			if (currentPlayerID == tempID) {
+				currentPlayerID ++;
+				socketData->setID(currentPlayerID);
+			}
+		}
+		//Send the data to the server with the JsonFormatted
+		gameClient->sendData(socketData->getJsonData());
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
 			camera->Update();
 		}
 		ID1Image.update(frameTime);
-		//change the state later
 
 	} // end of if statement for currentGameState = "IN-LOBBY"
 
