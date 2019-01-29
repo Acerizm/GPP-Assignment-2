@@ -31,7 +31,7 @@ class LastManStanding : public Game
 protected:
 	// variables
 
-	int numOfPlayers = 0;
+	int numOfPlayers = 1;
 	
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;
@@ -50,19 +50,24 @@ protected:
 
 	GameClient *gameClient;
 
-	//I need to store the game's state
-	string currentGameState;
-
 	TextureManager LobbyBackgroundTexture;
 	Image LobbyBackgroundImage;
 
+	//This is for the in-lobby
 	TextureManager ID1Texture;
 	Image ID1Image;
+	Image ID2Image = {};
+	Image ID3Image = {};
 
 	SocketData *socketData;
 	SocketData *tempSocketData;
 
-	int currentPlayerID =0;
+	int currentPlayerID = 1;
+
+	//States
+	//I need to store the game's state
+	string currentGameState;
+	int drawPlayerSelectionBox = 1;
 
 public:
 	// Constructor

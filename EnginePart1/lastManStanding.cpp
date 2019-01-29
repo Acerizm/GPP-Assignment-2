@@ -33,6 +33,7 @@ LastManStanding::LastManStanding()
 */
 	currentGameState = "IN-LOBBY";
 	socketData = new SocketData();
+	numOfPlayers = 1;
 }
 
 //=============================================================================
@@ -76,6 +77,7 @@ void LastManStanding::initialize(HWND hwnd)
 	//Initialize the 1st player's selectiion
 	if (!ID1Texture.initialize(graphics,ID1))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
+	//ID1Image = new Image();
 	if(!ID1Image.initialize(graphics,426,720,0,&ID1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
 
@@ -136,9 +138,17 @@ void LastManStanding::update(Timer *gameTimer)
 			//check if the ID has been taken up
 			// since this is in a loop, no need to for-loop to check
 			// this code is broken must fix in next patch
+			//need to check for the first plyer
+
 			if (currentPlayerID == tempID) {
+				numOfPlayers++;
 				currentPlayerID ++;
+				drawPlayerSelectionBox++;
 				socketData->setID(currentPlayerID);
+			}
+
+			if (numOfPlayers < tempID) {
+				numOfPlayers = tempID;
 			}
 		}
 		//Send the data to the server with the JsonFormatted
@@ -148,6 +158,33 @@ void LastManStanding::update(Timer *gameTimer)
 			camera->Update();
 		}
 		ID1Image.update(frameTime);
+
+		if (drawPlayerSelectionBox == 2 && ID2Image.getInitalized() != true ) 
+		{
+			//ID2Image = new Image();
+			if (!ID2Image.initialize(graphics, 426, 720, 0, &ID1Texture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
+
+			ID2Image.setX(GAME_WIDTH / 3);
+			ID2Image.setY(0);
+			ID2Image.setCurrentFrame(0);
+		}
+
+		if (drawPlayerSelectionBox == 3 && ID3Image.getInitalized() != true)
+		{
+			//ID3Image = new Image();
+			if (!ID3Image.initialize(graphics, 426, 720, 0, &ID1Texture))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
+
+			ID3Image.setX(GAME_WIDTH / 3 * 2);
+			ID3Image.setY(0);
+			ID3Image.setCurrentFrame(0);
+		}
+
+
+		ID2Image.update(frameTime);
+		ID3Image.update(frameTime);
+		
 
 	} // end of if statement for currentGameState = "IN-LOBBY"
 
@@ -295,6 +332,8 @@ void LastManStanding::render()
 	if (currentGameState == "IN-LOBBY") {
 		LobbyBackgroundImage.draw();
 		ID1Image.draw();
+		ID2Image.draw();
+		ID3Image.draw();
 	}
 	if (camera)
 	{
