@@ -82,8 +82,7 @@ const char HEART_IMAGE[] = "pictures\\heart.png";
 //obs1
 const char OBS1[] = "pictures\\OBS1.png";
 
-
-
+const char ID1[] = "pictures\\ID1.jpg";
 
 
 

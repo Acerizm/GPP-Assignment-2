@@ -47,6 +47,7 @@ LastManStanding::~LastManStanding()
 //=============================================================================
 void LastManStanding::initialize(HWND hwnd)
 {
+	//this only happens when the player has joined the lobby
 	Game::initialize(hwnd); // throws GameError
 
 	obstaclesInitialize(true);
@@ -66,7 +67,18 @@ void LastManStanding::initialize(HWND hwnd)
 	LobbyBackgroundImage.setCurrentFrame(0);
 	LobbyBackgroundImage.setX(0);
 	LobbyBackgroundImage.setY(0);
+	
+	//Initialize the 1st player's selectiion
+	if (!ID1Texture.initialize(graphics,ID1))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
+	if(!ID1Image.initialize(graphics,426,720,0,&ID1Texture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
 
+	ID1Image.setX(0);
+	ID1Image.setY(0);
+	ID1Image.setCurrentFrame(0);
+
+	numOfPlayers++;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	return;
 }
@@ -105,10 +117,14 @@ void LastManStanding::update(Timer *gameTimer)
 
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
 	{
+		//send what data to the other clients
+		gameClient->sendData();
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
 			camera->Update();
 		}
+		ID1Image.update(frameTime);
+		//change the state later
 
 	} // end of if statement for currentGameState = "IN-LOBBY"
 
@@ -230,14 +246,17 @@ void LastManStanding::obstaclesMovement()
 void LastManStanding::collisions(Timer *gameTimer) {
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////
-	VECTOR2 collisionVector;
-	//Event/Scenario:
-	// 1) The player collided with Osbtacle1
-	if (player1->collidesWith(*Obstacle1, collisionVector)) 
+	if (currentGameState == "IN-GAME") 
 	{
-		//what happens after collision
-		player1->setX(player1->getX() -collisionVector.x*frameTime*2);
+		VECTOR2 collisionVector;
+		//Event/Scenario:
+		// 1) The player collided with Osbtacle1
+		if (player1->collidesWith(*Obstacle1, collisionVector))
+		{
+			//what happens after collision
+			player1->setX(player1->getX() - collisionVector.x*frameTime * 2);
 
+		}
 	}
 }
 
@@ -250,7 +269,10 @@ void LastManStanding::render()
 	graphics->spriteBegin();                // begin drawing sprites
 	//player1->draw();
 	//Obstacle1->draw();
-	LobbyBackgroundImage.draw();
+	if (currentGameState == "IN-LOBBY") {
+		LobbyBackgroundImage.draw();
+		ID1Image.draw();
+	}
 	if (camera)
 	{
 		camera->setTransform(graphics);
@@ -259,6 +281,7 @@ void LastManStanding::render()
 	{
 		heartTemp->draw();
 	}*/
+
 	graphics->spriteEnd();                  // end drawing sprites
 
 }

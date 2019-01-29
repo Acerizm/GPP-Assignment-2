@@ -29,12 +29,7 @@ class LastManStanding : public Game
 protected:
 	// variables
 
-	//the textures & images here
-	/*TextureManager LEVEL1_TILE_TEXTURE;*/
-	//Image LEVEL1_TILE_IMAGE;
-
-	//TextureManager PLAYER_SHOOTING_TILE_TEXTURE;
-	//Image PLAYER_SHOOTING_TILE_IMAGE;
+	int numOfPlayers = 0;
 	
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;
@@ -58,6 +53,9 @@ protected:
 
 	TextureManager LobbyBackgroundTexture;
 	Image LobbyBackgroundImage;
+
+	TextureManager ID1Texture;
+	Image ID1Image;
 
 public:
 	// Constructor
