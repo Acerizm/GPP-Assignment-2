@@ -60,6 +60,7 @@ protected:
 	Image ID1Image;
 
 	SocketData *socketData;
+	SocketData *tempSocketData;
 
 public:
 	// Constructor

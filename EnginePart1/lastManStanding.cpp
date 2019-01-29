@@ -12,6 +12,9 @@
 #include <ws2tcpip.h>
 #include <stdlib.h>
 #include "GameClient.h"
+#include "include/rapidjson/document.h"
+#include "include/rapidjson/writer.h"
+#include "include/rapidjson/stringbuffer.h"
 
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
@@ -19,6 +22,7 @@
 
 
 using namespace std;
+using namespace rapidjson;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -122,6 +126,17 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//before i send the data; add it to the SocketData class
 		socketData->setID(1);
+		socketData->setXCoordinate(100);
+		socketData->setYCoordinate(100);
+		//Send the data to the server with the JsonFormatted
+		gameClient->sendData(socketData->getJsonData());
+		string receivedJson = gameClient->getCurrentClient()->getData();
+		//Use the document dom from rapidJson to access the dictionary
+		//Create a new SocketData object for the received data
+		tempSocketData = new SocketData();
+		Document document = tempSocketData->getDocument(receivedJson);
+		tempSocketData->setID(stoi(document["ID"].GetString()));
+		int fakeId = tempSocketData->getID();
 
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {

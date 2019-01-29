@@ -50,17 +50,20 @@ public:
 		return this->YCoordinate;
 	}
 
-	bool SerializeData() {
-		const string json = "{ \"ID\" :" + to_string(getID()) + "}";
+	string getJsonData() {
+		const string json = "{ \"ID\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + "}";
+		return json;
+	}
+
+	Document getDocument(string value) {
 		Document document;
 		//parse the json to the dom
 		//declare the characther array
-		document.Parse(json.c_str());
+		document.Parse(value.c_str());
 		StringBuffer buffer;
 		Writer<StringBuffer> writer(buffer);
 		document.Accept(writer);
-
-
-
+		return document;
 	}
+
 };
