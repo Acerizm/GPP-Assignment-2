@@ -147,8 +147,9 @@ void LastManStanding::update(Timer *gameTimer)
 				socketData->setID(currentPlayerID);
 			}
 
-			if (numOfPlayers < tempID) {
+			if (currentPlayerID < tempID) {
 				numOfPlayers = tempID;
+				drawPlayerSelectionBox = tempID;
 			}
 		}
 		//Send the data to the server with the JsonFormatted
