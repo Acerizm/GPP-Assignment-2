@@ -137,7 +137,7 @@ void LastManStanding::update(Timer *gameTimer)
 		tempSocketData = new SocketData();
 		if (receivedJson != "") {
 			Document document = tempSocketData->getDocument(receivedJson);
-			string s1 = document["ID"].GetString();
+			int s1 = document["id"].GetInt();
 			tempSocketData->setID(stoi(document["ID"].GetString()));
 			int fakeId = tempSocketData->getID();
 		}

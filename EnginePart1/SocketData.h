@@ -51,7 +51,7 @@ public:
 	}
 
 	string getJsonData() {
-		const string json = "{ \"ID\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + "}";
+		const string json = "{ \"id\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + "}";
 		return json;
 	}
 
