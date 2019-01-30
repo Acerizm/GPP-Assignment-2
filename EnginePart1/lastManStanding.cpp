@@ -189,6 +189,8 @@ void LastManStanding::update(Timer *gameTimer)
 					{
 						numOfPlayersVoted++;
 					}
+					if(numOfPlayersVoted == 0 && tempNumOfPlayersVoted > 0)
+					numOfPlayersVoted = tempNumOfPlayersVoted;
 						//do nothing
 				}
 			}
@@ -233,6 +235,10 @@ void LastManStanding::update(Timer *gameTimer)
 				//change the gameState here immediately to "LOADING-GAME"
 				currentGameState = "LOADING-GAME";
 			}
+		}
+
+		if (numOfPlayersVoted / numOfPlayers * 100 >= 50) {
+			currentGameState = "LOADING_GAME";
 		}
 		
 
