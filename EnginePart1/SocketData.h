@@ -55,12 +55,12 @@ public:
 		this->numOfPlayersVoted = value;
 	}
 
-	int getNumOfPlayesVoted() {
+	int getNumOfPlayersVoted() {
 		return this->numOfPlayersVoted;
 	}
 
 	string getJsonData() {
-		const string json = "{ \"id\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + ",\"numOfPlayersVoted\":"+ to_string(getNumOfPlayesVoted()) + "}";
+		const string json = "{ \"id\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + ",\"numOfPlayersVoted\":"+ to_string(getNumOfPlayersVoted()) + "}";
 		return json;
 	}
 

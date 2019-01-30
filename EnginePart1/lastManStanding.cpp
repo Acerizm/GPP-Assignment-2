@@ -85,7 +85,7 @@ void LastManStanding::initialize(HWND hwnd)
 	ID1Image.setY(0);
 	ID1Image.setCurrentFrame(0);
 
-	numOfPlayers++;
+	//numOfPlayers++;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	return;
 }
@@ -114,6 +114,29 @@ std::string to_format(const int number) {
 	std::stringstream ss;
 	ss << std::setw(2) << std::setfill('0') << number;
 	return ss.str();
+}
+
+void LastManStanding::player1Initialize() 
+{
+	player1 = new Player();
+
+	if (!Player1Texture.initialize(graphics, PLAYER))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
+	if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+	}
+
+	//player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	//player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
+	player1->setFrameDelay(AnimationDelayStop);
+	player1->setCurrentFrame(0);
+	player1->setScale(1);
+	player1->setY(GAME_HEIGHT / 2);
+	player1->setY(620 - player1->getHeight());
+	player1->setDegrees(315);
+
 }
 
 //=============================================================================
@@ -151,7 +174,27 @@ void LastManStanding::update(Timer *gameTimer)
 				numOfPlayers = tempID;
 				drawPlayerSelectionBox = tempID;
 			}
+
+			//do the voting system here
+			if (input->wasKeyPressed(0x0D)) {
+				// check if the voting number is more than total players
+				if (numOfPlayers == 1 && numOfPlayersVoted == 0) {
+					Document document = tempSocketData->getDocument(receivedJson);
+					tempSocketData->setNumOfPlayersVoted(document["numOfPlayersVoted"].GetInt());
+					//tempID is the other player's connection
+					int tempNumOfPlayersVoted = tempSocketData->getNumOfPlayersVoted();
+					if (numOfPlayersVoted < tempNumOfPlayersVoted)
+						numOfPlayersVoted = tempNumOfPlayersVoted;
+					if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted == 0) 
+					{
+						numOfPlayersVoted++;
+					}
+						//do nothing
+				}
+			}
+
 		}
+
 		//Send the data to the server with the JsonFormatted
 		gameClient->sendData(socketData->getJsonData());
 		LobbyBackgroundImage.update(frameTime);
@@ -182,64 +225,65 @@ void LastManStanding::update(Timer *gameTimer)
 			ID3Image.setCurrentFrame(0);
 		}
 
-		//do the voting system here
-		if (input->wasKeyPressed('0x0D')) {
-			// check if the voting number is more than total players
-			if (numOfPlayers == 1 && numOfPlayersVoted == 0) {
-				Document document = tempSocketData->getDocument(receivedJson);
-				//int s1 = document["id"].GetInt();
-				tempSocketData->setID(document["id"].GetInt());
-				//tempID is the other player's connection
-				int tempID = tempSocketData->getID();
-			}
-		}
-
-
 		ID2Image.update(frameTime);
 		ID3Image.update(frameTime);
+
+		if (receivedJson == "") {
+			if (input->wasKeyPressed(0x0D)) {
+				//change the gameState here immediately to "LOADING-GAME"
+				currentGameState = "LOADING-GAME";
+			}
+		}
 		
 
 	} // end of if statement for currentGameState = "IN-LOBBY"
 
 	if (currentGameState == "LOADING-GAME") 
 	{
+		if (!BackgroundTexture.initialize(graphics, Background))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing BackgroundTexture"));
+		if (!BackgroundImage.initialize(graphics, BackgroundWidth, BackgroundHeight, 0, &BackgroundTexture)) {
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
+		}
+		BackgroundImage.setCurrentFrame(0);
+		BackgroundImage.setX(0);
+		BackgroundImage.setY(0);
+		
 		//add an algorithm here to check how many players are there in the server
-		player1 = new Player();
-		if (!Player1Texture.initialize(graphics, PLAYER))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
-		if (!player1->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player1Texture))
-		{
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+		if (numOfPlayers == 1) {
+			player1Initialize();
+			if (!heartTexture.initialize(graphics, HEART_IMAGE))
+				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
+
+			for (int i = 0; i < player1->getNumberOfLifes(); i++)
+			{
+				Heart *heartTemp = new Heart();
+				if (!heartTemp->initialize(this, heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
+					throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
+				heartTemp->setY(0);
+				heartTemp->setHeartNo(i);
+				heartTemp->setScale(heartNS::HEART_SCALE);
+				heartTemp->setX(GAME_WIDTH / 20 * i);
+				heartList.push_back(heartTemp);
+			}
+
+			currentGameState = "IN-GAME";
+
 		}
-
-		player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-		player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
-		player1->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
-		player1->setFrameDelay(AnimationDelayStop);
-		player1->setCurrentFrame(0);
-		player1->setScale(1);
-		player1->setY(620 - player1->getHeight());
-		player1->setDegrees(315);
-
-		if (!heartTexture.initialize(graphics, HEART_IMAGE))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heartTexture"));
-
-		for (int i = 0; i < player1->getNumberOfLifes(); i++)
-		{
-			Heart *heartTemp = new Heart();
-			if (!heartTemp->initialize(this, heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
-				throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
-			heartTemp->setY(0);
-			heartTemp->setHeartNo(i);
-			heartTemp->setScale(heartNS::HEART_SCALE);
-			heartTemp->setX(GAME_WIDTH / 20 * i);
-			heartList.push_back(heartTemp);
+		if (numOfPlayers == 2) {
+			player1 = new Player();
+			player2 = new Player();
 		}
-
+		if (numOfPlayers == 3) {
+			player1 = new Player();
+			player2 = new Player();
+			player3 = new Player();
+		}
 	}
 
 	if (currentGameState == "IN-GAME") 
 	{
+		BackgroundImage.update(frameTime);
 		gameClient->sendData("Haiqel Test");
 		if (gameClient->getCurrentClient()->getData() != "")
 			string test = gameClient->getCurrentClient()->getData();
@@ -290,6 +334,8 @@ void LastManStanding::update(Timer *gameTimer)
 		player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
 
 		obstaclesMovement();
+
+
 		
 	} //end of if statement for currentGameState == "IN-GAME"
 }
@@ -342,13 +388,17 @@ void LastManStanding::render()
 {
 	
 	graphics->spriteBegin();                // begin drawing sprites
-	//player1->draw();
-	//Obstacle1->draw();
 	if (currentGameState == "IN-LOBBY") {
 		LobbyBackgroundImage.draw();
 		ID1Image.draw();
 		ID2Image.draw();
 		ID3Image.draw();
+	}
+	if (currentGameState == "IN-GAME") {
+		BackgroundImage.draw();
+		player1->draw();
+		Obstacle1->draw();
+		camera->setCameraState("MOVING");
 	}
 	if (camera)
 	{

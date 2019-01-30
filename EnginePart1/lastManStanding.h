@@ -15,6 +15,7 @@
 #include "camera.h"
 #include "GameClient.h"
 #include "SocketData.h"
+#include <list>
 
 using namespace std;
 
@@ -74,6 +75,9 @@ protected:
 	string currentGameState;
 	int drawPlayerSelectionBox = 1;
 
+	list<Player *> playerList;
+	
+
 public:
 	// Constructor
 	LastManStanding();
@@ -83,6 +87,7 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+	void player1Initialize();
 	void obstaclesInitialize(bool value);
 	void obstaclesMovement();
 	void update(Timer *gameTimer);      // must override pure virtual from Game
