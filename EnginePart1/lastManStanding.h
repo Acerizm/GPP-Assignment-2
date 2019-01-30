@@ -32,6 +32,7 @@ protected:
 	// variables
 
 	int numOfPlayers = 1;
+	int numOfPlayersVoted = 0;
 	
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;

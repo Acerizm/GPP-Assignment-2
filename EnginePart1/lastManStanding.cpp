@@ -182,6 +182,18 @@ void LastManStanding::update(Timer *gameTimer)
 			ID3Image.setCurrentFrame(0);
 		}
 
+		//do the voting system here
+		if (input->wasKeyPressed('0x0D')) {
+			// check if the voting number is more than total players
+			if (numOfPlayers == 1 && numOfPlayersVoted == 0) {
+				Document document = tempSocketData->getDocument(receivedJson);
+				//int s1 = document["id"].GetInt();
+				tempSocketData->setID(document["id"].GetInt());
+				//tempID is the other player's connection
+				int tempID = tempSocketData->getID();
+			}
+		}
+
 
 		ID2Image.update(frameTime);
 		ID3Image.update(frameTime);

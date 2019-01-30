@@ -17,6 +17,7 @@ private:
 	int ID = 1;
 	float XCoordinate = 0;
 	float YCoordinate = 0;
+	int numOfPlayersVoted = 0;
 
 
 
@@ -50,8 +51,16 @@ public:
 		return this->YCoordinate;
 	}
 
+	void setNumOfPlayersVoted(int value) {
+		this->numOfPlayersVoted = value;
+	}
+
+	int getNumOfPlayesVoted() {
+		return this->numOfPlayersVoted;
+	}
+
 	string getJsonData() {
-		const string json = "{ \"id\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + "}";
+		const string json = "{ \"id\":"  + to_string(getID()) + ",\"XCoordinate\":" + to_string(getXCoordinate()) + ",\"YCoordinate\":" + to_string(getYCoordinate()) + ",\"numOfPlayersVoted\":"+ to_string(getNumOfPlayesVoted()) + "}";
 		return json;
 	}
 
