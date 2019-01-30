@@ -38,9 +38,13 @@ protected:
 	TextureManager heartTexture;
 
 	TextureManager Player1Texture;
-	list <Heart*>  heartList;
+	TextureManager Player2Texture;
+	TextureManager Player3Texture;
 	Player *player1;
+	Player *player2;
+	Player *player3;
 
+	list <Heart*>  heartList;
 	TextureManager ObsTexture;
 	//Image Obs1Image;
 

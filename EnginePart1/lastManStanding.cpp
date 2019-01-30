@@ -300,6 +300,8 @@ void LastManStanding::obstaclesMovement()
 	else if (Obstacle1->getMovementState() == "DOWN")
 		Obstacle1->setY(Obstacle1->getY() + obstacleNS::OBS1_MOVEMENT_SPEED*frameTime);
 
+
+
 }
 //=============================================================================
 // Handle collisions
