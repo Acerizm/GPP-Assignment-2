@@ -144,7 +144,8 @@ void LastManStanding::player1Initialize()
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
-
+	//tempSocketData is to store data received from other clients
+	//socketData is to store data from the local machine
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby
 	{
 		//1. Check if there is data coming from other clients
@@ -155,8 +156,12 @@ void LastManStanding::update(Timer *gameTimer)
 			Document document = tempSocketData->getDocument(receivedJson);
 			//int s1 = document["id"].GetInt();
 			tempSocketData->setID(document["id"].GetInt());
+			tempSocketData->setNumOfPlayersVoted(document["numOfPlayersVoted"].GetInt());
+
 			//tempID is the other player's connection
 			int tempID = tempSocketData->getID();
+			//tempNumOfPlayersVoted is when there is from the other client
+			int tempNumOfPlayersVoted = tempSocketData->getNumOfPlayersVoted();
 
 			//check if the ID has been taken up
 			// since this is in a loop, no need to for-loop to check
@@ -177,24 +182,7 @@ void LastManStanding::update(Timer *gameTimer)
 
 			//do the voting system here
 			if (input->wasKeyPressed(0x0D)) {
-				// check if the voting number is more than total players
-				if (numOfPlayers == 1 && numOfPlayersVoted == 0) {
-					Document document = tempSocketData->getDocument(receivedJson);
-					tempSocketData->setNumOfPlayersVoted(document["numOfPlayersVoted"].GetInt());
-					//tempID is the other player's connection
-					//tempNumOfPlayersVoted is when there is from the other client
-					int tempNumOfPlayersVoted = tempSocketData->getNumOfPlayersVoted();
-					//this happens when there is the other client has voted alr or has more votes
-					if (numOfPlayersVoted < tempNumOfPlayersVoted) 
-						numOfPlayersVoted = tempNumOfPlayersVoted;
-					if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted == 0) 
-					{
-						numOfPlayersVoted++;
-					}
-					if(numOfPlayersVoted == 0 && tempNumOfPlayersVoted > 0)
-						numOfPlayersVoted = tempNumOfPlayersVoted;
-						
-				}
+				numOfPlayersVoted++;
 			}
 
 			//if the player presses the enter key
@@ -202,10 +190,31 @@ void LastManStanding::update(Timer *gameTimer)
 				if (numOfPlayersVoted == 0)
 					numOfPlayersVoted++;
 			}
+
+			// check if the voting number is more than total players
+			if (numOfPlayers >= 1) {
+				//this happens when there is the other client has voted alr or has more votes
+				if (numOfPlayersVoted < tempNumOfPlayersVoted)
+					numOfPlayersVoted = tempNumOfPlayersVoted;
+				if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted == 0)
+				{
+					numOfPlayersVoted++;
+					socketData->setNumOfPlayersVoted(numOfPlayersVoted);
+
+				}
+				if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted > 0)
+				{
+					numOfPlayersVoted = tempNumOfPlayersVoted;
+					socketData->setNumOfPlayersVoted(numOfPlayersVoted);
+				}
+
+			}
 		}
 
 		//Send the data to the server with the JsonFormatted
+		//use the socketData not the tempSocketData(local)
 		gameClient->sendData(socketData->getJsonData());
+
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
 			camera->Update();
