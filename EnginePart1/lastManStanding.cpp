@@ -202,7 +202,6 @@ void LastManStanding::update(Timer *gameTimer)
 				drawPlayerSelectionBox = tempID;
 			}
 
-			
 			////do the voting system here
 			//if (input->wasKeyPressed(0x0D)) {
 			//	numOfPlayersVoted++;
@@ -316,9 +315,7 @@ void LastManStanding::update(Timer *gameTimer)
 				heartList.push_back(heartTemp);
 			}
 
-			socketData->setIsLoaded(false);
-			gameClient->sendData(socketData->getJsonData());
-			currentGameState = "WAITING";
+			currentGameState = "IN-GAME";
 
 		}
 		if (numOfPlayers == 2) {
@@ -341,9 +338,7 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 
 			//need to stop the machine for awhile
-			socketData->setIsLoaded(false);
-			gameClient->sendData(socketData->getJsonData());
-			currentGameState = "WAITING";
+			currentGameState = "IN-GAME";
 
 		}
 		if (numOfPlayers == 3) {
@@ -353,35 +348,8 @@ void LastManStanding::update(Timer *gameTimer)
 		}
 	}
 
-	if (currentGameState == "WAITING") 
+	if (currentGameState == "PAUSE") 
 	{
-		//1. Check if there is data coming from other clients
-		string receivedJson = gameClient->getCurrentClient()->getData();
-		//Create a new SocketData object for the received data
-		tempSocketData = new SocketData();
-		Document document = tempSocketData->getDocument(receivedJson);
-		tempSocketData->setID(document["id"].GetInt());
-
-		//tempID is the other player's connection
-		int tempID = tempSocketData->getID();
-		bool tempIsLoaded = tempSocketData->getIsLoaded();
-
-		if (numOfPlayers == 1)
-			currentGameState = "IN-GAME";
-		if (numOfPlayers == 2) 
-		{
-			if (tempIsLoaded == true)
-				currentGameState = "IN-GAME";
-		}
-		if (numOfPlayers == 3) 
-		{
-			for (int i = 1; i < 4; i++) {
-				if (i == currentPlayerID)
-					continue;
-				if (tempID)
-
-			}
-		}
 
 	}
 
