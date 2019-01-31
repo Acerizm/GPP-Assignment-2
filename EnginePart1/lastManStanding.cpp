@@ -182,19 +182,26 @@ void LastManStanding::update(Timer *gameTimer)
 					Document document = tempSocketData->getDocument(receivedJson);
 					tempSocketData->setNumOfPlayersVoted(document["numOfPlayersVoted"].GetInt());
 					//tempID is the other player's connection
+					//tempNumOfPlayersVoted is when there is from the other client
 					int tempNumOfPlayersVoted = tempSocketData->getNumOfPlayersVoted();
-					if (numOfPlayersVoted < tempNumOfPlayersVoted)
+					//this happens when there is the other client has voted alr or has more votes
+					if (numOfPlayersVoted < tempNumOfPlayersVoted) 
 						numOfPlayersVoted = tempNumOfPlayersVoted;
 					if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted == 0) 
 					{
 						numOfPlayersVoted++;
 					}
 					if(numOfPlayersVoted == 0 && tempNumOfPlayersVoted > 0)
-					numOfPlayersVoted = tempNumOfPlayersVoted;
-						//do nothing
+						numOfPlayersVoted = tempNumOfPlayersVoted;
+						
 				}
 			}
 
+			//if the player presses the enter key
+			if (input->wasKeyPressed(0x0D)) {
+				if (numOfPlayersVoted == 0)
+					numOfPlayersVoted++;
+			}
 		}
 
 		//Send the data to the server with the JsonFormatted
@@ -232,16 +239,18 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//When this is a local game / not connected to the server or other clients
 		if (receivedJson == "") {
+			//if the player presses the enter key
 			if (input->wasKeyPressed(0x0D)) {
 				if (numOfPlayersVoted == 0)
 					numOfPlayersVoted++;
-				//this voting system happens when there is only 1 player
-				if (numOfPlayersVoted / numOfPlayers * 100 >= 50) {
-					currentGameState = "LOADING_GAME";
-				}
 			}
 		}
 
+		//check the voting system here
+		//this voting system happens when there is only 1 player
+		if (numOfPlayersVoted / numOfPlayers * 100 >= 50) {
+			currentGameState = "LOADING-GAME";
+		}
 		
 
 	} // end of if statement for currentGameState = "IN-LOBBY"
