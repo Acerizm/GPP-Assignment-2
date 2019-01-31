@@ -77,6 +77,8 @@ protected:
 
 	list<Player *> playerList;
 	
+	//number of players loaded
+	int allPlayerLoaded = 0;
 
 public:
 	// Constructor
@@ -88,6 +90,8 @@ public:
 	// Initialize the game
 	void initialize(HWND hwnd);
 	void player1Initialize();
+	void player2Initalize();
+	void player3Initalize();
 	void obstaclesInitialize(bool value);
 	void obstaclesMovement();
 	void update(Timer *gameTimer);      // must override pure virtual from Game
