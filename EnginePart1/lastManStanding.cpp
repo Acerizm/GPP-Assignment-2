@@ -230,16 +230,18 @@ void LastManStanding::update(Timer *gameTimer)
 		ID2Image.update(frameTime);
 		ID3Image.update(frameTime);
 
+		//When this is a local game / not connected to the server or other clients
 		if (receivedJson == "") {
 			if (input->wasKeyPressed(0x0D)) {
-				//change the gameState here immediately to "LOADING-GAME"
-				currentGameState = "LOADING-GAME";
+				if (numOfPlayersVoted == 0)
+					numOfPlayersVoted++;
+				//this voting system happens when there is only 1 player
+				if (numOfPlayersVoted / numOfPlayers * 100 >= 50) {
+					currentGameState = "LOADING_GAME";
+				}
 			}
 		}
 
-		if (numOfPlayersVoted / numOfPlayers * 100 >= 50) {
-			currentGameState = "LOADING_GAME";
-		}
 		
 
 	} // end of if statement for currentGameState = "IN-LOBBY"
