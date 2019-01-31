@@ -357,32 +357,34 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		//1. Check if there is data coming from other clients
 		string receivedJson = gameClient->getCurrentClient()->getData();
-		//Create a new SocketData object for the received data
-		tempSocketData = new SocketData();
-		Document document = tempSocketData->getDocument(receivedJson);
-		tempSocketData->setID(document["id"].GetInt());
-
-		//tempID is the other player's connection
-		int tempID = tempSocketData->getID();
-		bool tempIsLoaded = tempSocketData->getIsLoaded();
-
-		if (numOfPlayers == 1)
-			currentGameState = "IN-GAME";
-		if (numOfPlayers == 2) 
+		if (receivedJson != "") 
 		{
-			if (tempIsLoaded == true)
+			//Create a new SocketData object for the received data
+			//tempSocketData = new SocketData();
+			Document document = tempSocketData->getDocument(receivedJson);
+			tempSocketData->setID(document["id"].GetInt());
+
+			//tempID is the other player's connection
+			int tempID = tempSocketData->getID();
+			bool tempIsLoaded = tempSocketData->getIsLoaded();
+
+			if (numOfPlayers == 1)
 				currentGameState = "IN-GAME";
-		}
-		if (numOfPlayers == 3) 
-		{
-			for (int i = 1; i < 4; i++) {
-				if (i == currentPlayerID)
-					continue;
-				if (tempID)
-
+			if (numOfPlayers >= 2)
+			{
+				if (tempIsLoaded == true)
+					currentGameState = "IN-GAME";
 			}
-		}
+			/*if (numOfPlayers == 3)
+			{
+				for (int i = 1; i < 4; i++) {
+					if (i == currentPlayerID)
+						continue;
+					if (tempID)
 
+				}
+			}*/
+		}
 	}
 
 	if (currentGameState == "IN-GAME") 
