@@ -180,14 +180,14 @@ void LastManStanding::update(Timer *gameTimer)
 				drawPlayerSelectionBox = tempID;
 			}
 
-			//do the voting system here
-			if (input->wasKeyPressed(0x0D)) {
-				numOfPlayersVoted++;
-			}
+			////do the voting system here
+			//if (input->wasKeyPressed(0x0D)) {
+			//	numOfPlayersVoted++;
+			//}
 
 			//if the player presses the enter key
 			if (input->wasKeyPressed(0x0D)) {
-				if (numOfPlayersVoted == 0)
+				//if (numOfPlayersVoted == 0)
 					numOfPlayersVoted++;
 			}
 
@@ -198,15 +198,15 @@ void LastManStanding::update(Timer *gameTimer)
 					numOfPlayersVoted = tempNumOfPlayersVoted;
 				if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted == 0)
 				{
-					numOfPlayersVoted++;
 					socketData->setNumOfPlayersVoted(numOfPlayersVoted);
-
 				}
 				if (numOfPlayersVoted == 0 && tempNumOfPlayersVoted > 0)
 				{
 					numOfPlayersVoted = tempNumOfPlayersVoted;
 					socketData->setNumOfPlayersVoted(numOfPlayersVoted);
 				}
+
+				socketData->setNumOfPlayersVoted(numOfPlayersVoted);
 
 			}
 		}
@@ -257,7 +257,7 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//check the voting system here
 		//this voting system happens when there is only 1 player
-		if (numOfPlayersVoted / numOfPlayers * 100 >= 50) {
+		if (float(numOfPlayersVoted) / float(numOfPlayers) * 100 >= 50) {
 			currentGameState = "LOADING-GAME";
 		}
 		
