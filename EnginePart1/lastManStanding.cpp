@@ -161,6 +161,28 @@ void LastManStanding::player2Initalize() {
 	player2->setDegrees(315);
 }
 
+void LastManStanding::player3Initalize() {
+	player3 = new Player();
+
+	if (!Player3Texture.initialize(graphics, PLAYER))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
+	if (!player2->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player3Texture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+	}
+
+	//player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	//player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	player3->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
+	player3->setFrameDelay(AnimationDelayStop);
+	player3->setCurrentFrame(0);
+	player3->setScale(1);
+	player3->setY(GAME_HEIGHT / 4);
+	player3->setX(GAME_WIDTH / 4);
+	//player2->setY(620 - player1->getHeight());
+	player2->setDegrees(315);
+}
+
 //=============================================================================
 // Update all game items
 //=============================================================================
@@ -202,12 +224,6 @@ void LastManStanding::update(Timer *gameTimer)
 				drawPlayerSelectionBox = tempID;
 			}
 
-			
-			////do the voting system here
-			//if (input->wasKeyPressed(0x0D)) {
-			//	numOfPlayersVoted++;
-			//}
-
 			//if the player presses the enter key
 			if (input->wasKeyPressed(0x0D)) {
 				//if (numOfPlayersVoted == 0)
@@ -236,7 +252,7 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//Send the data to the server with the JsonFormatted
 		//use the socketData not the tempSocketData(local)
-		gameClient->sendData(socketData->getJsonData());
+		gameClient->sendData(socketData->getInLobbyData());
 		Sleep(1000);
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
@@ -289,6 +305,11 @@ void LastManStanding::update(Timer *gameTimer)
 
 	if (currentGameState == "LOADING-GAME") 
 	{
+		//1. Check if there is data coming from other clients
+		string receivedJson = gameClient->getCurrentClient()->getData();
+		//Create a new SocketData object for the received data
+		tempSocketData = new SocketData();
+
 		if (!BackgroundTexture.initialize(graphics, Background))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing BackgroundTexture"));
 		if (!BackgroundImage.initialize(graphics, BackgroundWidth, BackgroundHeight, 0, &BackgroundTexture)) {
@@ -297,8 +318,6 @@ void LastManStanding::update(Timer *gameTimer)
 		BackgroundImage.setCurrentFrame(0);
 		BackgroundImage.setX(0);
 		BackgroundImage.setY(0);
-		
-		//add an algorithm here to check how many players are there in the server
 		if (numOfPlayers == 1) {
 			player1Initialize();
 			if (!heartTexture.initialize(graphics, HEART_IMAGE))
@@ -316,40 +335,57 @@ void LastManStanding::update(Timer *gameTimer)
 				heartList.push_back(heartTemp);
 			}
 
-			socketData->setIsLoaded(false);
+			socketData->setIsLoaded(1);
 			gameClient->sendData(socketData->getJsonData());
 			currentGameState = "WAITING";
 
 		}
-		if (numOfPlayers == 2) {
-			player1 = new Player();
-			player2 = new Player();
+		if (receivedJson != "") {
+			Document document = tempSocketData->getDocument(receivedJson);
+			tempSocketData->setID(document["id"].GetInt());
+			if (numOfPlayers == 2) {
+				player1 = new Player();
+				player2 = new Player();
+				if (currentPlayerID == 1) {
+					player1->setClientID(currentPlayerID);
+					player2->setClientID(2);
+				}
 
-			player1Initialize();
-			player2Initalize();
+				player1Initialize();
+				player2Initalize();
 
-			for (int i = 0; i < player1->getNumberOfLifes(); i++)
-			{
-				Heart *heartTemp = new Heart();
-				if (!heartTemp->initialize(this, heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
-					throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
-				heartTemp->setY(0);
-				heartTemp->setHeartNo(i);
-				heartTemp->setScale(heartNS::HEART_SCALE);
-				heartTemp->setX(GAME_WIDTH / 20 * i);
-				heartList.push_back(heartTemp);
+				for (int i = 0; i < player1->getNumberOfLifes(); i++)
+				{
+					Heart *heartTemp = new Heart();
+					if (!heartTemp->initialize(this, heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
+						throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
+					heartTemp->setY(0);
+					heartTemp->setHeartNo(i);
+					heartTemp->setScale(heartNS::HEART_SCALE);
+					heartTemp->setX(GAME_WIDTH / 20 * i);
+					heartList.push_back(heartTemp);
+				}
+
+				//need to stop the machine for awhile
+				socketData->setIsLoaded(1);
+				gameClient->sendData(socketData->getLoadingGameData());
+				currentGameState = "WAITING";
+
 			}
+			if (numOfPlayers == 3) {
+				player1 = new Player();
+				player2 = new Player();
+				player3 = new Player();
 
-			//need to stop the machine for awhile
-			socketData->setIsLoaded(false);
-			gameClient->sendData(socketData->getJsonData());
-			currentGameState = "WAITING";
-
-		}
-		if (numOfPlayers == 3) {
-			player1 = new Player();
-			player2 = new Player();
-			player3 = new Player();
+				//initialize the player immediately
+				player1Initialize();
+				player2Initalize();
+				player3Initalize();
+				//need to stop the machine for awhile
+				socketData->setIsLoaded(1);
+				gameClient->sendData(socketData->getLoadingGameData());
+				currentGameState = "WAITING";
+			}
 		}
 	}
 
@@ -363,27 +399,37 @@ void LastManStanding::update(Timer *gameTimer)
 			//tempSocketData = new SocketData();
 			Document document = tempSocketData->getDocument(receivedJson);
 			tempSocketData->setID(document["id"].GetInt());
+			tempSocketData->setIsLoaded(document["isLoaded"].GetInt());
 
 			//tempID is the other player's connection
 			int tempID = tempSocketData->getID();
-			bool tempIsLoaded = tempSocketData->getIsLoaded();
+			int tempIsLoaded = tempSocketData->getIsLoaded();
 
 			if (numOfPlayers == 1)
 				currentGameState = "IN-GAME";
+			if (numOfPlayers == 2) {
+				if (tempIsLoaded == 1)
+					allPlayerLoaded++;
+				if (allPlayerLoaded == numOfPlayers)
+					currentGameState = "IN-GAME";
+				else {
+					gameClient->sendData(socketData->getLoadingGameData());
+					Sleep(100);
+				}
+			}
 			if (numOfPlayers >= 2)
 			{
-				if (tempIsLoaded == true)
-					currentGameState = "IN-GAME";
-			}
-			/*if (numOfPlayers == 3)
-			{
-				for (int i = 1; i < 4; i++) {
-					if (i == currentPlayerID)
-						continue;
-					if (tempID)
-
+				if (currentClientIDConnected != tempID) {
+					if (tempIsLoaded == 1)
+						allPlayerLoaded++;
+					if (allPlayerLoaded == numOfPlayers)
+						currentGameState = "IN-GAME";
+					else {
+						gameClient->sendData(socketData->getLoadingGameData());
+						Sleep(100);
+					}
 				}
-			}*/
+			}
 		}
 	}
 

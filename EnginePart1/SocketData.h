@@ -18,7 +18,7 @@ private:
 	float XCoordinate = 0;
 	float YCoordinate = 0;
 	int numOfPlayersVoted = 0;
-	bool isLoaded = false;
+	int isLoaded = 0;
 
 
 
@@ -59,11 +59,11 @@ public:
 		return this->numOfPlayersVoted;
 	}
 
-	void setIsLoaded(bool value) {
+	void setIsLoaded(int value) {
 		this->isLoaded = value;
 	}
 
-	bool getIsLoaded() {
+	int getIsLoaded() {
 		return this->isLoaded;
 	}
 	string getJsonData() {
@@ -74,6 +74,16 @@ public:
 
 		return json;
 	}
+	string getInLobbyData() {
+		const string json = "{ \"id\":" + to_string(getID()) + ",\"numOfPlayersVoted\":" + to_string(getNumOfPlayersVoted()) + "}";
+		return json;
+	}
+
+	string getLoadingGameData() {
+		const string json = "{ \"id\":" + to_string(getID()) + ",\"isLoaded\":" + to_string(getIsLoaded()) + "}";
+		return json;
+	}
+
 
 	Document getDocument(string value) {
 		Document document;

@@ -83,7 +83,7 @@ protected:
 	bool player3IsLoaded = false;
 	int player2ID = 0;
 	int player3ID = 0;
-
+	int currentClientIDConnected = 0;
 public:
 	// Constructor
 	LastManStanding();
