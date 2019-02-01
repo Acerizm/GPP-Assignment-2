@@ -80,7 +80,7 @@ public:
 	}
 
 	string getLoadingGameData() {
-		const string json = "{ \"id\":" + to_string(getID()) + ",\"isLoaded\":" + to_string(getIsLoaded()) + "}";
+		const string json = "{ \"id\":" + to_string(getID()) + ",\"check\":" + to_string(getIsLoaded()) + "}";
 		return json;
 	}
 

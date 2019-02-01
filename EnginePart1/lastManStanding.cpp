@@ -393,14 +393,15 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		//1. Check if there is data coming from other clients
 		string receivedJson = gameClient->getCurrentClient()->getData();
+
 		if (receivedJson != "") 
 		{
-			//Create a new SocketData object for the received data
-			//tempSocketData = new SocketData();
+			// Create a new SocketData object for the received data
+			// tempSocketData = new SocketData();
 			Document document = tempSocketData->getDocument(receivedJson);
 			tempSocketData->setID(document["id"].GetInt());
-			tempSocketData->setIsLoaded(document["isLoaded"].GetInt());
-
+			tempSocketData->setIsLoaded(document["check"].GetInt64());
+			
 			//tempID is the other player's connection
 			int tempID = tempSocketData->getID();
 			int tempIsLoaded = tempSocketData->getIsLoaded();
@@ -410,33 +411,34 @@ void LastManStanding::update(Timer *gameTimer)
 			if (numOfPlayers == 2) {
 				if (tempIsLoaded == 1)
 					allPlayerLoaded++;
-				if (allPlayerLoaded == numOfPlayers)
+				else if (allPlayerLoaded == numOfPlayers)
 					currentGameState = "IN-GAME";
-				else {
-					gameClient->sendData(socketData->getLoadingGameData());
-					Sleep(100);
-				}
+				
+				gameClient->sendData(socketData->getLoadingGameData());
+				Sleep(100);
 			}
-			if (numOfPlayers >= 2)
+			if (numOfPlayers == 3)	
 			{
-				if (currentClientIDConnected != tempID) {
+				if (currentClientIDConnected != tempID) 
+				{
+
 					if (tempIsLoaded == 1)
 						allPlayerLoaded++;
 					if (allPlayerLoaded == numOfPlayers)
 						currentGameState = "IN-GAME";
-					else {
-						gameClient->sendData(socketData->getLoadingGameData());
-						Sleep(100);
-					}
+					
+					gameClient->sendData(socketData->getLoadingGameData());
+					Sleep(100);
+					
 				}
 			}
 		}
 	}
 
-	if (currentGameState == "IN-GAME") 
+	else if (currentGameState == "IN-GAME") 
 	{
 		BackgroundImage.update(frameTime);
-		gameClient->sendData("Haiqel Test");
+		//gameClient->sendData("Haiqel Test");
 		if (gameClient->getCurrentClient()->getData() != "")
 			string test = gameClient->getCurrentClient()->getData();
 
