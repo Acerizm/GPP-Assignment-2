@@ -237,7 +237,7 @@ void LastManStanding::update(Timer *gameTimer)
 		//Send the data to the server with the JsonFormatted
 		//use the socketData not the tempSocketData(local)
 		gameClient->sendData(socketData->getJsonData());
-
+		Sleep(1000);
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
 			camera->Update();
