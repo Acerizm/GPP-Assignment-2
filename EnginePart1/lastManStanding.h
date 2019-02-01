@@ -78,7 +78,11 @@ protected:
 	list<Player *> playerList;
 	
 	//number of players loaded
-	int allPlayerLoaded = 0;
+	int allPlayerLoaded = 1;
+	bool player2IsLoaded = false;
+	bool player3IsLoaded = false;
+	int player2ID = 0;
+	int player3ID = 0;
 
 public:
 	// Constructor
