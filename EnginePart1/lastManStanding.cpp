@@ -139,6 +139,28 @@ void LastManStanding::player1Initialize()
 
 }
 
+void LastManStanding::player2Initalize() {
+	player2 = new Player();
+
+	if (!Player2Texture.initialize(graphics, PLAYER))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
+	if (!player2->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player2Texture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+	}
+
+	//player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	//player1->setSpriteDataXnY(GAME_WIDTH / 2, GAME_HEIGHT / 2);
+	player2->setFrames(playerNS::PLAYER_START_FRAME, playerNS::PLAYER_END_FRAME);
+	player2->setFrameDelay(AnimationDelayStop);
+	player2->setCurrentFrame(0);
+	player2->setScale(1);
+	player2->setY(GAME_HEIGHT / 3);
+	player2->setX(GAME_WIDTH / 3);
+	//player2->setY(620 - player1->getHeight());
+	player2->setDegrees(315);
+}
+
 //=============================================================================
 // Update all game items
 //=============================================================================
@@ -299,12 +321,36 @@ void LastManStanding::update(Timer *gameTimer)
 		if (numOfPlayers == 2) {
 			player1 = new Player();
 			player2 = new Player();
+
+			player1Initialize();
+			player2Initalize();
+
+			for (int i = 0; i < player1->getNumberOfLifes(); i++)
+			{
+				Heart *heartTemp = new Heart();
+				if (!heartTemp->initialize(this, heartNS::HEART_WIDTH, heartNS::HEART_HEIGHT, heartNS::HEART_TEXTURE_COLS, &heartTexture))
+					throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing heart"));
+				heartTemp->setY(0);
+				heartTemp->setHeartNo(i);
+				heartTemp->setScale(heartNS::HEART_SCALE);
+				heartTemp->setX(GAME_WIDTH / 20 * i);
+				heartList.push_back(heartTemp);
+			}
+
+			//need to stop the machine for awhile
+			currentGameState = "IN-GAME";
+
 		}
 		if (numOfPlayers == 3) {
 			player1 = new Player();
 			player2 = new Player();
 			player3 = new Player();
 		}
+	}
+
+	if (currentGameState == "PAUSE") 
+	{
+
 	}
 
 	if (currentGameState == "IN-GAME") 
@@ -315,6 +361,12 @@ void LastManStanding::update(Timer *gameTimer)
 			string test = gameClient->getCurrentClient()->getData();
 
 		player1->update(frameTime);
+		if (numOfPlayers == 2)
+			player2->update(frameTime);
+		if (numOfPlayers == 3) {
+			player2->update(frameTime);
+			player3->update(frameTime);
+		}
 		float cameraDifferenceX = 0;
 		float cameraDifferenceY = 0;
 		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
@@ -423,6 +475,8 @@ void LastManStanding::render()
 	if (currentGameState == "IN-GAME") {
 		BackgroundImage.draw();
 		player1->draw();
+		if (numOfPlayers == 2)
+			player2->draw();
 		Obstacle1->draw();
 		camera->setCameraState("MOVING");
 	}
