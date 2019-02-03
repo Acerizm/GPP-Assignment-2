@@ -644,21 +644,22 @@ void LastManStanding::obstaclesMovement()
 		Obstacle1->setY(Obstacle1->getY() + obstacleNS::OBS1_MOVEMENT_SPEED*frameTime);
 
 
+	// This is for sine wave
 
-	if (Obstacle2->getX() >= (BackgroundWidth / 20 * 5))
+	if (Obstacle2->getX() >= (BackgroundWidth / 20 * 3))
 		Obstacle2->setMovementState("LEFT");
-	else if (Obstacle2->getY() <= (BackgroundWidth / 20 * 2))
+	else if (Obstacle2->getX() <= (BackgroundWidth / 20 * 2))
 		Obstacle2->setMovementState("RIGHT");
 
 
 	if (Obstacle2->getMovementState() == "RIGHT") 
 	{
-		Obstacle2->setY(/*Obstacle2->getY() +*/ sin(Obstacle2->getX())*500*frameTime);
-		Obstacle2->setX(Obstacle2->getX() + camera->getCameraHorizontalSpeed()*50*frameTime);
+		Obstacle2->setX(Obstacle2->getX() + camera->getCameraHorizontalSpeed()*80*frameTime);
+		Obstacle2->setY(GAME_HEIGHT / 2 + sin(Obstacle2->getX() * 1 / 10) * 20000 * frameTime);
 	}
 	else if (Obstacle2->getMovementState() == "LEFT") {
-		Obstacle2->setY(/*Obstacle2->getY() -*/ sin(Obstacle2->getX())*500*frameTime);
-		Obstacle2->setX(Obstacle2->getX() - camera->getCameraHorizontalSpeed()*50*frameTime);
+		Obstacle2->setX(Obstacle2->getX() - camera->getCameraHorizontalSpeed()*80*frameTime);
+		Obstacle2->setY(sin(Obstacle2->getX() * 1 / 10) * 20000 * frameTime + GAME_HEIGHT / 2);
 	}
 
 }
