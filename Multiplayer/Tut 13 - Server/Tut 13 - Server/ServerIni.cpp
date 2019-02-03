@@ -14,7 +14,8 @@ Server::Server(int port, bool loopBacktoLocalHost) //Port = port to broadcast on
 		exit(1);
 	}
 	if (loopBacktoLocalHost) //If server is to loopback to local host (others cannot connect)
-		inet_pton(AF_INET, "127.0.0.1", &m_addr.sin_addr.s_addr);
+		//inet_pton(AF_INET, "127.0.0.1", &m_addr.sin_addr.s_addr);
+		inet_pton(AF_INET, "25.90.64.129", &m_addr.sin_addr.s_addr);
 	else
 		m_addr.sin_addr.s_addr = htonl(INADDR_ANY); //loopback to any addr so others can connect
 
