@@ -31,7 +31,7 @@ LastManStanding::LastManStanding()
 	/*srand(time(NULL));
 	hpText = new TextDX();
 */
-	currentGameState = "IN-LOBBY";
+	currentGameState = "PRE-LOBBY";
 	socketData = new SocketData();
 	numOfPlayers = 1;
 	timer = new Timer();
@@ -48,15 +48,9 @@ LastManStanding::~LastManStanding()
 	}
 	releaseAll();           // call onLostDevice() for every graphics item
 }
-//=============================================================================
-// Initializes the game
-// Throws GameError on error
-//=============================================================================
-void LastManStanding::initialize(HWND hwnd)
-{
-	//this only happens when the player has joined the lobby
-	Game::initialize(hwnd); // throws GameError
 
+void LastManStanding::lobbyInitialize() 
+{
 	obstaclesInitialize(true);
 
 	// Connect to the server //////////////////////////////////////////////////////////////
@@ -74,12 +68,12 @@ void LastManStanding::initialize(HWND hwnd)
 	LobbyBackgroundImage.setCurrentFrame(0);
 	LobbyBackgroundImage.setX(0);
 	LobbyBackgroundImage.setY(0);
-	
+
 	//Initialize the 1st player's selectiion
-	if (!ID1Texture.initialize(graphics,ID1))
+	if (!ID1Texture.initialize(graphics, ID1))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
 	//ID1Image = new Image();
-	if(!ID1Image.initialize(graphics,426,720,0,&ID1Texture))
+	if (!ID1Image.initialize(graphics, 426, 720, 0, &ID1Texture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
 
 	ID1Image.setX(0);
@@ -88,6 +82,17 @@ void LastManStanding::initialize(HWND hwnd)
 
 	//numOfPlayers++;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+}
+//=============================================================================
+// Initializes the game
+// Throws GameError on error
+//=============================================================================
+void LastManStanding::initialize(HWND hwnd)
+{
+	//this only happens when the player has joined the lobby
+	Game::initialize(hwnd); // throws GameError
+	//lobbyInitialize();
+	
 	return;
 }
 
@@ -196,6 +201,11 @@ void LastManStanding::player3Initalize() {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+	if (currentGameState == "PRE-LOBBY")
+	{
+		lobbyInitialize();
+		currentGameState = "IN-LOBBY";
+	}
 	//tempSocketData is to store data received from other clients
 	//socketData is to store data from the local machine
 	if (currentGameState == "IN-LOBBY") //this has to only run once because the player is still in the main lobby

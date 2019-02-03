@@ -98,6 +98,7 @@ public:
 
 	// Initialize the game
 	void initialize(HWND hwnd);
+	void lobbyInitialize();
 	void player1Initialize();
 	void player2Initalize();
 	void player3Initalize();
