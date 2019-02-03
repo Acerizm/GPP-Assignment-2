@@ -44,6 +44,8 @@ private:
 	float velocityY = 0;
 	float velocityX = 0;
 	int numberOflifes = 3;
+	int ClientID = 1;
+
 public:
 	Player();
 	~Player();
@@ -61,6 +63,14 @@ public:
 	//void setSpriteDataY(float y);
 	void minusLife();
 	int getNumberOfLifes();
+
+	void setClientID(int value) {
+		this->ClientID = value;
+	}
+
+	int getClientID() {
+		return this->ClientID;
+	}
 
 };
 

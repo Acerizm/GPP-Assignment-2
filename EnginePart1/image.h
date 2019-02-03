@@ -165,6 +165,10 @@ class Image
 		}
 		void Image::setPercentage(float currentHPPercentage);
 
+		bool Image::getInitalized() {
+			return this->initialized;
+		}
+
 };
 
 #endif

@@ -26,7 +26,8 @@ void Camera::Update()
 		this->cameraX = GAME_WIDTH / 2;
 	}
 	else {
-		cameraX = this->getCameraX() + this->cameraHorizontalSpeed;
+		if (getCameraState() == "MOVING")
+			cameraX = this->getCameraX() + this->cameraHorizontalSpeed;
 	}
 	//int cameraX = 1000, cameraY = 1000;
 
