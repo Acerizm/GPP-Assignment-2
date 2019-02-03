@@ -147,7 +147,7 @@ void LastManStanding::player2Initalize() {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
 	if (!player2->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player2Texture))
 	{
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player2"));
 	}
 
 	//player1->setPositionVector(GAME_WIDTH / 2, GAME_HEIGHT / 2);
@@ -167,7 +167,7 @@ void LastManStanding::player3Initalize() {
 
 	if (!Player3Texture.initialize(graphics, PLAYER))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundTexture"));
-	if (!player2->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player3Texture))
+	if (!player3->initialize(this, playerNS::PLAYER_WIDTH, playerNS::PLAYER_HEIGHT, 4, &Player3Texture))
 	{
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player1"));
 	}
@@ -181,7 +181,7 @@ void LastManStanding::player3Initalize() {
 	player3->setY(GAME_HEIGHT / 4);
 	player3->setX(GAME_WIDTH / 4);
 	//player2->setY(620 - player1->getHeight());
-	player2->setDegrees(315);
+	player3->setDegrees(315);
 }
 
 //=============================================================================
@@ -344,12 +344,6 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 
 			socketData->setIsLoaded(1);
-			/*int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
-			int test = timer->getCurrentElapsedTime(false);
-			if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
-				currentTime = numOfSecondsPassed;
-				gameClient->sendData(socketData->getJsonData());
-			}*/
 			currentGameState = "WAITING";
 
 		}
@@ -418,7 +412,8 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//1. Check if there is data coming from other clients
 		string receivedJson = gameClient->getCurrentClient()->getData();
-
+		if (numOfPlayers == 1)
+			currentGameState = "IN-GAME";
 		if (receivedJson != "") 
 		{
 			// Create a new SocketData object for the received data
@@ -430,9 +425,6 @@ void LastManStanding::update(Timer *gameTimer)
 			//tempID is the other player's connection
 			int tempID = tempSocketData->getID();
 			int tempIsLoaded = tempSocketData->getIsLoaded();
-
-			if (numOfPlayers == 1)
-				currentGameState = "IN-GAME";
 			if (numOfPlayers == 2) {
 				if (tempIsLoaded == 1)
 					allPlayerLoaded++;
@@ -480,10 +472,12 @@ void LastManStanding::update(Timer *gameTimer)
 			currentTime = numOfSecondsPassed;
 			gameClient->sendData(socketData->getJsonData());
 		}
-
+		
 		player1->update(frameTime);
-		if (numOfPlayers == 2)
+		if (numOfPlayers == 2) {
+			player1->update(frameTime);
 			player2->update(frameTime);
+		}
 		if (numOfPlayers == 3) {
 			player2->update(frameTime);
 			player3->update(frameTime);
@@ -536,28 +530,52 @@ void LastManStanding::update(Timer *gameTimer)
 			obstaclesMovement();
 		}
 
-		if (camera) {
-			camera->Update();
-		}
-
 		if (numOfPlayers == 2) 
 		{
+			//1. Check if there is data coming from other clients
+			string receivedJson = gameClient->getCurrentClient()->getData();
+			//Create a new SocketData object for the received data
+			// tempSocketData = new SocketData();
+			Document document = tempSocketData->getDocument(receivedJson);
+			tempSocketData->setID(document["id"].GetInt());
+			tempSocketData->setXCoordinate(document["XCoordinate"].GetFloat());
+			tempSocketData->setYCoordinate(document["YCoordinate"].GetFloat());
+
+			float x = tempSocketData->getXCoordinate();
+			float y = tempSocketData->getYCoordinate();
 			if (currentPlayerID == 1) {
+				player2->setX(x);
+				player2->setY(y);
 				myPlayerMovement(player1, cameraDifferenceX, cameraDifferenceY);
+				socketData->setXCoordinate(player1->getX());
+				socketData->setYCoordinate(player1->getY());
+				gameClient->sendData(socketData->getJsonData());
 				if (player2->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
 				{
 					player2->setFrameDelay(AnimationDelayStop);
 					player2->setCurrentFrame(0);
 				}
+				player2->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
 			}
 			if (currentPlayerID == 2) {
+				player1->setX(x);
+				player1->setY(y);
 				myPlayerMovement(player2, cameraDifferenceX, cameraDifferenceY);
+				socketData->setXCoordinate(player2->getX());
+				socketData->setYCoordinate(player2->getY());
+				gameClient->sendData(socketData->getJsonData());
 				if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
 				{
 					player1->setFrameDelay(AnimationDelayStop);
 					player1->setCurrentFrame(0);
 				}
+				player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
 			}
+
+			if (camera) {
+				camera->Update();
+			}
+
 
 		}
 
@@ -644,9 +662,12 @@ void LastManStanding::render()
 	}
 	if (currentGameState == "IN-GAME") {
 		BackgroundImage.draw();
-		player1->draw();
-		if (numOfPlayers == 2)
+		if (numOfPlayers == 1)
+			player1->draw();
+		if (numOfPlayers == 2) {
+			player1->draw();
 			player2->draw();
+		}
 		Obstacle1->draw();
 		camera->setCameraState("MOVING");
 	}
