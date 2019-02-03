@@ -100,6 +100,7 @@ public:
 	void player1Initialize();
 	void player2Initalize();
 	void player3Initalize();
+	void myPlayerMovement(Player * player,float cameraDifferenceX, float cameraDifferenceY);
 	void obstaclesInitialize(bool value);
 	void obstaclesMovement();
 	void update(Timer *gameTimer);      // must override pure virtual from Game

@@ -344,12 +344,12 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 
 			socketData->setIsLoaded(1);
-			int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+			/*int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
 			int test = timer->getCurrentElapsedTime(false);
 			if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
 				currentTime = numOfSecondsPassed;
 				gameClient->sendData(socketData->getJsonData());
-			}
+			}*/
 			currentGameState = "WAITING";
 
 		}
@@ -536,11 +536,33 @@ void LastManStanding::update(Timer *gameTimer)
 			obstaclesMovement();
 		}
 
+		if (camera) {
+			camera->Update();
+		}
+
 		if (numOfPlayers == 2) 
 		{
-
+			if (currentPlayerID == 1) {
+				myPlayerMovement(player1, cameraDifferenceX, cameraDifferenceY);
+				if (player2->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+				{
+					player2->setFrameDelay(AnimationDelayStop);
+					player2->setCurrentFrame(0);
+				}
+			}
+			if (currentPlayerID == 2) {
+				myPlayerMovement(player2, cameraDifferenceX, cameraDifferenceY);
+				if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+				{
+					player1->setFrameDelay(AnimationDelayStop);
+					player1->setCurrentFrame(0);
+				}
+			}
 
 		}
+
+		obstaclesMovement();
+
 
 
 
@@ -549,7 +571,24 @@ void LastManStanding::update(Timer *gameTimer)
 	} //end of if statement for currentGameState == "IN-GAME"
 }
 
+void LastManStanding::myPlayerMovement(Player* player,float cameraDifferenceX, float cameraDifferenceY) {
+	if (input->wasKeyPressed(VK_SPACE))
+	{
+		float currentAngle = player->getRadians();
+		player->startJump(currentAngle, frameTime);
+		player->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 
+
+	}
+	if (player->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+	{
+		player->setFrameDelay(AnimationDelayStop);
+		player->setCurrentFrame(0);
+	}
+
+	player->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
+
+}
 void LastManStanding::obstaclesMovement() 
 {
 	Obstacle1->update(frameTime);
@@ -615,10 +654,10 @@ void LastManStanding::render()
 	{
 		camera->setTransform(graphics);
 	}
-	/*for each (Heart *heartTemp in heartList)
+	for each (Heart *heartTemp in heartList)
 	{
 		heartTemp->draw();
-	}*/
+	}
 
 	graphics->spriteEnd();                  // end drawing sprites
 
