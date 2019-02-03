@@ -39,6 +39,9 @@ public:
 	string getCameraState() {
 		return this->cameraState;
 	}
+	float getCameraHorizontalSpeed() {
+		return this->cameraHorizontalSpeed;
+	}
 
 };
 

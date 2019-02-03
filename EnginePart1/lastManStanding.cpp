@@ -97,6 +97,7 @@ void LastManStanding::obstaclesInitialize(bool value)
 	{
 		//Attributes
 		Obstacle1 = new Obstacle();
+		Obstacle2 = new Obstacle();
 
 		//methods || functions
 
@@ -105,8 +106,14 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obstacle1->initialize(this, &ObsTexture, GAME_WIDTH / 4 * 3, GAME_HEIGHT/10 * 7.4, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
+		if (!Obs2Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+		if (!Obstacle2->initialize(this, &Obs2Texture, BackgroundWidth / 20 * 2, GAME_HEIGHT / 10 * 5, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
 		//set the states here
 		Obstacle1->setMovementState("UP");
+		Obstacle2->setMovementState("RIGHT");
 	}
 
 }
@@ -621,6 +628,7 @@ void LastManStanding::myPlayerMovement(Player* player,float cameraDifferenceX, f
 void LastManStanding::obstaclesMovement() 
 {
 	Obstacle1->update(frameTime);
+	Obstacle2->update(frameTime);
 
 
 	// 1) Obstacle1 moves up and down ez
@@ -636,6 +644,22 @@ void LastManStanding::obstaclesMovement()
 		Obstacle1->setY(Obstacle1->getY() + obstacleNS::OBS1_MOVEMENT_SPEED*frameTime);
 
 
+
+	if (Obstacle2->getX() >= (BackgroundWidth / 20 * 5))
+		Obstacle2->setMovementState("LEFT");
+	else if (Obstacle2->getY() <= (BackgroundWidth / 20 * 2))
+		Obstacle2->setMovementState("RIGHT");
+
+
+	if (Obstacle2->getMovementState() == "RIGHT") 
+	{
+		Obstacle2->setY(/*Obstacle2->getY() +*/ sin(Obstacle2->getX())*500*frameTime);
+		Obstacle2->setX(Obstacle2->getX() + camera->getCameraHorizontalSpeed()*50*frameTime);
+	}
+	else if (Obstacle2->getMovementState() == "LEFT") {
+		Obstacle2->setY(/*Obstacle2->getY() -*/ sin(Obstacle2->getX())*500*frameTime);
+		Obstacle2->setX(Obstacle2->getX() - camera->getCameraHorizontalSpeed()*50*frameTime);
+	}
 
 }
 //=============================================================================
@@ -680,6 +704,7 @@ void LastManStanding::render()
 			player2->draw();
 		}
 		Obstacle1->draw();
+		Obstacle2->draw();
 		camera->setCameraState("MOVING");
 	}
 	if (camera)

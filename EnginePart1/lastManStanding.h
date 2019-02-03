@@ -48,9 +48,10 @@ protected:
 
 	list <Heart*>  heartList;
 	TextureManager ObsTexture;
-	//Image Obs1Image;
+	TextureManager Obs2Texture;
 
 	Obstacle *Obstacle1;
+	Obstacle *Obstacle2;
 
 	Camera *camera;
 
