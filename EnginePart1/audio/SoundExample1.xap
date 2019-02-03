@@ -16,8 +16,8 @@ Global Settings
     Header File = C:\Programming 2D Games\Object Version\Chapter 7 Sound\SoundExample1\audio\SoundExample1.h;
     Exclude Category Names = 0;
     Exclude Variable Names = 0;
-    Last Modified Low = 1109899208;
-    Last Modified High = 30717244;
+    Last Modified Low = 3881720291;
+    Last Modified High = 30717667;
 
     Category
     {
@@ -227,12 +227,10 @@ Wave Bank
     Compression Preset Name = <none>;
     Xbox Bank Last Modified Low = 0;
     Xbox Bank Last Modified High = 0;
-    PC Bank Last Modified Low = 884965030;
-    PC Bank Last Modified High = 30717244;
-    Header Last Modified Low = 0;
-    Header Last Modified High = 0;
-    Bank Last Revised Low = 487220975;
-    Bank Last Revised High = 30717244;
+    PC Bank Last Modified Low = 3881800074;
+    PC Bank Last Modified High = 30717667;
+    Bank Last Revised Low = 3780742517;
+    Bank Last Revised High = 30717667;
 
     Wave
     {
@@ -353,22 +351,22 @@ Wave Bank
     {
         Name = scream6;
         File = scream6.wav;
-        Build Settings Last Modified Low = 385904455;
-        Build Settings Last Modified High = 30717244;
+        Build Settings Last Modified Low = 3520713924;
+        Build Settings Last Modified High = 30717667;
 
         Cache
         {
             Format Tag = 0;
             Channels = 1;
-            Sampling Rate = 11025;
-            Bits Per Sample = 0;
+            Sampling Rate = 44100;
+            Bits Per Sample = 1;
             Play Region Offset = 44;
-            Play Region Length = 14156;
+            Play Region Length = 71552;
             Loop Region Offset = 0;
             Loop Region Length = 0;
             File Type = 1;
-            Last Modified Low = 178475235;
-            Last Modified High = 30717244;
+            Last Modified Low = 2981523156;
+            Last Modified High = 30717667;
         }
     }
 }
@@ -380,8 +378,8 @@ Sound Bank
     Windows File = Win\SoundsExample1.xsb;
     Xbox Bank Path Edited = 0;
     Windows Bank Path Edited = 0;
-    Bank Last Modified Low = 1109988970;
-    Bank Last Modified High = 30717244;
+    Bank Last Modified Low = 3881859916;
+    Bank Last Modified High = 30717667;
     Header Last Modified High = 0;
     Header Last Modified Low = 0;
 

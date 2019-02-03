@@ -16,7 +16,7 @@
 #include "GameClient.h"
 #include "SocketData.h"
 #include <list>
-
+#include "textDX.h"
 using namespace std;
 
 //=============================================================================
@@ -89,6 +89,22 @@ protected:
 	Timer *timer;
 	int currentTime = 0;
 
+	TextDX  fontBig;
+	//menu options here 
+	TextDX *startText;
+	TextDX *instructionsText;
+	TextDX *quitText;
+	TextDX *scoreText;
+	int menuOptionNo;
+	bool menuOn;
+	bool countDownOn;
+	const int COUNT_DOWN = 3;
+	int countDownTimer;
+	time_t t;
+	time_t timePassed;
+	bool counted = false;
+	int i = 0;
+
 public:
 	// Constructor
 	LastManStanding();
@@ -111,6 +127,8 @@ public:
 	void render();      // "
 	void releaseAll();
 	void resetAll();
+	void MenuInitialize();
+	void startGame(float cameraDifferenceX, float cameraDifferenceY);
 
 };
 

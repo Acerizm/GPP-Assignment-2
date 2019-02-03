@@ -42,7 +42,8 @@ public:
 	float getCameraHorizontalSpeed() {
 		return this->cameraHorizontalSpeed;
 	}
-
+	void setCameraHorizontalSpeed(float i);
+	float returnCameraDifferenceX();
 };
 
 

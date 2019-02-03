@@ -144,3 +144,13 @@ int Player::getNumberOfLifes()
 		return numberOflifes;
 	
 }
+
+void Player::setScore(int i)
+{ 
+	this->score = i;
+}
+
+int Player::getScore()
+{
+	return this->score;
+}

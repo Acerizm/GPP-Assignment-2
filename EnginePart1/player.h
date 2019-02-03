@@ -45,7 +45,7 @@ private:
 	float velocityX = 0;
 	int numberOflifes = 3;
 	int ClientID = 1;
-
+	float score = 0;
 public:
 	Player();
 	~Player();
@@ -71,7 +71,8 @@ public:
 	int getClientID() {
 		return this->ClientID;
 	}
-
+	void setScore(int i);
+	int getScore();
 };
 
 

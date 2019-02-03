@@ -19,7 +19,10 @@
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment(lib, "Winmm.lib")
-
+#include <stdio.h>
+#include <iostream>
+#include <chrono>
+#include <ctime>    
 
 using namespace std;
 using namespace rapidjson;
@@ -35,6 +38,13 @@ LastManStanding::LastManStanding()
 	socketData = new SocketData();
 	numOfPlayers = 1;
 	timer = new Timer();
+	menuOn = true;
+	startText = new TextDX();
+	instructionsText = new TextDX();
+	quitText = new TextDX();
+	scoreText = new TextDX();
+	menuOptionNo = 2;
+	countDownOn = false;
 }
 
 //=============================================================================
@@ -83,6 +93,26 @@ void LastManStanding::lobbyInitialize()
 	//numOfPlayers++;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 }
+
+void LastManStanding::MenuInitilization()
+{
+
+	fontBig.initialize(graphics, 256, false, false, "Arial Bold");
+	fontBig.setFontColor(graphicsNS::RED);
+	// init the texts for menu 
+	if (startText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+	if (instructionsText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+	if (quitText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
+
+	if (scoreText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing scoreText font"));
+
+
+}
+
 //=============================================================================
 // Initializes the game
 // Throws GameError on error
@@ -476,9 +506,128 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 		}
 	}
+	if (currentGameState == "MENU") {
+		long int timePassedint = static_cast<long int> (timePassed);
+		if (countDownOn)
+		{
+			countDownTimer = COUNT_DOWN - timePassedint;
+			if (countDownTimer < 0)
+			{
+				countDownOn = false;
+				camera->setCameraHorizontalSpeed(0.3f);
+			}
+		}
+		float cameraDifferenceX = 0;
+		float cameraDifferenceY = 0;
+		int tempScore = 0;
 
+		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+		{
+			cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+		}
+		if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+		{
+			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+		}
+
+		camera->setCameraHorizontalSpeed(0.0f);
+		if (menuOptionNo == 2)
+		{
+			startText->setFontColor(graphicsNS::YELLOW);
+			instructionsText->setFontColor(graphicsNS::WHITE);
+			quitText->setFontColor(graphicsNS::WHITE);
+		}
+		if (menuOptionNo == 1)
+		{
+			startText->setFontColor(graphicsNS::WHITE);
+			instructionsText->setFontColor(graphicsNS::YELLOW);
+			quitText->setFontColor(graphicsNS::WHITE);
+		}
+		if (menuOptionNo == 0)
+		{
+			startText->setFontColor(graphicsNS::WHITE);
+			instructionsText->setFontColor(graphicsNS::WHITE);
+			quitText->setFontColor(graphicsNS::YELLOW);
+		}
+
+		if (input->wasKeyPressed(VK_DOWN))
+		{
+			if (menuOptionNo != 0)
+			{
+				menuOptionNo -= 1;
+			}
+		}
+		if (input->wasKeyPressed(VK_UP))
+		{
+			if (menuOptionNo != 2)
+			{
+				menuOptionNo += 1;
+			}
+		}
+		if (input->wasKeyPressed(VK_RETURN))
+		{
+			if (menuOptionNo == 2)
+			{
+				menuOn = !menuOn;
+				t = std::time(0);
+				countDownOn = true;
+			}
+			else if (menuOptionNo == 1)
+			{
+				//show instructions here
+				//showInstruction = true;
+				if (input->wasKeyPressed(VK_ESCAPE))
+				{
+					//showInstruction = false;
+				}
+			}
+			else if (menuOptionNo == 0)
+			{
+				PostQuitMessage(0);
+			}
+		}
+		/*if (showInstruction)
+		{
+			if (input->wasKeyPressed(VK_ESCAPE))
+			{
+				showInstruction = false;
+			}
+		}
+		*/
+
+	}
+	if (currentGameState == "PRE-GAME") 
+	{
+		timePassed = std::time(0) - t;
+		this->startGame(cameraDifferenceX, cameraDifferenceY);
+
+	}
 	else if (currentGameState == "IN-GAME") 
 	{
+		//scoring system created by your boy
+		if (i == cameraDifferenceX)
+		{
+			counted = true;
+		}
+		if (i < cameraDifferenceX)
+		{
+			counted = false;
+			i = i + 50;  // adding the damn score every 50 pixels bois
+		}
+		while (counted == false)
+		{
+			tempScore = player1->getNumberOfLifes();
+			player1->setScore(player1->getScore() + tempScore);
+			counted = true;
+		}
+
+		if (input->wasKeyPressed(VK_ESCAPE))
+		{
+			//change the state here instead
+			menuOn = !menuOn;
+			currentGameState = "MENU";
+		}
+
 		BackgroundImage.update(frameTime);
 		//gameClient->sendData("Haiqel Test");
 		/*if (gameClient->getCurrentClient()->getData() != "")
@@ -700,6 +849,7 @@ void LastManStanding::render()
 {
 	
 	graphics->spriteBegin();                // begin drawing sprites
+	scoreText->print("Score: " + to_string(player1->getScore()), camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
 	if (currentGameState == "IN-LOBBY") {
 		LobbyBackgroundImage.draw();
 		ID1Image.draw();
@@ -717,6 +867,21 @@ void LastManStanding::render()
 		Obstacle1->draw();
 		Obstacle2->draw();
 		camera->setCameraState("MOVING");
+	}
+	if (currentGameState == "MENU") 
+	{
+		BackgroundImage.draw();
+		int textWidthStart = startText->GetTextWidth("START", startText->getFont());
+		int textHeightStart = startText->GetTextHeight("START", startText->getFont());
+		startText->print("START", camera->getCameraX() - textWidthStart / 2, camera->getCameraY() - textHeightStart / 2);
+
+		int textWidthInstructions = instructionsText->GetTextWidth("INSTRUCTIONS", instructionsText->getFont());
+		int textHeightInstructions = instructionsText->GetTextHeight("INSTRUCTIONS", instructionsText->getFont());
+		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - textWidthInstructions / 2, camera->getCameraY() + 30 - textHeightInstructions / 2);
+
+		int textWidthQuit = quitText->GetTextWidth("QUIT GAME", quitText->getFont());
+		int textHeightQuit = quitText->GetTextHeight("QUIT GAME", quitText->getFont());
+		quitText->print("QUIT GAME", camera->getCameraX() - (textWidthQuit / 2), camera->getCameraY() + 60 - textHeightQuit / 2);
 	}
 	if (camera)
 	{
@@ -757,5 +922,24 @@ void LastManStanding::resetAll()
 {
 	return;
 
+}
+void LastManStanding::startGame(float cameraDifferenceX, float cameraDifferenceY)
+{
+	
+	for each (Heart *heartTemp in heartList)
+	{
+		heartTemp->setX(cameraDifferenceX + GAME_WIDTH / 20 * heartTemp->getHeartNo());
+		heartTemp->update(frameTime);
+
+	}
+	for (int i = player1->getNumberOfLifes(); i < heartList.size(); i)
+	{
+		if (heartList.size() > 0)
+		{
+			heartList.pop_back();
+		}
+	}
+	countDownTimer = COUNT_DOWN;
+	
 }
 
