@@ -549,7 +549,12 @@ void LastManStanding::update(Timer *gameTimer)
 				myPlayerMovement(player1, cameraDifferenceX, cameraDifferenceY);
 				socketData->setXCoordinate(player1->getX());
 				socketData->setYCoordinate(player1->getY());
-				gameClient->sendData(socketData->getJsonData());
+				int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+				int test = timer->getCurrentElapsedTime(false);
+				if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+					currentTime = numOfSecondsPassed;
+					gameClient->sendData(socketData->getJsonData());
+				}
 				if (player2->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
 				{
 					player2->setFrameDelay(AnimationDelayStop);
@@ -563,7 +568,13 @@ void LastManStanding::update(Timer *gameTimer)
 				myPlayerMovement(player2, cameraDifferenceX, cameraDifferenceY);
 				socketData->setXCoordinate(player2->getX());
 				socketData->setYCoordinate(player2->getY());
-				gameClient->sendData(socketData->getJsonData());
+				int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+				int test = timer->getCurrentElapsedTime(false);
+				if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+					currentTime = numOfSecondsPassed;
+					gameClient->sendData(socketData->getJsonData());
+				}
+				//gameClient->sendData(socketData->getJsonData());
 				if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
 				{
 					player1->setFrameDelay(AnimationDelayStop);
