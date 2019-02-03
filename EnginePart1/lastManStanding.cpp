@@ -414,6 +414,8 @@ void LastManStanding::update(Timer *gameTimer)
 
 	if (currentGameState == "WAITING") 
 	{
+		// need to assign the player to each respective player object
+
 		//1. Check if there is data coming from other clients
 		string receivedJson = gameClient->getCurrentClient()->getData();
 
@@ -510,27 +512,37 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 		}
 
+		//this is where the magic happens
+		if (numOfPlayers == 1) {
+			if (input->wasKeyPressed(VK_SPACE))
+			{
+				float currentAngle = player1->getRadians();
+				player1->startJump(currentAngle, frameTime);
+				player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 
-		if (input->wasKeyPressed(VK_SPACE))
+
+			}
+			if (camera) {
+				camera->Update();
+			}
+			if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
+			{
+				player1->setFrameDelay(AnimationDelayStop);
+				player1->setCurrentFrame(0);
+			}
+
+			player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
+
+			obstaclesMovement();
+		}
+
+		if (numOfPlayers == 2) 
 		{
-			float currentAngle = player1->getRadians();
-			player1->startJump(currentAngle, frameTime);
-			player1->setFrameDelay(playerNS::PLAYER_ANIMATION_DELAY);
 
 
 		}
-		if (camera) {
-			camera->Update();
-		}
-		if (player1->getCurrentFrame() == playerNS::PLAYER_END_FRAME)
-		{
-			player1->setFrameDelay(AnimationDelayStop);
-			player1->setCurrentFrame(0);
-		}
 
-		player1->jump(frameTime, cameraDifferenceX, cameraDifferenceY);
 
-		obstaclesMovement();
 
 
 		
