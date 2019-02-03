@@ -21,13 +21,19 @@ Server::Server(int port, bool loopBacktoLocalHost) //Port = port to broadcast on
 	m_addr.sin_port = htons(port); //Port
 	m_addr.sin_family = AF_INET; //IPv4 Socket
 
+	//all of this just for the startup only;
+
+	//socket to listen to connections
 	m_sListen = socket(AF_INET, SOCK_STREAM, 0); //Create socket to listen for new connections
+
+	//bind the socket created for it to be listened by the server
 	if (bind(m_sListen, (SOCKADDR*)&m_addr, sizeof(m_addr)) == SOCKET_ERROR) //Bind the address to the socket, if we fail to bind the address..
 	{
 		std::string ErrorMsg = "Failed to bind the address to our listening socket. Winsock Error:" + std::to_string(WSAGetLastError());
 		MessageBoxA(0, ErrorMsg.c_str(), "Error", MB_OK | MB_ICONERROR);
 		exit(1);
 	}
+
 	if (listen(m_sListen, SOMAXCONN) == SOCKET_ERROR) //Places sListen socket in a state in which it is listening for an incoming connection. Note:SOMAXCONN = Socket Oustanding Max connections, if we fail to listen on listening socket...
 	{
 		std::string ErrorMsg = "Failed to listen on listening socket. Winsock Error:" + std::to_string(WSAGetLastError());
@@ -37,6 +43,7 @@ Server::Server(int port, bool loopBacktoLocalHost) //Port = port to broadcast on
 	m_IDCounter = 0;
 	std::thread PST(PacketSenderThread, std::ref(*this));
 	PST.detach();
+	//this is a vector/list of threads waiting
 	m_threads.push_back(&PST);
 }
 
@@ -51,11 +58,14 @@ bool Server::ListenForNewConnection()
 	}
 	else //If client connection properly accepted
 	{
+		//this process is blocking
 		std::lock_guard<std::shared_mutex> lock(m_mutex_connectionMgr); //Lock connection manager mutex since we are adding an element to connection vector
 		std::shared_ptr<Connection> newConnection(std::make_shared<Connection>(newConnectionSocket));
 		m_connections.push_back(newConnection); //push new connection into vector of connections
 		newConnection->m_ID = m_IDCounter; //Set ID for this connection
 		m_IDCounter += 1; //Increment ID Counter...
+
+		//this process is blocking
 		std::cout << "Client Connected! ID:" << newConnection->m_ID << std::endl;
 		std::thread CHT(ClientHandlerThread, std::ref(*this), newConnection);
 		CHT.detach();

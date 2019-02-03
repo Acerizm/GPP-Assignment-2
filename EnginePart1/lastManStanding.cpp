@@ -34,6 +34,7 @@ LastManStanding::LastManStanding()
 	currentGameState = "IN-LOBBY";
 	socketData = new SocketData();
 	numOfPlayers = 1;
+	timer = new Timer();
 }
 
 //=============================================================================
@@ -252,8 +253,15 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//Send the data to the server with the JsonFormatted
 		//use the socketData not the tempSocketData(local)
-		gameClient->sendData(socketData->getInLobbyData());
-		Sleep(1000);
+		int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+		int test = timer->getCurrentElapsedTime(false);
+		if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+			currentTime = numOfSecondsPassed;
+			//if (currentGameState == "IN-LOBBY")
+				//currentTime = static_cast<int>(timer->getCurrentElapsedTime(false));
+			gameClient->sendData(socketData->getJsonData());
+		}
+		//Sleep(1000);
 		LobbyBackgroundImage.update(frameTime);
 		if (camera) {
 			camera->Update();
@@ -336,13 +344,19 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 
 			socketData->setIsLoaded(1);
-			gameClient->sendData(socketData->getJsonData());
+			int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+			int test = timer->getCurrentElapsedTime(false);
+			if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+				currentTime = numOfSecondsPassed;
+				gameClient->sendData(socketData->getJsonData());
+			}
 			currentGameState = "WAITING";
 
 		}
 		if (receivedJson != "") {
 			Document document = tempSocketData->getDocument(receivedJson);
 			tempSocketData->setID(document["id"].GetInt());
+
 			if (numOfPlayers == 2) {
 				player1 = new Player();
 				player2 = new Player();
@@ -366,10 +380,14 @@ void LastManStanding::update(Timer *gameTimer)
 					heartList.push_back(heartTemp);
 				}
 
-				//need to stop the machine for awhile
 				socketData->setIsLoaded(1);
-				gameClient->sendData(socketData->getLoadingGameData());
 				currentGameState = "WAITING";
+				int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+				int test = timer->getCurrentElapsedTime(false);
+				if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+					currentTime = numOfSecondsPassed;
+					gameClient->sendData(socketData->getJsonData());
+				}
 
 			}
 			if (numOfPlayers == 3) {
@@ -383,7 +401,12 @@ void LastManStanding::update(Timer *gameTimer)
 				player3Initalize();
 				//need to stop the machine for awhile
 				socketData->setIsLoaded(1);
-				gameClient->sendData(socketData->getLoadingGameData());
+				int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+				int test = timer->getCurrentElapsedTime(false);
+				if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+					currentTime = numOfSecondsPassed;
+					gameClient->sendData(socketData->getJsonData());
+				}
 				currentGameState = "WAITING";
 			}
 		}
@@ -400,8 +423,8 @@ void LastManStanding::update(Timer *gameTimer)
 			// tempSocketData = new SocketData();
 			Document document = tempSocketData->getDocument(receivedJson);
 			tempSocketData->setID(document["id"].GetInt());
-			tempSocketData->setIsLoaded(document["check"].GetInt64());
-			
+			//tempSocketData->setIsLoaded(document["check"].GetInt());
+			tempSocketData->setIsLoaded(document["isLoaded"].GetInt());
 			//tempID is the other player's connection
 			int tempID = tempSocketData->getID();
 			int tempIsLoaded = tempSocketData->getIsLoaded();
@@ -411,11 +434,16 @@ void LastManStanding::update(Timer *gameTimer)
 			if (numOfPlayers == 2) {
 				if (tempIsLoaded == 1)
 					allPlayerLoaded++;
-				else if (allPlayerLoaded == numOfPlayers)
+				if (allPlayerLoaded == numOfPlayers) {
 					currentGameState = "IN-GAME";
+				}
 				
-				gameClient->sendData(socketData->getLoadingGameData());
-				Sleep(100);
+				int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+				int test = timer->getCurrentElapsedTime(false);
+				if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+					currentTime = numOfSecondsPassed;
+					gameClient->sendData(socketData->getJsonData());
+				}
 			}
 			if (numOfPlayers == 3)	
 			{
@@ -427,9 +455,12 @@ void LastManStanding::update(Timer *gameTimer)
 					if (allPlayerLoaded == numOfPlayers)
 						currentGameState = "IN-GAME";
 					
-					gameClient->sendData(socketData->getLoadingGameData());
-					Sleep(100);
-					
+					int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+					int test = timer->getCurrentElapsedTime(false);
+					if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+						currentTime = numOfSecondsPassed;
+						gameClient->sendData(socketData->getJsonData());
+					}				
 				}
 			}
 		}
@@ -439,8 +470,14 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		BackgroundImage.update(frameTime);
 		//gameClient->sendData("Haiqel Test");
-		if (gameClient->getCurrentClient()->getData() != "")
-			string test = gameClient->getCurrentClient()->getData();
+		/*if (gameClient->getCurrentClient()->getData() != "")
+			string test = gameClient->getCurrentClient()->getData();*/
+		int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
+		int test = timer->getCurrentElapsedTime(false);
+		if (numOfSecondsPassed % 1 == 0 && numOfSecondsPassed != currentTime && numOfSecondsPassed != 0) {
+			currentTime = numOfSecondsPassed;
+			gameClient->sendData(socketData->getJsonData());
+		}
 
 		player1->update(frameTime);
 		if (numOfPlayers == 2)
