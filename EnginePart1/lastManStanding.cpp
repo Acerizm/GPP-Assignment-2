@@ -191,7 +191,7 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obstacle4->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 6, GAME_HEIGHT / 10 * 5, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
-		if (!Obstacle5->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 8, GAME_HEIGHT / 10 * 5, 1))
+		if (!Obstacle5->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 8, GAME_HEIGHT / 10 * 2, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 
@@ -201,7 +201,7 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle2->setMovementState("RIGHT");
 		Obstacle3->setMovementState("RIGHT");
 		Obstacle4->setMovementState("RIGHT");
-
+		Obstacle5->setMovementState("ANTI-CLOCKWISE");
 		// 6) Then go to obstaclesMovement() function to make the obstacles move
 	}
 
@@ -951,6 +951,24 @@ void LastManStanding::obstaclesMovement()
 		Obstacle4->setY(tan(Obstacle4->getX() * 500) * 1/2 * frameTime + GAME_HEIGHT / 2);
 	}
 
+	//this is for circular motion wave
+	//Formula:
+	// 1) X := OriginX + cos(angle)*radius
+	// 20 Y := OriginY + sin(angle)*radius
+
+	/*if (Obstacle4->getX() >= (BackgroundWidth / 20 * 7))
+		Obstacle4->setMovementState("LEFT");
+	else if (Obstacle4->getX() <= (BackgroundWidth / 20 * 6))
+		Obstacle4->setMovementState("RIGHT");
+*/
+
+	if (Obstacle5->getMovementState() == "ANTI-CLOCKWISE")
+	{
+		obstacle5Angle += camera->getCameraHorizontalSpeed()*0.005;
+		Obstacle5->setX(Obstacle5->getX() + cos(obstacle5Angle)*obstacle5Radius*frameTime);
+		Obstacle5->setY(Obstacle5->getY() + sin(obstacle5Angle)*obstacle5Radius*frameTime);
+	}
+	
 }
 //=============================================================================
 // Handle collisions

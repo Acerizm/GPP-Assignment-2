@@ -126,6 +126,8 @@ protected:
 	Obstacle *Obstacle3;
 	Obstacle *Obstacle4;
 	Obstacle *Obstacle5;
+	float obstacle5Angle = 0;
+	float obstacle5Radius = 50.0f;
 	//////////////////////////////////////////////////////////
 	
 
