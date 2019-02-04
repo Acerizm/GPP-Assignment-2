@@ -28,6 +28,8 @@ void Camera::Update()
 	else {
 		if (getCameraState() == "MOVING")
 			cameraX = this->getCameraX() + this->cameraHorizontalSpeed;
+		if (getCameraState() == "STOP");
+			//cameraX = getCameraX();
 	}
 	//int cameraX = 1000, cameraY = 1000;
 

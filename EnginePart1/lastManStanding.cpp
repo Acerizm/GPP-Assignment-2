@@ -124,6 +124,17 @@ void LastManStanding::initialize(HWND hwnd)
 	LobbyBackgroundImage.setX(0);
 	LobbyBackgroundImage.setY(0);
 
+	if (!BackgroundTexture.initialize(graphics, Background))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing BackgroundTexture"));
+	if (!BackgroundImage.initialize(graphics, BackgroundWidth, BackgroundHeight, 0, &BackgroundTexture)) {
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
+	}
+	BackgroundImage.setCurrentFrame(0);
+	BackgroundImage.setX(0);
+	BackgroundImage.setY(0);
+
+	countDownTimer = COUNT_DOWN;
+	camera->setCameraState("STOP");
 	MenuInitialize();
 	return;
 }
@@ -233,10 +244,10 @@ void LastManStanding::player3Initalize() {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
-	timePassed = std::time(0) - t;
+	//timePassed = std::time(0) - t;
 	if (currentGameState == "MENU") {
-		LobbyBackgroundImage.update(frameTime);
-		long int timePassedint = static_cast<long int> (timePassed);
+		BackgroundImage.update(frameTime);
+		/*long int timePassedint = static_cast<long int> (timePassed);
 		if (countDownOn)
 		{
 			countDownTimer = COUNT_DOWN - timePassedint;
@@ -245,9 +256,9 @@ void LastManStanding::update(Timer *gameTimer)
 				countDownOn = false;
 				camera->setCameraHorizontalSpeed(0.3f);
 			}
-		}
+		}*/
 
-		camera->setCameraHorizontalSpeed(0.0f);
+		//camera->setCameraHorizontalSpeed(0.0f);
 		if (menuOptionNo == 2)
 		{
 			startText->setFontColor(graphicsNS::YELLOW);
@@ -290,7 +301,6 @@ void LastManStanding::update(Timer *gameTimer)
 				//this is where the state is changed to "PRE-LOBBY"
 				currentGameState = "PRE-LOBBY";
 				menuOn = !menuOn;
-				t = std::time(0);
 				countDownOn = true;
 			}
 			else if (menuOptionNo == 1)
@@ -455,14 +465,6 @@ void LastManStanding::update(Timer *gameTimer)
 		//Create a new SocketData object for the received data
 		tempSocketData = new SocketData();
 
-		if (!BackgroundTexture.initialize(graphics, Background))
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing BackgroundTexture"));
-		if (!BackgroundImage.initialize(graphics, BackgroundWidth, BackgroundHeight, 0, &BackgroundTexture)) {
-			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
-		}
-		BackgroundImage.setCurrentFrame(0);
-		BackgroundImage.setX(0);
-		BackgroundImage.setY(0);
 		if (numOfPlayers == 1) {
 			player1Initialize();
 			if (!heartTexture.initialize(graphics, HEART_IMAGE))
@@ -549,8 +551,10 @@ void LastManStanding::update(Timer *gameTimer)
 
 		//1. Check if there is data coming from other clients
 		string receivedJson = gameClient->getCurrentClient()->getData();
-		if (numOfPlayers == 1)
-			currentGameState = "IN-GAME";
+		if (numOfPlayers == 1) {
+			t = std::time(0);
+			currentGameState = "PRE-GAME";
+		}
 		if (receivedJson != "") 
 		{
 			// Create a new SocketData object for the received data
@@ -566,7 +570,8 @@ void LastManStanding::update(Timer *gameTimer)
 				if (tempIsLoaded == 1)
 					allPlayerLoaded++;
 				if (allPlayerLoaded == numOfPlayers) {
-					currentGameState = "IN-GAME";
+					t = std::time(0);
+					currentGameState = "PRE-GAME";
 				}
 				
 				int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
@@ -583,8 +588,10 @@ void LastManStanding::update(Timer *gameTimer)
 
 					if (tempIsLoaded == 1)
 						allPlayerLoaded++;
-					if (allPlayerLoaded == numOfPlayers)
-						currentGameState = "IN-GAME";
+					if (allPlayerLoaded == numOfPlayers) {
+						t = std::time(0);
+						currentGameState = "PRE-GAME";
+					}
 					
 					int numOfSecondsPassed = int(gameTimer->getCurrentElapsedTime(false));
 					int test = timer->getCurrentElapsedTime(false);
@@ -600,24 +607,32 @@ void LastManStanding::update(Timer *gameTimer)
 	{
 		//timePassed = std::time(0) - t;
 		//this->startGame(cameraDifferenceX, cameraDifferenceY);
+		//countDownTimer = COUNT_DOWN;
+		timePassed = std::time(0) - t;
+		camera->setCameraState("STOP");
+		long int timePassedint = static_cast<long int> (timePassed);
+		if (countDownOn)
+		{
+			countDownTimer = COUNT_DOWN - timePassedint;
+			if (countDownTimer < 0)
+			{
+				countDownOn = false;
+				//camera->setCameraHorizontalSpeed(0.3f);
+				//camera->setCameraState("MOVING");
+				//currentGameState = "IN-GAME";
+			}
+		}
+		BackgroundImage.update(frameTime);
+		if (camera) {
+			camera->Update();
+		}
 
 	}
 	else if (currentGameState == "IN-GAME") 
-	{
-		/*float cameraDifferenceX = 0;
-		float cameraDifferenceY = 0;
-		int tempScore = 0;
-
-		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
-		{
-			cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
-		}
-		if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
-		{
-			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
-		}*/
+	{	
 		//darren's start
-		long int timePassedint = static_cast<long int> (timePassed);
+
+		/*long int timePassedint = static_cast<long int> (timePassed);
 		if (countDownOn)
 		{
 			countDownTimer = COUNT_DOWN - timePassedint;
@@ -626,7 +641,7 @@ void LastManStanding::update(Timer *gameTimer)
 				countDownOn = false;
 				camera->setCameraHorizontalSpeed(0.3f);
 			}
-		}
+		}*/
 		float cameraDifferenceX = 0;
 		float cameraDifferenceY = 0;
 		int tempScore = 0;
@@ -639,8 +654,6 @@ void LastManStanding::update(Timer *gameTimer)
 		{
 			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
 		}
-
-		timePassed = std::time(0) - t;
 
 		//scoring system created by your boy
 		if (i == cameraDifferenceX)
@@ -879,7 +892,7 @@ void LastManStanding::render()
 	graphics->spriteBegin();                // begin drawing sprites
 	if (currentGameState == "MENU")
 	{
-		LobbyBackgroundImage.draw();
+		BackgroundImage.draw();
 		int textWidthStart = startText->GetTextWidth("START", startText->getFont());
 		int textHeightStart = startText->GetTextHeight("START", startText->getFont());
 		startText->print("START", camera->getCameraX() - textWidthStart / 2, camera->getCameraY() - textHeightStart / 2);
@@ -897,6 +910,35 @@ void LastManStanding::render()
 		ID1Image.draw();
 		ID2Image.draw();
 		ID3Image.draw();
+	}
+	if (currentGameState == "PRE-GAME")
+	{
+		BackgroundImage.draw();
+		if (numOfPlayers == 1)
+			player1->draw();
+		if (numOfPlayers == 2) {
+			player1->draw();
+			player2->draw();
+		}
+		Obstacle1->draw();
+		Obstacle2->draw();
+		if (countDownOn)
+		{
+			if (countDownTimer - timePassed > 0)
+			{
+				int textWidth = fontBig.GetTextWidth(to_string(countDownTimer - timePassed), fontBig.getFont());
+				int textHeight = fontBig.GetTextHeight(to_string(countDownTimer - timePassed), fontBig.getFont());
+				fontBig.print(to_string(countDownTimer - timePassed), camera->getCameraX() - textWidth / 2, camera->getCameraY() - textHeight / 2);
+			}
+			else if (countDownTimer - timePassed <= 0)
+			{
+				int textWidth = fontBig.GetTextWidth("GO!", fontBig.getFont());
+				int textHeight = fontBig.GetTextHeight("GO!", fontBig.getFont());
+				fontBig.print("GO!", camera->getCameraX() - textWidth / 2, camera->getCameraY() - textHeight / 2);
+				camera->setCameraState("MOVING");
+				currentGameState = "IN-GAME";
+			}
+		}
 	}
 	if (currentGameState == "IN-GAME") {
 		scoreText->print("Score: " + to_string(player1->getScore()), camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
