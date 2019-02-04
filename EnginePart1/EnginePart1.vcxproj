@@ -14,7 +14,7 @@
     <ProjectName>EnginePart1</ProjectName>
     <ProjectGuid>{0259B800-2046-467E-94A2-D13B6F5210BC}</ProjectGuid>
     <RootNamespace>Destroyer</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -93,6 +93,9 @@
     <ClCompile Include="audio.cpp" />
     <ClCompile Include="background.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="ClientIni.cpp" />
+    <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="heart.cpp" />
     <ClCompile Include="obstacle.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -101,7 +104,11 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="lastManStanding.cpp" />
+    <ClCompile Include="Packet.cpp" />
+    <ClCompile Include="PacketManager.cpp" />
+    <ClCompile Include="PacketStructs.cpp" />
     <ClCompile Include="player.cpp" />
+    <ClCompile Include="SendGetMethods.cpp" />
     <ClCompile Include="textDX.cpp" />
     <ClCompile Include="textureManager.cpp" />
     <ClCompile Include="winmain.cpp" />
@@ -110,6 +117,9 @@
     <ClInclude Include="audio.h" />
     <ClInclude Include="background.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="Client.h" />
+    <ClInclude Include="FileTransferData.h" />
+    <ClInclude Include="GameClient.h" />
     <ClInclude Include="heart.h" />
     <ClInclude Include="obstacle.h" />
     <ClInclude Include="constants.h" />
@@ -120,7 +130,12 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="lastManStanding.h" />
+    <ClInclude Include="Packet.h" />
+    <ClInclude Include="PacketManager.h" />
+    <ClInclude Include="PacketStructs.h" />
+    <ClInclude Include="PacketType.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="SocketData.h" />
     <ClInclude Include="textDX.h" />
     <ClInclude Include="textureManager.h" />
     <ClInclude Include="timer.h" />

@@ -85,6 +85,7 @@ protected:
 	int player2ID = 0;
 	int player3ID = 0;
 	int currentClientIDConnected = 0;
+	int connectedToServer = 0;
 
 	Timer *timer;
 	int currentTime = 0;
