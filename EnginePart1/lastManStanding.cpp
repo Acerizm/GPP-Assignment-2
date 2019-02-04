@@ -94,7 +94,7 @@ void LastManStanding::lobbyInitialize()
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 }
 
-void LastManStanding::MenuInitilization()
+void LastManStanding::MenuInitialize()
 {
 
 	fontBig.initialize(graphics, 256, false, false, "Arial Bold");
@@ -231,6 +231,19 @@ void LastManStanding::player3Initalize() {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+	float cameraDifferenceX = 0;
+	float cameraDifferenceY = 0;
+	int tempScore = 0;
+
+	if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+	{
+		cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+	}
+	if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+	{
+		cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+	}
+	timePassed = std::time(0) - t;
 	if (currentGameState == "PRE-LOBBY")
 	{
 		lobbyInitialize();
@@ -517,18 +530,6 @@ void LastManStanding::update(Timer *gameTimer)
 				camera->setCameraHorizontalSpeed(0.3f);
 			}
 		}
-		float cameraDifferenceX = 0;
-		float cameraDifferenceY = 0;
-		int tempScore = 0;
-
-		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
-		{
-			cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
-		}
-		if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
-		{
-			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
-		}
 
 		camera->setCameraHorizontalSpeed(0.0f);
 		if (menuOptionNo == 2)
@@ -598,12 +599,38 @@ void LastManStanding::update(Timer *gameTimer)
 	}
 	if (currentGameState == "PRE-GAME") 
 	{
-		timePassed = std::time(0) - t;
-		this->startGame(cameraDifferenceX, cameraDifferenceY);
+		//timePassed = std::time(0) - t;
+		//this->startGame(cameraDifferenceX, cameraDifferenceY);
 
 	}
 	else if (currentGameState == "IN-GAME") 
 	{
+		//darren's start
+		long int timePassedint = static_cast<long int> (timePassed);
+		if (countDownOn)
+		{
+			countDownTimer = COUNT_DOWN - timePassedint;
+			if (countDownTimer < 0)
+			{
+				countDownOn = false;
+				camera->setCameraHorizontalSpeed(0.3f);
+			}
+		}
+		float cameraDifferenceX = 0;
+		float cameraDifferenceY = 0;
+		int tempScore = 0;
+
+		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
+		{
+			cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
+		}
+		if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
+		{
+			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
+		}
+
+		timePassed = std::time(0) - t;
+
 		//scoring system created by your boy
 		if (i == cameraDifferenceX)
 		{
@@ -647,16 +674,6 @@ void LastManStanding::update(Timer *gameTimer)
 		if (numOfPlayers == 3) {
 			player2->update(frameTime);
 			player3->update(frameTime);
-		}
-		float cameraDifferenceX = 0;
-		float cameraDifferenceY = 0;
-		if ((camera->getCameraX() + GAME_WIDTH / 2) > GAME_WIDTH)
-		{
-			cameraDifferenceX = (camera->getCameraX() + GAME_WIDTH / 2) - GAME_WIDTH;
-		}
-		if ((camera->getCameraY() + GAME_HEIGHT / 2) > GAME_HEIGHT)
-		{
-			cameraDifferenceY = (camera->getCameraY() + GAME_HEIGHT / 2) - GAME_HEIGHT;
 		}
 		for each (Heart *heartTemp in heartList)
 		{
