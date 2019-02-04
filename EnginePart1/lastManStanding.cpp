@@ -68,7 +68,7 @@ void LastManStanding::lobbyInitialize()
 	// Connect to the server //////////////////////////////////////////////////////////////
 	gameClient = new GameClient();
 	gameClient->createClient();
-	gameClient->ConnectToServer();
+	connectedToServer = gameClient->ConnectToServer();
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -443,9 +443,19 @@ void LastManStanding::update(Timer *gameTimer)
 		//When this is a local game / not connected to the server or other clients
 		if (receivedJson == "") {
 			//if the player presses the enter key
-			if (input->wasKeyPressed(0x0D)) {
+			/*if (input->wasKeyPressed(0x0D)) {
 				if (numOfPlayersVoted == 0)
 					numOfPlayersVoted++;
+			}*/
+			//check if the player is connected to the server first
+			if (connectedToServer == 0)
+				currentGameState = "LOADING-GAME";
+			else 
+			{
+				if (input->wasKeyPressed(0x0D)) {
+					if (numOfPlayersVoted == 0)
+						numOfPlayersVoted++;
+				}
 			}
 		}
 
