@@ -148,11 +148,13 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle1 = new Obstacle();
 		Obstacle2 = new Obstacle();
 		Obstacle3 = new Obstacle();
+		Obstacle4 = new Obstacle();
 
 		// 2) Then add it to the list one by one
 		obstacleList.push_back(Obstacle1);
 		obstacleList.push_back(Obstacle2);
 		obstacleList.push_back(Obstacle3);
+		obstacleList.push_back(Obstacle4);
 
 		//methods || functions
 		// 3) Initialize the textures of the obstacles first
@@ -164,6 +166,10 @@ void LastManStanding::obstaclesInitialize(bool value)
 
 		if (!Obs3Texture.initialize(graphics, OBS1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obs4Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
 
 		// 4) Then initialize the obstacle object (this is not an image object)
 		// Change the magic numbers to constants in the future
@@ -177,13 +183,16 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obstacle3->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 4, GAME_HEIGHT / 10 * 5, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
+		if (!Obstacle4->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 6, GAME_HEIGHT / 10 * 5, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
 
 		// 5) Then set the states here
 		//set the states here
 		Obstacle1->setMovementState("UP");
 		Obstacle2->setMovementState("RIGHT");
 		Obstacle3->setMovementState("RIGHT");
-
+		Obstacle4->setMovementState("RIGHT");
 		// 6) Then go to obstaclesMovement() function to make the obstacles move
 	}
 
@@ -861,9 +870,9 @@ void LastManStanding::myPlayerMovement(Player* player,float cameraDifferenceX, f
 void LastManStanding::obstaclesMovement() 
 {
 	// 7) Update the obstacles here first with frameTime
-	Obstacle1->update(frameTime);
-	Obstacle2->update(frameTime);
-	Obstacle3->update(frameTime);
+	for each(Obstacle * obs in obstacleList) {
+		obs->update(frameTime);
+	}
 
 	// 8) Change the state of the obstacle after a condition you specified
 	// 9) change what happens when the obstacle is in that state
@@ -914,6 +923,23 @@ void LastManStanding::obstaclesMovement()
 	else if (Obstacle3->getMovementState() == "LEFT") {
 		Obstacle3->setX(Obstacle3->getX() - camera->getCameraHorizontalSpeed() * 80 * frameTime);
 		Obstacle3->setY(cos(Obstacle3->getX() * 1 / 10) * 20000 * frameTime + GAME_HEIGHT / 2);
+	}
+
+	//this is for tangent wave
+	if (Obstacle4->getX() >= (BackgroundWidth / 20 * 7))
+		Obstacle4->setMovementState("LEFT");
+	else if (Obstacle4->getX() <= (BackgroundWidth / 20 * 6))
+		Obstacle4->setMovementState("RIGHT");
+
+
+	if (Obstacle4->getMovementState() == "RIGHT")
+	{
+		Obstacle4->setX(Obstacle4->getX() + camera->getCameraHorizontalSpeed() * 80 * frameTime);
+		Obstacle4->setY(GAME_HEIGHT / 2 + tan(Obstacle4->getX() * 5) * 1 / 2 * frameTime);
+	}
+	else if (Obstacle4->getMovementState() == "LEFT") {
+		Obstacle4->setX(Obstacle4->getX() - camera->getCameraHorizontalSpeed() * 80 * frameTime);
+		Obstacle4->setY(tan(Obstacle4->getX() * 5) * 1/2 * frameTime + GAME_HEIGHT / 2);
 	}
 
 }
