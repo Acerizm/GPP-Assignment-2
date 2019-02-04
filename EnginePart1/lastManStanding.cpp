@@ -149,12 +149,14 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle2 = new Obstacle();
 		Obstacle3 = new Obstacle();
 		Obstacle4 = new Obstacle();
+		Obstacle5 = new Obstacle();
 
 		// 2) Then add it to the list one by one
 		obstacleList.push_back(Obstacle1);
 		obstacleList.push_back(Obstacle2);
 		obstacleList.push_back(Obstacle3);
 		obstacleList.push_back(Obstacle4);
+		obstacleList.push_back(Obstacle5);
 
 		//methods || functions
 		// 3) Initialize the textures of the obstacles first
@@ -168,6 +170,9 @@ void LastManStanding::obstaclesInitialize(bool value)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 		if (!Obs4Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obs5Texture.initialize(graphics, OBS1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 
@@ -186,6 +191,9 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obstacle4->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 6, GAME_HEIGHT / 10 * 5, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
+		if (!Obstacle5->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 8, GAME_HEIGHT / 10 * 5, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
 
 		// 5) Then set the states here
 		//set the states here
@@ -193,6 +201,7 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle2->setMovementState("RIGHT");
 		Obstacle3->setMovementState("RIGHT");
 		Obstacle4->setMovementState("RIGHT");
+
 		// 6) Then go to obstaclesMovement() function to make the obstacles move
 	}
 
@@ -935,11 +944,11 @@ void LastManStanding::obstaclesMovement()
 	if (Obstacle4->getMovementState() == "RIGHT")
 	{
 		Obstacle4->setX(Obstacle4->getX() + camera->getCameraHorizontalSpeed() * 80 * frameTime);
-		Obstacle4->setY(GAME_HEIGHT / 2 + tan(Obstacle4->getX() * 5) * 1 / 2 * frameTime);
+		Obstacle4->setY(GAME_HEIGHT / 2 + tan(Obstacle4->getX() * 500) * 1 / 2 * frameTime);
 	}
 	else if (Obstacle4->getMovementState() == "LEFT") {
 		Obstacle4->setX(Obstacle4->getX() - camera->getCameraHorizontalSpeed() * 80 * frameTime);
-		Obstacle4->setY(tan(Obstacle4->getX() * 5) * 1/2 * frameTime + GAME_HEIGHT / 2);
+		Obstacle4->setY(tan(Obstacle4->getX() * 500) * 1/2 * frameTime + GAME_HEIGHT / 2);
 	}
 
 }

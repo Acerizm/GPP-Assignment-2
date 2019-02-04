@@ -117,6 +117,7 @@ protected:
 	TextureManager Obs2Texture;
 	TextureManager Obs3Texture;
 	TextureManager Obs4Texture;
+	TextureManager Obs5Texture;
 
 	//Obstacle objects/pointers here
 	// NOTE: Null pointers at first
@@ -124,7 +125,7 @@ protected:
 	Obstacle *Obstacle2;
 	Obstacle *Obstacle3;
 	Obstacle *Obstacle4;
-
+	Obstacle *Obstacle5;
 	//////////////////////////////////////////////////////////
 	
 
