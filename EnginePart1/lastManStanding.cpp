@@ -285,6 +285,8 @@ void LastManStanding::update(Timer *gameTimer)
 		{
 			if (menuOptionNo == 2)
 			{
+				//clear the damn key first
+				input->clearAll();
 				//this is where the state is changed to "PRE-LOBBY"
 				currentGameState = "PRE-LOBBY";
 				menuOn = !menuOn;
@@ -427,7 +429,7 @@ void LastManStanding::update(Timer *gameTimer)
 
 		ID2Image.update(frameTime);
 		ID3Image.update(frameTime);
-
+		
 		//When this is a local game / not connected to the server or other clients
 		if (receivedJson == "") {
 			//if the player presses the enter key
