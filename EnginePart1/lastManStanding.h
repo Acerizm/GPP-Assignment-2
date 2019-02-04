@@ -32,8 +32,7 @@ class LastManStanding : public Game
 protected:
 	// variables
 
-	int numOfPlayers = 1;
-	int numOfPlayersVoted = 0;
+	// Haiqel Here //////////////////////////////////
 	
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;
@@ -46,13 +45,6 @@ protected:
 	Player *player2;
 	Player *player3;
 
-	list <Heart*>  heartList;
-	TextureManager ObsTexture;
-	TextureManager Obs2Texture;
-
-	Obstacle *Obstacle1;
-	Obstacle *Obstacle2;
-
 	Camera *camera;
 
 	GameClient *gameClient;
@@ -60,15 +52,11 @@ protected:
 	TextureManager LobbyBackgroundTexture;
 	Image LobbyBackgroundImage;
 
-	//This is for the in-lobby
-	TextureManager ID1Texture;
-	Image ID1Image;
-	Image ID2Image = {};
-	Image ID3Image = {};
-
 	SocketData *socketData;
 	SocketData *tempSocketData;
 
+	int numOfPlayers = 1;
+	int numOfPlayersVoted = 0;
 	int currentPlayerID = 1;
 
 	//States
@@ -76,8 +64,15 @@ protected:
 	string currentGameState;
 	int drawPlayerSelectionBox = 1;
 
+
+	//This is for the in-lobby
+	TextureManager ID1Texture;
+	Image ID1Image;
+	Image ID2Image = {};
+	Image ID3Image = {};
+
 	list<Player *> playerList;
-	
+
 	//number of players loaded
 	int allPlayerLoaded = 1;
 	bool player2IsLoaded = false;
@@ -87,6 +82,11 @@ protected:
 	int currentClientIDConnected = 0;
 	int connectedToServer = 0;
 
+
+	/////////////////////////////////////////////////////////
+
+	//Darren here //////////////////////////////////////////
+	list <Heart*>  heartList;
 	Timer *timer;
 	int currentTime = 0;
 
@@ -106,6 +106,26 @@ protected:
 	bool counted = false;
 	int i = 0;
 
+	//////////////////////////////////////////////////////////
+
+	// Wx and Lijun Here /////////////////////////////////////
+	//store obstacles in a list here
+	list<Obstacle*>obstacleList;
+
+	//Obstacle Textures Here
+	TextureManager ObsTexture;
+	TextureManager Obs2Texture;
+	TextureManager Obs3Texture;
+
+	//Obstacle objects/pointers here
+	// NOTE: Null pointers at first
+	Obstacle *Obstacle1;
+	Obstacle *Obstacle2;
+	Obstacle *Obstacle3;
+
+	//////////////////////////////////////////////////////////
+	
+
 public:
 	// Constructor
 	LastManStanding();
@@ -121,6 +141,7 @@ public:
 	void player3Initalize();
 	void myPlayerMovement(Player * player,float cameraDifferenceX, float cameraDifferenceY);
 	void obstaclesInitialize(bool value);
+	void drawObstacles();
 	void obstaclesMovement();
 	void update(Timer *gameTimer);      // must override pure virtual from Game
 	void ai(Timer *gameTimer);          // "
