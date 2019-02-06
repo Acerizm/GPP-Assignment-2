@@ -120,6 +120,7 @@ protected:
 	TextureManager Obs5Texture;
 	TextureManager Obs6Texture;
 	TextureManager Obs7Texture;
+	TextureManager Obs8Texture;
 
 	//Obstacle objects/pointers here
 	// NOTE: Null pointers at first
@@ -131,9 +132,14 @@ protected:
 	// y = mx + c
 	Obstacle *Obstacle6;
 	Obstacle *Obstacle7;
+	Obstacle *Obstacle8;
 
 	float obstacle5Angle = 0;
 	float obstacle5Radius = 50.0f;
+	float obstacle6Radius = 10.0f;
+	float obstacle6Angle = 0;
+	float obstacle7Gradient = 0.01;
+	float obstacle7C = 10;
 	//////////////////////////////////////////////////////////
 	
 
