@@ -150,6 +150,8 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle3 = new Obstacle();
 		Obstacle4 = new Obstacle();
 		Obstacle5 = new Obstacle();
+		Obstacle6 = new Obstacle();
+		Obstacle7 = new Obstacle();
 
 		// 2) Then add it to the list one by one
 		obstacleList.push_back(Obstacle1);
@@ -157,6 +159,8 @@ void LastManStanding::obstaclesInitialize(bool value)
 		obstacleList.push_back(Obstacle3);
 		obstacleList.push_back(Obstacle4);
 		obstacleList.push_back(Obstacle5);
+		obstacleList.push_back(Obstacle6);
+		obstacleList.push_back(Obstacle7);
 
 		//methods || functions
 		// 3) Initialize the textures of the obstacles first
@@ -173,6 +177,12 @@ void LastManStanding::obstaclesInitialize(bool value)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 		if (!Obs5Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obs6Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obs7Texture.initialize(graphics, OBS1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 
@@ -288,18 +298,6 @@ void LastManStanding::update(Timer *gameTimer)
 	//timePassed = std::time(0) - t;
 	if (currentGameState == "MENU") {
 		BackgroundImage.update(frameTime);
-		/*long int timePassedint = static_cast<long int> (timePassed);
-		if (countDownOn)
-		{
-			countDownTimer = COUNT_DOWN - timePassedint;
-			if (countDownTimer < 0)
-			{
-				countDownOn = false;
-				camera->setCameraHorizontalSpeed(0.3f);
-			}
-		}*/
-
-		//camera->setCameraHorizontalSpeed(0.0f);
 		if (menuOptionNo == 2)
 		{
 			startText->setFontColor(graphicsNS::YELLOW);
@@ -681,18 +679,6 @@ void LastManStanding::update(Timer *gameTimer)
 	}
 	else if (currentGameState == "IN-GAME") 
 	{	
-		//darren's start
-
-		/*long int timePassedint = static_cast<long int> (timePassed);
-		if (countDownOn)
-		{
-			countDownTimer = COUNT_DOWN - timePassedint;
-			if (countDownTimer < 0)
-			{
-				countDownOn = false;
-				camera->setCameraHorizontalSpeed(0.3f);
-			}
-		}*/
 		float cameraDifferenceX = 0;
 		float cameraDifferenceY = 0;
 		int tempScore = 0;
@@ -981,11 +967,13 @@ void LastManStanding::collisions(Timer *gameTimer) {
 		VECTOR2 collisionVector;
 		//Event/Scenario:
 		// 1) The player collided with Osbtacle1
-		if (player1->collidesWith(*Obstacle1, collisionVector))
-		{
-			//what happens after collision
-			player1->setX(player1->getX() - collisionVector.x*frameTime * 2);
+		for each (Obstacle * obs in obstacleList) {
+			if (player1->collidesWith(*obs, collisionVector))
+			{
+				//what happens after collision
+				player1->setX(player1->getX() - collisionVector.x*frameTime * 2);
 
+			}
 		}
 	}
 }
@@ -1034,8 +1022,6 @@ void LastManStanding::render()
 			player1->draw();
 			player2->draw();
 		}
-		/*Obstacle1->draw();
-		Obstacle2->draw();*/
 		drawObstacles();
 		if (countDownOn)
 		{
