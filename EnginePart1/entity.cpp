@@ -225,7 +225,7 @@ bool Entity::projectionsOverlap(Entity &ent)
 	projection = graphics->Vector2Dot(&edge03, ent.getCorner(0)); // project corner 0
 	min03 = projection;
 	max03 = projection;
-	// for each remaining corner
+	//remaining corner
 	for (int c = 1; c<4; c++)
 	{
 		// project corner onto edge03

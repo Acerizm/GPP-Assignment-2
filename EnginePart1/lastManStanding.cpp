@@ -43,7 +43,8 @@ LastManStanding::LastManStanding()
 	instructionsText = new TextDX();
 	quitText = new TextDX();
 	scoreText = new TextDX();
-	menuOptionNo = 2;
+	nameText = new TextDX();
+	menuOptionNo = 3;
 	countDownOn = false;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
@@ -102,7 +103,8 @@ void LastManStanding::MenuInitialize()
 	if (scoreText->initialize(graphics, 30, false, false, "Arial") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing scoreText font"));
 
-
+	if (nameText->initialize(graphics,30,false,false,"Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nameText font"));
 }
 
 //=============================================================================
@@ -333,9 +335,21 @@ void LastManStanding::update(Timer *gameTimer)
 				menuOptionNo += 1;
 			}
 		}
+		if (isKeyingInName)
+		{
+			//player1->setName(input->getTextIn());
+			
+			if (input->wasKeyPressed(VK_SPACE))
+			{
+				isKeyingInName = false;
+				menuOptionNo = 2;
+				tempName = input->getTextIn();
+			}
+
+		}
 		if (input->wasKeyPressed(VK_RETURN))
 		{
-			if (menuOptionNo == 2)
+			if (menuOptionNo == 2 && !isKeyingInName)
 			{
 				//clear the damn key first
 				input->clearAll();
@@ -343,7 +357,11 @@ void LastManStanding::update(Timer *gameTimer)
 				currentGameState = "PRE-LOBBY";
 				menuOn = !menuOn;
 				countDownOn = true;
+				
+
+				
 			}
+
 			else if (menuOptionNo == 1)
 			{
 				//show instructions here
@@ -1004,6 +1022,7 @@ void LastManStanding::render()
 {
 	
 	graphics->spriteBegin();                // begin drawing sprites
+	
 	if (currentGameState == "MENU")
 	{
 		BackgroundImage.draw();
@@ -1018,6 +1037,13 @@ void LastManStanding::render()
 		int textWidthQuit = quitText->GetTextWidth("QUIT GAME", quitText->getFont());
 		int textHeightQuit = quitText->GetTextHeight("QUIT GAME", quitText->getFont());
 		quitText->print("QUIT GAME", camera->getCameraX() - (textWidthQuit / 2), camera->getCameraY() + 60 - textHeightQuit / 2);
+	}
+	if (isKeyingInName)
+	{
+		BackgroundImage.draw();
+		int textWidthName = nameText->GetTextWidth("Please Enter a Name(Press space when done typing):" + input->getTextIn(), nameText->getFont());
+		int textHeightName = nameText->GetTextHeight("Please Enter a Name(Press space when done typing):" + input->getTextIn(), nameText->getFont());
+		nameText->print("Please Enter a Name(Press space when done typing):" + input->getTextIn(), camera->getCameraX() - textWidthName/2, camera->getCameraY() - textHeightName/2);
 	}
 	if (currentGameState == "IN-LOBBY") {
 		LobbyBackgroundImage.draw();
@@ -1056,7 +1082,7 @@ void LastManStanding::render()
 		}
 	}
 	if (currentGameState == "IN-GAME") {
-		scoreText->print("Score: " + to_string(player1->getScore()), camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
+		
 		BackgroundImage.draw();
 		if (numOfPlayers == 1)
 			player1->draw();
@@ -1067,6 +1093,10 @@ void LastManStanding::render()
 		/*Obstacle1->draw();
 		Obstacle2->draw();*/
 		drawObstacles();
+		player1->setName(tempName);
+		int textWidthName = nameText->GetTextWidth(player1->getName(), nameText->getFont());
+		nameText->print(player1->getName(), player1->getCenterX() - textWidthName/2, player1->getCenterY());
+		scoreText->print("Score: " + to_string(player1->getScore()), camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
 		camera->setCameraState("MOVING");
 	}
 	if (camera)
@@ -1077,7 +1107,9 @@ void LastManStanding::render()
 	{
 		heartTemp->draw();
 	}
-
+	int testX = camera->getCameraX() - GAME_WIDTH / 2;
+	int testY = camera->getCameraY();
+	
 	graphics->spriteEnd();                  // end drawing sprites
 
 }

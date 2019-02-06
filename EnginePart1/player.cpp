@@ -71,7 +71,6 @@ Player::~Player() {
 bool Player::initialize(Game *gamePtr, int width, int height, int ncols,
 	TextureManager *textureM)
 {
-
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -154,3 +153,14 @@ int Player::getScore()
 {
 	return this->score;
 }
+
+void Player::setName(string Name)
+{
+	this->name = Name;
+}
+
+string Player::getName()
+{
+	return this->name;
+}
+

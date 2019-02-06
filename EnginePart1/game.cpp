@@ -34,6 +34,7 @@ LRESULT Game::messageHandler( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam 
     {
         switch( msg )
         {
+
             case WM_DESTROY:
                 PostQuitMessage(0);        //tell Windows to kill this program
                 return 0;

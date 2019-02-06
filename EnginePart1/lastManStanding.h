@@ -87,6 +87,7 @@ protected:
 
 	//Darren here //////////////////////////////////////////
 	list <Heart*>  heartList;
+	list <char> characterNameList;
 	Timer *timer;
 	int currentTime = 0;
 
@@ -96,6 +97,7 @@ protected:
 	TextDX *instructionsText;
 	TextDX *quitText;
 	TextDX *scoreText;
+	TextDX *nameText;
 	int menuOptionNo;
 	bool menuOn;
 	bool countDownOn;
@@ -104,8 +106,9 @@ protected:
 	time_t t;
 	time_t timePassed;
 	bool counted = false;
+	bool isKeyingInName = true;
 	int i = 0;
-
+	string tempName = "";
 	//////////////////////////////////////////////////////////
 
 	// Wx and Lijun Here /////////////////////////////////////
