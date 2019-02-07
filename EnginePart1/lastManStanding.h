@@ -38,6 +38,8 @@ protected:
 	Image BackgroundImage;
 	TextureManager heartTexture;
 	Image InstructionImage;
+	TextureManager DeathImageTexture;
+	Image DeathImage;
 	TextureManager instructionTexture;
 	TextureManager Player1Texture;
 	TextureManager Player2Texture;
@@ -92,6 +94,7 @@ protected:
 	Timer *timer;
 	int currentTime = 0;
 	bool isShowingInstruction = false;
+	bool isDead = false;
 
 	TextDX  fontBig;
 	//menu options here 

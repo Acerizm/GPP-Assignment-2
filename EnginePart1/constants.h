@@ -80,6 +80,8 @@ const char HIT[] = "hit";
 const char INSTRUCTIONPAGE_IMAGE[] = "pictures\\InstructionsPage.png";
 const char PLAYER[] = "pictures\\Player.png";
 const char HEART_IMAGE[] = "pictures\\heart.png";
+const char DEATH_IMAGE[] = "pictures\\DeathImage.png";
+
 //obs1
 const char OBS1[] = "pictures\\OBS1.png";
 

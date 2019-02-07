@@ -139,6 +139,15 @@ void LastManStanding::initialize(HWND hwnd)
 	if (!BackgroundImage.initialize(graphics, BackgroundWidth, BackgroundHeight, 0, &BackgroundTexture)) {
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing backgroundImage"));
 	}
+
+	if(!DeathImageTexture.initialize(graphics, DEATH_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing BackgroundTexture"));
+
+	if (!DeathImage.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &DeathImageTexture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing deathImage"));
+	}
+	mciSendString("open \"audio\\deathSong.wav\" type waveaudio alias sound", NULL, 0, NULL);
 	BackgroundImage.setCurrentFrame(0);
 	BackgroundImage.setX(0);
 	BackgroundImage.setY(0);
@@ -709,6 +718,21 @@ void LastManStanding::update(Timer *gameTimer)
 	else if (currentGameState == "IN-GAME") 
 	{	
 		//darren's start
+		if (player1->getNumberOfLifes() < 1)
+		{
+			isDead = true;
+			camera->setCameraState("STOP");
+			DeathImage.setX(camera->getCameraX() - GAME_WIDTH / 2);
+			DeathImage.setY(camera->getCameraY() + 25 - GAME_HEIGHT / 2 );
+			// store some data here later.
+		}
+		if (isDead)
+		{
+			if (input->wasKeyPressed(VK_ESCAPE))
+			{
+				PostQuitMessage(0);
+			}
+		}
 
 		/*long int timePassedint = static_cast<long int> (timePassed);
 		if (countDownOn)
@@ -1115,6 +1139,13 @@ void LastManStanding::render()
 	if (camera)
 	{
 		camera->setTransform(graphics);
+	}
+	if (isDead)
+	{
+		mciSendString("stop backGroundMusic", NULL, 0, NULL);
+		mciSendString("play sound", NULL, 0, NULL);
+		DeathImage.draw();
+		scoreText->print(to_string(player1->getScore()), camera->getCameraX(), camera->getCameraY());
 	}
 	for each (Heart *heartTemp in heartList)
 	{
