@@ -93,6 +93,14 @@ void LastManStanding::MenuInitialize()
 	fontBig.initialize(graphics, 256, false, false, "Arial Bold");
 	fontBig.setFontColor(graphicsNS::RED);
 	// init the texts for menu 
+	if(!instructionTexture.initialize(graphics,INSTRUCTIONPAGE_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing InstructionsTexture"));
+
+	if (!InstructionImage.initialize(graphics, GAME_WIDTH, GAME_HEIGHT, 0, &instructionTexture))
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing instructionImage"));
+	}
+
 	if (startText->initialize(graphics, 30, false, false, "Arial") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
 	if (instructionsText->initialize(graphics, 30, false, false, "Arial") == false)
@@ -365,16 +373,17 @@ void LastManStanding::update(Timer *gameTimer)
 			else if (menuOptionNo == 1)
 			{
 				//show instructions here
-				//showInstruction = true;
-				if (input->wasKeyPressed(VK_ESCAPE))
-				{
-					//showInstruction = false;
-				}
+				isShowingInstruction = true;
+
 			}
 			else if (menuOptionNo == 0)
 			{
 				PostQuitMessage(0);
 			}
+		}
+		if (isShowingInstruction &&input->wasKeyPressed(VK_ESCAPE))
+		{
+			isShowingInstruction = false;
 		}
 
 		if (camera) {
@@ -1044,6 +1053,10 @@ void LastManStanding::render()
 		int textWidthName = nameText->GetTextWidth("Please Enter a Name(Press space when done typing):" + input->getTextIn(), nameText->getFont());
 		int textHeightName = nameText->GetTextHeight("Please Enter a Name(Press space when done typing):" + input->getTextIn(), nameText->getFont());
 		nameText->print("Please Enter a Name(Press space when done typing):" + input->getTextIn(), camera->getCameraX() - textWidthName/2, camera->getCameraY() - textHeightName/2);
+	}
+	if (isShowingInstruction)
+	{
+		InstructionImage.draw();
 	}
 	if (currentGameState == "IN-LOBBY") {
 		LobbyBackgroundImage.draw();

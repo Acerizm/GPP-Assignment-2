@@ -37,7 +37,8 @@ protected:
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;
 	TextureManager heartTexture;
-
+	Image InstructionImage;
+	TextureManager instructionTexture;
 	TextureManager Player1Texture;
 	TextureManager Player2Texture;
 	TextureManager Player3Texture;
@@ -90,6 +91,7 @@ protected:
 	list <char> characterNameList;
 	Timer *timer;
 	int currentTime = 0;
+	bool isShowingInstruction = false;
 
 	TextDX  fontBig;
 	//menu options here 

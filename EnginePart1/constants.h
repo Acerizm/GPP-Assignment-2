@@ -77,6 +77,7 @@ const char SCREAM6[] = "scream6";
 const char HIT[] = "hit";
 
 //player reloading
+const char INSTRUCTIONPAGE_IMAGE[] = "pictures\\InstructionsPage.png";
 const char PLAYER[] = "pictures\\Player.png";
 const char HEART_IMAGE[] = "pictures\\heart.png";
 //obs1
