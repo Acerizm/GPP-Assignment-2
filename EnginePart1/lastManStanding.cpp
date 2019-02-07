@@ -956,11 +956,12 @@ void LastManStanding::obstaclesMovement()
 	//this is for circular motion wave
 	//Formula:
 	// 1) X := OriginX + cos(angle)*radius
-	// 20 Y := OriginY + sin(angle)*radius
+	// 2) Y := OriginY + sin(angle)*radius
 
 	if (Obstacle5->getMovementState() == "ANTI-CLOCKWISE")
 	{
-		obstacle5Angle += camera->getCameraHorizontalSpeed()*0.005;
+		//obstacle5Angle += camera->getCameraHorizontalSpeed()*0.005;
+		obstacle5Angle = obstacle5Angle + camera->getCameraHorizontalSpeed()*0.005;
 		Obstacle5->setX(Obstacle5->getX() + cos(obstacle5Angle)*obstacle5Radius*frameTime);
 		Obstacle5->setY(Obstacle5->getY() + sin(obstacle5Angle)*obstacle5Radius*frameTime);
 	}
@@ -1052,16 +1053,16 @@ void LastManStanding::collisions(Timer *gameTimer) {
 			}
 		}
 
-		if (player2 != NULL) {
-			for each (Obstacle * obs in obstacleList) {
-				if (player2->collidesWith(*obs, collisionVector))
-				{
-					//what happens after collision
-					player2->setX(player2->getX() - collisionVector.x*frameTime * 2);
+		//if (player2 != NULL) {
+		//	for each (Obstacle * obs in obstacleList) {
+		//		if (player2->collidesWith(*obs, collisionVector))
+		//		{
+		//			//what happens after collision
+		//			player2->setX(player2->getX() - collisionVector.x*frameTime * 2);
 
-				}
-			}
-		}
+		//		}
+		//	}
+		//}
 	}
 }
 
