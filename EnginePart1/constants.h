@@ -88,9 +88,9 @@ const char OBS1[] = "pictures\\OBS1.png";
 const char ID1[] = "pictures\\ID1.jpg";
 
 
-const char CURSO_IMAGE[] = "pictures\\NewCursor.png";
-const int cursor_HEIGHT = 397;
-const int cursor_WIDTH = 416;
+const char CURSO_IMAGE[] = "pictures\\NewCursor.jpg";
+const int cursor_HEIGHT = 209;
+const int cursor_WIDTH = 165;
 const float cursor_Scale = 0.15f;
 
 

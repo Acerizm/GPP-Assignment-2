@@ -343,7 +343,7 @@ void LastManStanding::update(Timer *gameTimer)
 	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
 	cursorImage.setX(mousePosVector.x + camera->returnCameraDifferenceX() - cursorImage.getWidth()*cursor_Scale/2);
 	cursorImage.setY(mousePosVector.y - cursorImage.getHeight()*cursor_Scale);
-	ShowCursor(true);
+	ShowCursor(false);
 	//timePassed = std::time(0) - t;
 	if (currentGameState == "MENU") {
 		BackgroundImage.update(frameTime);
