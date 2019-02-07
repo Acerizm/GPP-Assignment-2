@@ -145,3 +145,13 @@ LP_DXFONT TextDX::getFont()
 	return dxFont;
 }
 
+int TextDX::getX()
+{
+	return fontRect.left;
+}
+
+int TextDX::getY()
+{
+	return fontRect.top;
+}
+

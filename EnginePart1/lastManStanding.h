@@ -121,6 +121,11 @@ protected:
 	bool isKeyingInName = true;
 	int i = 0;
 	string tempName = "";
+
+	TextureManager cursorTexture;
+	Image cursorImage;
+
+
 	//////////////////////////////////////////////////////////
 
 	// Wx and Lijun Here /////////////////////////////////////

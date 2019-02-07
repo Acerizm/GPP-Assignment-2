@@ -128,6 +128,13 @@ void LastManStanding::initialize(HWND hwnd)
 	Game::initialize(hwnd); // throws GameError
 	//lobbyInitialize();
 	//Initialize the background for the main menu
+	if (!cursorTexture.initialize(graphics, CURSO_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing cursorTexture texture"));
+	if (!cursorImage.initialize(graphics, cursor_WIDTH, cursor_HEIGHT, 0, &cursorTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing cursorImage"));
+	cursorImage.setScale(cursor_Scale);
+
+
 	if (!LobbyBackgroundTexture.initialize(graphics, LobbyBackground))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing lobbyBackgroundTexture"));
 	if (!LobbyBackgroundImage.initialize(graphics, LobbyBackgroundWidth, LobbyBackgroundHeight, 0, &LobbyBackgroundTexture)) {
@@ -331,21 +338,38 @@ void LastManStanding::player3Initalize() {
 //=============================================================================
 void LastManStanding::update(Timer *gameTimer)
 {
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
+	cursorImage.setX(mousePosVector.x + camera->returnCameraDifferenceX() - cursorImage.getWidth()*cursor_Scale/2);
+	cursorImage.setY(mousePosVector.y - cursorImage.getHeight()*cursor_Scale);
+	ShowCursor(true);
 	//timePassed = std::time(0) - t;
 	if (currentGameState == "MENU") {
 		BackgroundImage.update(frameTime);
-		/*long int timePassedint = static_cast<long int> (timePassed);
-		if (countDownOn)
-		{
-			countDownTimer = COUNT_DOWN - timePassedint;
-			if (countDownTimer < 0)
-			{
-				countDownOn = false;
-				camera->setCameraHorizontalSpeed(0.3f);
-			}
-		}*/
 
-		//camera->setCameraHorizontalSpeed(0.0f);
+		//KING OF THE SPEGHETTI IS HERE
+
+
+
+		int textWidthStart = startText->GetTextWidth("START", startText->getFont());
+		int textHeightStart = startText->GetTextHeight("START", startText->getFont());
+
+		int textWidthLeaderBoard = leaderBoardText->GetTextWidth("LEADERBOARD", leaderBoardText->getFont());
+		int textHeightLeaderBoard = leaderBoardText->GetTextHeight("LEADERBOARD", leaderBoardText->getFont());
+
+		int textWidthInstructions = instructionsText->GetTextWidth("INSTRUCTIONS", instructionsText->getFont());
+		int textHeightInstructions = instructionsText->GetTextHeight("INSTRUCTIONS", instructionsText->getFont());
+
+		int textWidthQuit = quitText->GetTextWidth("QUIT GAME", quitText->getFont());
+		int textHeightQuit = quitText->GetTextHeight("QUIT GAME", quitText->getFont());
+
+		
+
+
+
+
+
 		if (menuOptionNo == 3)
 		{
 			startText->setFontColor(graphicsNS::YELLOW);
@@ -401,7 +425,7 @@ void LastManStanding::update(Timer *gameTimer)
 			}
 
 		}
-		if (input->wasKeyPressed(VK_RETURN))
+		if (input->wasKeyPressed(VK_RETURN) || (GetKeyState(VK_LBUTTON) & 0x100) != 0)
 		{
 			if (menuOptionNo == 3 && !isKeyingInName)
 			{
@@ -1128,6 +1152,30 @@ void LastManStanding::render()
 		int textWidthQuit = quitText->GetTextWidth("QUIT GAME", quitText->getFont());
 		int textHeightQuit = quitText->GetTextHeight("QUIT GAME", quitText->getFont());
 		quitText->print("QUIT GAME", camera->getCameraX() - (textWidthQuit / 2), camera->getCameraY() + 90 - textHeightQuit / 2);
+
+		POINT mousePos;
+		GetCursorPos(&mousePos);
+		VECTOR2 mousePosVector = VECTOR2(mousePos.x, mousePos.y);
+		mousePos.y -= 28;
+		if (startText->getX() < mousePos.x  && (startText->getX() + textWidthStart) > mousePos.x && startText->getY() < mousePos.y && (startText->getY() + textHeightStart) > mousePos.y)
+		{
+			int test1 = startText->getX();
+			int test2 = startText->getY();
+			menuOptionNo = 3;
+		}
+		if (leaderBoardText->getX() < mousePos.x && (leaderBoardText->getX() + textWidthLeaderBoard) > mousePos.x && leaderBoardText->getY() < mousePos.y && (leaderBoardText->getY() + textHeightLeaderBoard) > mousePos.y)
+		{
+			menuOptionNo = 2;
+		}
+		if (instructionsText->getX() < mousePos.x && (instructionsText->getX() + textWidthInstructions) > mousePos.x && instructionsText->getY() < mousePos.y && (instructionsText->getY() + textHeightInstructions) > mousePos.y)
+		{
+			menuOptionNo = 1;
+		}
+		if (quitText->getX() < mousePos.x && (quitText->getX() + textWidthQuit) > mousePos.x && quitText->getY() < mousePos.y && (quitText->getY() + textHeightQuit) > mousePos.y)
+		{
+			menuOptionNo = 0;
+		}
+
 	}
 	if (isKeyingInName)
 	{
@@ -1230,6 +1278,7 @@ void LastManStanding::render()
 		scoreText->print("Please Press Esc to go back to Menu" , camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
 		
 	}
+	cursorImage.draw();
 
 
 	graphics->spriteEnd();                  // end drawing sprites
