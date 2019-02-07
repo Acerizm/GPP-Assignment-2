@@ -1051,6 +1051,17 @@ void LastManStanding::collisions(Timer *gameTimer) {
 
 			}
 		}
+
+		if (player2 != NULL) {
+			for each (Obstacle * obs in obstacleList) {
+				if (player2->collidesWith(*obs, collisionVector))
+				{
+					//what happens after collision
+					player2->setX(player2->getX() - collisionVector.x*frameTime * 2);
+
+				}
+			}
+		}
 	}
 }
 
