@@ -9,7 +9,7 @@ Obstacle::Obstacle() {
 	spriteData.scale = 0;
 	spriteData.x = 0;
 	spriteData.y = 0;
-	setCollisionRadius(0.5f);
+	setCollisionRadius(0.8f);
 }
 
 Obstacle::~Obstacle() {
