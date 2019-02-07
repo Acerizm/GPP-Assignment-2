@@ -15,7 +15,8 @@
 #include "include/rapidjson/document.h"
 #include "include/rapidjson/writer.h"
 #include "include/rapidjson/stringbuffer.h"
-
+#include <iostream>//These 2 for input output of the damn textfile bois
+#include <fstream>//
 // Need to link with Ws2_32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment(lib, "Winmm.lib")
@@ -42,9 +43,10 @@ LastManStanding::LastManStanding()
 	startText = new TextDX();
 	instructionsText = new TextDX();
 	quitText = new TextDX();
-	scoreText = new TextDX();
+	leaderBoardText = new TextDX();
 	nameText = new TextDX();
-	menuOptionNo = 3;
+	scoreText = new TextDX();
+	menuOptionNo = 4;
 	countDownOn = false;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 
@@ -107,12 +109,13 @@ void LastManStanding::MenuInitialize()
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
 	if (quitText->initialize(graphics, 30, false, false, "Arial") == false)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing pausedText font"));
-
-	if (scoreText->initialize(graphics, 30, false, false, "Arial") == false)
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing scoreText font"));
-
 	if (nameText->initialize(graphics,30,false,false,"Arial") == false)
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nameText font"));
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing name font"));
+	if (scoreText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing score font"));
+	if (leaderBoardText->initialize(graphics, 30, false, false, "Arial") == false)
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing leaderBoardText font"));
+
 }
 
 //=============================================================================
@@ -155,6 +158,30 @@ void LastManStanding::initialize(HWND hwnd)
 	countDownTimer = COUNT_DOWN;
 	camera->setCameraState("STOP");
 	MenuInitialize();
+	ifstream leaderBoard;
+	leaderBoard.open("scoreBoard.txt");
+	if (!leaderBoard)
+	{
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Failed to open scoreboard text file")); // just some error checking bois.
+	}
+	//leaderBoard << "DarrenTest786";
+	int tempScore = 0;
+	string tempPlayerName;
+	while (leaderBoard >> tempPlayerName >> tempScore)
+	{
+		TextDX *tempText = new TextDX();
+		if (tempText->initialize(graphics, 30, false, false, "Arial") == false)
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tempText font"));
+		leaderboardTextList.push_back(tempText);
+		nameVector.push_back(tempPlayerName);
+		scoreVector.push_back(tempScore);
+
+	}
+
+	leaderBoard.close();
+	
+
+
 	return;
 }
 
@@ -319,21 +346,31 @@ void LastManStanding::update(Timer *gameTimer)
 		}*/
 
 		//camera->setCameraHorizontalSpeed(0.0f);
-		if (menuOptionNo == 2)
+		if (menuOptionNo == 3)
 		{
 			startText->setFontColor(graphicsNS::YELLOW);
+			leaderBoardText->setFontColor(graphicsNS::WHITE);
+			instructionsText->setFontColor(graphicsNS::WHITE);
+			quitText->setFontColor(graphicsNS::WHITE);
+		}
+		if (menuOptionNo == 2)
+		{
+			startText->setFontColor(graphicsNS::WHITE);
+			leaderBoardText->setFontColor(graphicsNS::YELLOW);
 			instructionsText->setFontColor(graphicsNS::WHITE);
 			quitText->setFontColor(graphicsNS::WHITE);
 		}
 		if (menuOptionNo == 1)
 		{
 			startText->setFontColor(graphicsNS::WHITE);
+			leaderBoardText->setFontColor(graphicsNS::WHITE);
 			instructionsText->setFontColor(graphicsNS::YELLOW);
 			quitText->setFontColor(graphicsNS::WHITE);
 		}
 		if (menuOptionNo == 0)
 		{
 			startText->setFontColor(graphicsNS::WHITE);
+			leaderBoardText->setFontColor(graphicsNS::WHITE);
 			instructionsText->setFontColor(graphicsNS::WHITE);
 			quitText->setFontColor(graphicsNS::YELLOW);
 		}
@@ -347,7 +384,7 @@ void LastManStanding::update(Timer *gameTimer)
 		}
 		if (input->wasKeyPressed(VK_UP))
 		{
-			if (menuOptionNo != 2)
+			if (menuOptionNo != 3)
 			{
 				menuOptionNo += 1;
 			}
@@ -359,14 +396,14 @@ void LastManStanding::update(Timer *gameTimer)
 			if (input->wasKeyPressed(VK_SPACE))
 			{
 				isKeyingInName = false;
-				menuOptionNo = 2;
+				menuOptionNo = 3;
 				tempName = input->getTextIn();
 			}
 
 		}
 		if (input->wasKeyPressed(VK_RETURN))
 		{
-			if (menuOptionNo == 2 && !isKeyingInName)
+			if (menuOptionNo == 3 && !isKeyingInName)
 			{
 				//clear the damn key first
 				input->clearAll();
@@ -377,6 +414,10 @@ void LastManStanding::update(Timer *gameTimer)
 				
 
 				
+			}
+			else if(menuOptionNo == 2)
+			{
+				isShowingLeaderBoard = true;
 			}
 
 			else if (menuOptionNo == 1)
@@ -393,6 +434,10 @@ void LastManStanding::update(Timer *gameTimer)
 		if (isShowingInstruction &&input->wasKeyPressed(VK_ESCAPE))
 		{
 			isShowingInstruction = false;
+		}
+		if (isShowingLeaderBoard &&input->wasKeyPressed(VK_ESCAPE))
+		{
+			isShowingLeaderBoard = false;
 		}
 
 		if (camera) {
@@ -722,8 +767,15 @@ void LastManStanding::update(Timer *gameTimer)
 		{
 			isDead = true;
 			camera->setCameraState("STOP");
-			DeathImage.setX(camera->getCameraX() - GAME_WIDTH / 2);
-			DeathImage.setY(camera->getCameraY() + 25 - GAME_HEIGHT / 2 );
+			//darrenishere
+			ofstream leaderBoardWrite;
+			leaderBoardWrite.open("scoreBoard.txt", std::ios_base::app);
+			if (leaderBoardWrite.is_open() && !isRecorded)
+			{
+				leaderBoardWrite << "\n" + player1->getName() + " " + to_string(player1->getScore()) ;
+				isRecorded = true;
+				leaderBoardWrite.close();
+			}
 			// store some data here later.
 		}
 		if (isDead)
@@ -1056,20 +1108,26 @@ void LastManStanding::render()
 	
 	graphics->spriteBegin();                // begin drawing sprites
 	
+
 	if (currentGameState == "MENU")
 	{
 		BackgroundImage.draw();
+
+		int textWidthLeaderBoard = leaderBoardText->GetTextWidth("LEADERBOARD", leaderBoardText->getFont());
+		int textHeightLeaderBoard = leaderBoardText->GetTextHeight("LEADERBOARD", leaderBoardText->getFont());
+		leaderBoardText->print("LEADERBOARD", camera->getCameraX() - textWidthLeaderBoard / 2, camera->getCameraY() + 30 - textHeightLeaderBoard / 2);
+
 		int textWidthStart = startText->GetTextWidth("START", startText->getFont());
 		int textHeightStart = startText->GetTextHeight("START", startText->getFont());
 		startText->print("START", camera->getCameraX() - textWidthStart / 2, camera->getCameraY() - textHeightStart / 2);
 
 		int textWidthInstructions = instructionsText->GetTextWidth("INSTRUCTIONS", instructionsText->getFont());
 		int textHeightInstructions = instructionsText->GetTextHeight("INSTRUCTIONS", instructionsText->getFont());
-		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - textWidthInstructions / 2, camera->getCameraY() + 30 - textHeightInstructions / 2);
+		instructionsText->print("INSTRUCTIONS", camera->getCameraX() - textWidthInstructions / 2, camera->getCameraY() + 60 - textHeightInstructions / 2);
 
 		int textWidthQuit = quitText->GetTextWidth("QUIT GAME", quitText->getFont());
 		int textHeightQuit = quitText->GetTextHeight("QUIT GAME", quitText->getFont());
-		quitText->print("QUIT GAME", camera->getCameraX() - (textWidthQuit / 2), camera->getCameraY() + 60 - textHeightQuit / 2);
+		quitText->print("QUIT GAME", camera->getCameraX() - (textWidthQuit / 2), camera->getCameraY() + 90 - textHeightQuit / 2);
 	}
 	if (isKeyingInName)
 	{
@@ -1078,9 +1136,11 @@ void LastManStanding::render()
 		int textHeightName = nameText->GetTextHeight("Please Enter a Name(Press space when done typing):" + input->getTextIn(), nameText->getFont());
 		nameText->print("Please Enter a Name(Press space when done typing):" + input->getTextIn(), camera->getCameraX() - textWidthName/2, camera->getCameraY() - textHeightName/2);
 	}
+	
 	if (isShowingInstruction)
 	{
 		InstructionImage.draw();
+		scoreText->print("Please Press Esc to go back to Menu", camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
 	}
 	if (currentGameState == "IN-LOBBY") {
 		LobbyBackgroundImage.draw();
@@ -1144,8 +1204,10 @@ void LastManStanding::render()
 	{
 		mciSendString("stop backGroundMusic", NULL, 0, NULL);
 		mciSendString("play sound", NULL, 0, NULL);
+		DeathImage.setX(camera->getCameraX() - (GAME_WIDTH / 2));
+		DeathImage.setY(camera->getCameraY() - (GAME_HEIGHT / 2));
 		DeathImage.draw();
-		scoreText->print(to_string(player1->getScore()), camera->getCameraX(), camera->getCameraY());
+		scoreText->print(to_string(player1->getScore()), camera->getCameraX(), camera->getCameraY() - 25);
 	}
 	for each (Heart *heartTemp in heartList)
 	{
@@ -1153,7 +1215,23 @@ void LastManStanding::render()
 	}
 	int testX = camera->getCameraX() - GAME_WIDTH / 2;
 	int testY = camera->getCameraY();
-	
+	if (isShowingLeaderBoard)
+	{
+		BackgroundImage.draw();
+		int trolololol = 0;
+		for each(TextDX* tempTextDX in leaderboardTextList)
+		{
+			nameText->print("Name:", 300, 0);
+			quitText->print("Score:", 900, 0);
+			tempTextDX->print(nameVector[trolololol], 300, GAME_HEIGHT/20 * (trolololol+1));
+			scoreText->print(to_string(scoreVector[trolololol]), 900, GAME_HEIGHT / 20 * (trolololol+1));
+			trolololol++;
+		}
+		scoreText->print("Please Press Esc to go back to Menu" , camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
+		
+	}
+
+
 	graphics->spriteEnd();                  // end drawing sprites
 
 }

@@ -90,19 +90,26 @@ protected:
 
 	//Darren here //////////////////////////////////////////
 	list <Heart*>  heartList;
-	list <char> characterNameList;
+	list<TextDX *> leaderboardTextList;
+	vector <string> nameVector;
+	vector <int> scoreVector;
 	Timer *timer;
 	int currentTime = 0;
 	bool isShowingInstruction = false;
 	bool isDead = false;
+	bool isShowingLeaderBoard = false;
+	bool isRecorded = false;
 
 	TextDX  fontBig;
 	//menu options here 
 	TextDX *startText;
 	TextDX *instructionsText;
 	TextDX *quitText;
-	TextDX *scoreText;
+	TextDX *leaderBoardText;
 	TextDX *nameText;
+	TextDX *scoreText;
+
+
 	int menuOptionNo;
 	bool menuOn;
 	bool countDownOn;
