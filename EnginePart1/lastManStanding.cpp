@@ -49,6 +49,8 @@ LastManStanding::LastManStanding()
 	menuOptionNo = 4;
 	countDownOn = false;
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
+	player2 = NULL;
+	player3 = NULL;
 
 }
 
@@ -203,6 +205,9 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle3 = new Obstacle();
 		Obstacle4 = new Obstacle();
 		Obstacle5 = new Obstacle();
+		Obstacle6 = new Obstacle();
+		Obstacle7 = new Obstacle();
+		Obstacle8 = new Obstacle();
 
 		// 2) Then add it to the list one by one
 		obstacleList.push_back(Obstacle1);
@@ -210,6 +215,9 @@ void LastManStanding::obstaclesInitialize(bool value)
 		obstacleList.push_back(Obstacle3);
 		obstacleList.push_back(Obstacle4);
 		obstacleList.push_back(Obstacle5);
+		obstacleList.push_back(Obstacle6);
+		obstacleList.push_back(Obstacle7);
+		obstacleList.push_back(Obstacle8);
 
 		//methods || functions
 		// 3) Initialize the textures of the obstacles first
@@ -228,6 +236,14 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obs5Texture.initialize(graphics, OBS1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
+		if (!Obs6Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obs7Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obs8Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 		// 4) Then initialize the obstacle object (this is not an image object)
 		// Change the magic numbers to constants in the future
@@ -241,10 +257,19 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obstacle3->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 4, GAME_HEIGHT / 10 * 5, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
-		if (!Obstacle4->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 6, GAME_HEIGHT / 10 * 5, 1))
+		if (!Obstacle4->initialize(this, &Obs4Texture, BackgroundWidth / 20 * 6, GAME_HEIGHT / 10 * 5, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
-		if (!Obstacle5->initialize(this, &Obs3Texture, BackgroundWidth / 20 * 8, GAME_HEIGHT / 10 * 2, 1))
+		if (!Obstacle5->initialize(this, &Obs5Texture, BackgroundWidth / 20 * 8, GAME_HEIGHT / 10 * 2, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obstacle6->initialize(this, &Obs6Texture, BackgroundWidth / 20 * 10, GAME_HEIGHT / 2, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obstacle7->initialize(this, &Obs7Texture, BackgroundWidth / 20 * 10, GAME_HEIGHT / 2, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!Obstacle8->initialize(this, &Obs8Texture, BackgroundWidth / 20 * 10, GAME_HEIGHT / 2, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 
@@ -255,6 +280,9 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle3->setMovementState("RIGHT");
 		Obstacle4->setMovementState("RIGHT");
 		Obstacle5->setMovementState("ANTI-CLOCKWISE");
+		Obstacle6->setMovementState("TOP-RIGHT");
+		Obstacle7->setMovementState("BOTTOM-LEFT");
+		Obstacle8->setMovementState("TOP-LEFT");
 		// 6) Then go to obstaclesMovement() function to make the obstacles move
 	}
 
@@ -1081,20 +1109,81 @@ void LastManStanding::obstaclesMovement()
 	//this is for circular motion wave
 	//Formula:
 	// 1) X := OriginX + cos(angle)*radius
-	// 20 Y := OriginY + sin(angle)*radius
-
-	/*if (Obstacle4->getX() >= (BackgroundWidth / 20 * 7))
-		Obstacle4->setMovementState("LEFT");
-	else if (Obstacle4->getX() <= (BackgroundWidth / 20 * 6))
-		Obstacle4->setMovementState("RIGHT");
-*/
+	// 2) Y := OriginY + sin(angle)*radius
 
 	if (Obstacle5->getMovementState() == "ANTI-CLOCKWISE")
 	{
-		obstacle5Angle += camera->getCameraHorizontalSpeed()*0.005;
+		//obstacle5Angle += camera->getCameraHorizontalSpeed()*0.005;
+		obstacle5Angle = obstacle5Angle + camera->getCameraHorizontalSpeed()*0.005;
 		Obstacle5->setX(Obstacle5->getX() + cos(obstacle5Angle)*obstacle5Radius*frameTime);
 		Obstacle5->setY(Obstacle5->getY() + sin(obstacle5Angle)*obstacle5Radius*frameTime);
 	}
+
+	//obstacle 6 and obstacle 7 and 8 comes together
+	if (Obstacle6->getY() >= (GAME_HEIGHT / 10 * 8))
+		Obstacle6->setMovementState("TOP-RIGHT");
+	else if (Obstacle6->getY() <= (GAME_HEIGHT / 10 * 2))
+		Obstacle6->setMovementState("BOTTOM-LEFT");
+
+	if (Obstacle6->getMovementState() == "TOP-RIGHT")
+	{
+		// use y = x
+		// where m is the gradient and c is the shift up or shift down
+		Obstacle6->setX(Obstacle6->getX() + camera->getCameraHorizontalSpeed() * 300 * frameTime);
+		Obstacle6->setY(Obstacle6->getY() + (-1 * Obstacle6->getX()*obstacle7Gradient)*frameTime);
+	}
+	else if (Obstacle6->getMovementState() == "BOTTOM-LEFT")
+	{
+		// use y = x
+		// where m is the gradient and c is the shift up or shift down
+		Obstacle6->setX(Obstacle6->getX() - camera->getCameraHorizontalSpeed() * 300 * frameTime);
+		Obstacle6->setY(Obstacle6->getY() + (Obstacle6->getX()*obstacle7Gradient)*frameTime);
+	}
+
+	// Obstacle 7
+	if (Obstacle7->getY() >= (GAME_HEIGHT / 10 * 8))
+		Obstacle7->setMovementState("TOP-RIGHT");
+	else if (Obstacle7->getY() <= (GAME_HEIGHT / 10 * 2))
+		Obstacle7->setMovementState("BOTTOM-LEFT");
+
+	if (Obstacle7->getMovementState() == "TOP-RIGHT")
+	{
+		// use y = x
+		// where m is the gradient and c is the shift up or shift down
+		Obstacle7->setX(Obstacle7->getX() + camera->getCameraHorizontalSpeed()*300*frameTime);
+		Obstacle7->setY(Obstacle7->getY() + (-1*Obstacle7->getX()*obstacle7Gradient)*frameTime);
+	}
+	else if (Obstacle7->getMovementState() == "BOTTOM-LEFT")
+	{
+		// use y = x
+		// where m is the gradient and c is the shift up or shift down
+		Obstacle7->setX(Obstacle7->getX() - camera->getCameraHorizontalSpeed()*300*frameTime);
+		Obstacle7->setY(Obstacle7->getY() + (Obstacle7->getX()*obstacle7Gradient)*frameTime);
+	}
+
+	// Obstacle 8
+	if (Obstacle8->getY() >= (GAME_HEIGHT / 10 * 8))
+		Obstacle8->setMovementState("TOP-LEFT");
+	else if (Obstacle8->getY() <= (GAME_HEIGHT / 10 * 2))
+		Obstacle8->setMovementState("BOTTOM-RIGHT");
+
+	if (Obstacle8->getMovementState() == "TOP-LEFT")
+	{
+		// use y = x
+		// where m is the gradient and c is the shift up or shift down
+		Obstacle8->setX(Obstacle8->getX() - camera->getCameraHorizontalSpeed() * 300* frameTime);
+		Obstacle8->setY(Obstacle8->getY() + (-1 * Obstacle8->getX()*obstacle7Gradient)*frameTime);
+	}
+	else if (Obstacle8->getMovementState() == "BOTTOM-RIGHT")
+	{
+		// use y = x
+		// where m is the gradient and c is the shift up or shift down
+		Obstacle8->setX(Obstacle8->getX() + camera->getCameraHorizontalSpeed() * 300 * frameTime);
+		Obstacle8->setY(Obstacle8->getY() + (Obstacle8->getX()*obstacle7Gradient)*frameTime);
+	}
+
+
+
 	
 }
 //=============================================================================
@@ -1108,11 +1197,24 @@ void LastManStanding::collisions(Timer *gameTimer) {
 		VECTOR2 collisionVector;
 		//Event/Scenario:
 		// 1) The player collided with Osbtacle1
-		if (player1->collidesWith(*Obstacle1, collisionVector))
-		{
-			//what happens after collision
-			player1->setX(player1->getX() - collisionVector.x*frameTime * 2);
+		for each (Obstacle * obs in obstacleList) {
+			if (player1->collidesWith(*obs, collisionVector))
+			{
+				//what happens after collision
+				player1->setX(player1->getX() - collisionVector.x*frameTime * 2);
 
+			}
+		}
+
+		if (player2 != NULL) {
+			for each (Obstacle * obs in obstacleList) {
+				if (player2->collidesWith(*obs, collisionVector))
+				{
+					//what happens after collision
+					player2->setX(player2->getX() - collisionVector.x*frameTime * 2);
+
+				}
+			}
 		}
 	}
 }
@@ -1205,8 +1307,6 @@ void LastManStanding::render()
 			player1->draw();
 			player2->draw();
 		}
-		/*Obstacle1->draw();
-		Obstacle2->draw();*/
 		drawObstacles();
 		if (countDownOn)
 		{

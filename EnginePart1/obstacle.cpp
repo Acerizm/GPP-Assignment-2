@@ -3,13 +3,13 @@
 #include <string>
 
 Obstacle::Obstacle() {
-	collisionType = entityNS::ROTATED_BOX;
+	collisionType = entityNS::CIRCLE;
 	spriteData.width = 0;
 	spriteData.height = 0;
 	spriteData.scale = 0;
 	spriteData.x = 0;
 	spriteData.y = 0;
-	setCollisionRadius(100.0f);
+	setCollisionRadius(0.8f);
 }
 
 Obstacle::~Obstacle() {

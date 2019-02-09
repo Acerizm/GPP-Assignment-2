@@ -16,7 +16,7 @@ public:
 	~GameClient();
 
 	void createClient() {
-		this->client = new Client("25.90.64.129", 1111);
+		this->client = new Client("172.18.168.58", 1111);
 	}
 
 	void sendData(std::string message) {
