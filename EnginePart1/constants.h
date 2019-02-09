@@ -77,12 +77,21 @@ const char SCREAM6[] = "scream6";
 const char HIT[] = "hit";
 
 //player reloading
+const char INSTRUCTIONPAGE_IMAGE[] = "pictures\\InstructionsPage.png";
 const char PLAYER[] = "pictures\\Player.png";
 const char HEART_IMAGE[] = "pictures\\heart.png";
+const char DEATH_IMAGE[] = "pictures\\DeathImage.png";
+
 //obs1
 const char OBS1[] = "pictures\\OBS1.png";
 
 const char ID1[] = "pictures\\ID1.jpg";
+
+
+const char CURSO_IMAGE[] = "pictures\\NewCursor.jpg";
+const int cursor_HEIGHT = 209;
+const int cursor_WIDTH = 165;
+const float cursor_Scale = 0.15f;
 
 
 

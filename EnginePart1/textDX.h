@@ -77,9 +77,15 @@ public:
 	// Restore resources
 	virtual void onResetDevice();
 
+
+	//freaking insane 
 	int GetTextWidth(const std::string &str, LP_DXFONT pFont);
 	int GetTextHeight(const std::string &str, LP_DXFONT pFont);
 	LP_DXFONT getFont();
+	int getX();
+	int getY();
+
+
 };
 
 #endif

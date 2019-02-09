@@ -16,7 +16,7 @@ TextDX::TextDX()
 	// set font position
 	fontRect.top = 0;
 	fontRect.left = 0;
-	fontRect.right = GAME_WIDTH;
+	fontRect.right = 12800;
 	fontRect.bottom = GAME_HEIGHT;
 	dxFont = NULL;
 	angle = 0;
@@ -143,5 +143,15 @@ int TextDX::GetTextHeight(const std::string & str, LP_DXFONT pFont)
 LP_DXFONT TextDX::getFont()
 {
 	return dxFont;
+}
+
+int TextDX::getX()
+{
+	return fontRect.left;
+}
+
+int TextDX::getY()
+{
+	return fontRect.top;
 }
 

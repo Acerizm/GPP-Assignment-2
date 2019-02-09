@@ -9,6 +9,8 @@
 #include <list>
 #include "entity.h"
 #include "constants.h"
+#include <string>
+#include <iostream>
 #define VECTOR2 D3DXVECTOR2
 //#define Vector2Normalize D3DXVec2Normalize()
 #define Vector2Normalize D3DXVec2Normalize
@@ -46,6 +48,8 @@ private:
 	int numberOflifes = 3;
 	int ClientID = 1;
 	float score = 0;
+	string name = "";
+	
 public:
 	Player();
 	~Player();
@@ -53,6 +57,8 @@ public:
 		this->setX(x);
 		this->setY(y);
 	}
+	
+
 	virtual bool initialize(Game *gamePtr, int width, int height, int ncols,
 		TextureManager *textureM);
 	virtual void draw();
@@ -73,6 +79,9 @@ public:
 	}
 	void setScore(int i);
 	int getScore();
+	
+	void setName(string Name);
+	string getName();
 };
 
 

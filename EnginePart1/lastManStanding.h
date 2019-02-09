@@ -37,7 +37,10 @@ protected:
 	TextureManager BackgroundTexture;
 	Image BackgroundImage;
 	TextureManager heartTexture;
-
+	Image InstructionImage;
+	TextureManager DeathImageTexture;
+	Image DeathImage;
+	TextureManager instructionTexture;
 	TextureManager Player1Texture;
 	TextureManager Player2Texture;
 	TextureManager Player3Texture;
@@ -87,15 +90,26 @@ protected:
 
 	//Darren here //////////////////////////////////////////
 	list <Heart*>  heartList;
+	list<TextDX *> leaderboardTextList;
+	vector <string> nameVector;
+	vector <int> scoreVector;
 	Timer *timer;
 	int currentTime = 0;
+	bool isShowingInstruction = false;
+	bool isDead = false;
+	bool isShowingLeaderBoard = false;
+	bool isRecorded = false;
 
 	TextDX  fontBig;
 	//menu options here 
 	TextDX *startText;
 	TextDX *instructionsText;
 	TextDX *quitText;
+	TextDX *leaderBoardText;
+	TextDX *nameText;
 	TextDX *scoreText;
+
+
 	int menuOptionNo;
 	bool menuOn;
 	bool countDownOn;
@@ -104,7 +118,13 @@ protected:
 	time_t t;
 	time_t timePassed;
 	bool counted = false;
+	bool isKeyingInName = true;
 	int i = 0;
+	string tempName = "";
+
+	TextureManager cursorTexture;
+	Image cursorImage;
+
 
 	//////////////////////////////////////////////////////////
 
