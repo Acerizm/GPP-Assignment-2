@@ -51,7 +51,9 @@ LastManStanding::LastManStanding()
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	player2 = NULL;
 	player3 = NULL;
-
+	gameClient = new GameClient();
+	gameClient->createClient();
+	connectedToServer = gameClient->ConnectToServer();
 }
 
 //=============================================================================
@@ -71,9 +73,9 @@ void LastManStanding::lobbyInitialize()
 	obstaclesInitialize(true);
 
 	// Connect to the server //////////////////////////////////////////////////////////////
-	gameClient = new GameClient();
+	/*gameClient = new GameClient();
 	gameClient->createClient();
-	connectedToServer = gameClient->ConnectToServer();
+	connectedToServer = gameClient->ConnectToServer();*/
 	/////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -209,6 +211,19 @@ void LastManStanding::obstaclesInitialize(bool value)
 		Obstacle7 = new Obstacle();
 		Obstacle8 = new Obstacle();
 
+		StationaryObs1 = new Obstacle();
+		StationaryObs2 = new Obstacle();
+		StationaryObs3 = new Obstacle();
+		StationaryObs4 = new Obstacle();
+		StationaryObs5 = new Obstacle();
+		StationaryObs6 = new Obstacle();
+		StationaryObs7 = new Obstacle();
+		StationaryObs8 = new Obstacle();
+		StationaryObs9 = new Obstacle();
+		StationaryObs10 = new Obstacle();
+		StationaryObs11 = new Obstacle();
+		StationaryObs12 = new Obstacle();
+
 		// 2) Then add it to the list one by one
 		obstacleList.push_back(Obstacle1);
 		obstacleList.push_back(Obstacle2);
@@ -218,6 +233,19 @@ void LastManStanding::obstaclesInitialize(bool value)
 		obstacleList.push_back(Obstacle6);
 		obstacleList.push_back(Obstacle7);
 		obstacleList.push_back(Obstacle8);
+
+		obstacleList.push_back(StationaryObs1);
+		obstacleList.push_back(StationaryObs2);
+		obstacleList.push_back(StationaryObs3);
+		obstacleList.push_back(StationaryObs4);
+		obstacleList.push_back(StationaryObs5);
+		obstacleList.push_back(StationaryObs6);
+		obstacleList.push_back(StationaryObs7);
+		obstacleList.push_back(StationaryObs8);
+		obstacleList.push_back(StationaryObs9);
+		obstacleList.push_back(StationaryObs10);
+		obstacleList.push_back(StationaryObs11);
+		obstacleList.push_back(StationaryObs12);
 
 		//methods || functions
 		// 3) Initialize the textures of the obstacles first
@@ -244,6 +272,44 @@ void LastManStanding::obstaclesInitialize(bool value)
 
 		if (!Obs8Texture.initialize(graphics, OBS1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs1Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs2Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs3Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs4Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs5Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs6Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs7Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs8Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs9Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs10Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs11Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+		if (!StationaryObs12Texture.initialize(graphics, OBS1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+
+
 
 		// 4) Then initialize the obstacle object (this is not an image object)
 		// Change the magic numbers to constants in the future
@@ -272,6 +338,13 @@ void LastManStanding::obstaclesInitialize(bool value)
 		if (!Obstacle8->initialize(this, &Obs8Texture, BackgroundWidth / 20 * 10, GAME_HEIGHT / 2, 1))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
+		// From BackgroundWidth /20 * 1 to BackgroundWidth / 20 * 2
+		if (!StationaryObs1->initialize(this, &Obs8Texture, BackgroundWidth / 20 * 1, gameFloor, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
+		/*if (!StationaryObs2->initialize(this, &Obs8Texture, BackgroundWidth / 20 * 1, gameFloor - StationaryObs1->getWidth()*3, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));*/
+		if (!StationaryObs3->initialize(this, &Obs8Texture, BackgroundWidth / 20 * 1, StationaryObs2->getY() - StationaryObs2->getHeight()*2, 1))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing Texture"));
 
 		// 5) Then set the states here
 		//set the states here

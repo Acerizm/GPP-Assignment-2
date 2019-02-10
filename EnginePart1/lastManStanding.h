@@ -85,6 +85,10 @@ protected:
 	int currentClientIDConnected = 0;
 	int connectedToServer = 0;
 
+	//floor and the ceiling
+	float gameFloor = GAME_HEIGHT / 10 * 7.3;
+	float gameCeiling = GAME_HEIGHT / 10 * 3;
+
 
 	/////////////////////////////////////////////////////////
 
@@ -142,6 +146,21 @@ protected:
 	TextureManager Obs7Texture;
 	TextureManager Obs8Texture;
 
+	//Stationary Obstacles here
+	TextureManager StationaryObs1Texture;
+	TextureManager StationaryObs2Texture;
+	TextureManager StationaryObs3Texture;
+	TextureManager StationaryObs4Texture;
+	TextureManager StationaryObs5Texture;
+	TextureManager StationaryObs6Texture;
+	TextureManager StationaryObs7Texture;
+	TextureManager StationaryObs8Texture;
+	TextureManager StationaryObs9Texture;
+	TextureManager StationaryObs10Texture;
+	TextureManager StationaryObs11Texture;
+	TextureManager StationaryObs12Texture;
+
+
 	//Obstacle objects/pointers here
 	// NOTE: Null pointers at first
 	Obstacle *Obstacle1;
@@ -153,6 +172,21 @@ protected:
 	Obstacle *Obstacle6;
 	Obstacle *Obstacle7;
 	Obstacle *Obstacle8;
+
+	// Stationary objects/pointers here
+	Obstacle *StationaryObs1;
+	Obstacle *StationaryObs2;
+	Obstacle *StationaryObs3;
+	Obstacle *StationaryObs4;
+	Obstacle *StationaryObs5;
+	Obstacle *StationaryObs6;
+	Obstacle *StationaryObs7;
+	Obstacle *StationaryObs8;
+	Obstacle *StationaryObs9;
+	Obstacle *StationaryObs10;
+	Obstacle *StationaryObs11;
+	Obstacle *StationaryObs12;
+
 
 	float obstacle5Angle = 0;
 	float obstacle5Radius = 50.0f;
