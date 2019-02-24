@@ -51,7 +51,11 @@ LastManStanding::LastManStanding()
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	player2 = NULL;
 	player3 = NULL;
-
+	// Connect to the server //////////////////////////////////////////////////////////////
+	gameClient = new GameClient();
+	gameClient->createClient();
+	connectedToServer = gameClient->ConnectToServer();
+	/////////////////////////////////////////////////////////////////////////////////////////
 }
 
 //=============================================================================
@@ -70,11 +74,6 @@ void LastManStanding::lobbyInitialize()
 {
 	obstaclesInitialize(true);
 
-	// Connect to the server //////////////////////////////////////////////////////////////
-	gameClient = new GameClient();
-	gameClient->createClient();
-	connectedToServer = gameClient->ConnectToServer();
-	/////////////////////////////////////////////////////////////////////////////////////////
 
 
 	//Initialize the 1st player's selectiion

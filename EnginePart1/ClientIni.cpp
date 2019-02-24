@@ -26,7 +26,7 @@ bool Client::Connect()
 	int sizeofaddr = sizeof(m_addr);
 	if (connect(m_connection, (SOCKADDR*)&m_addr, sizeofaddr) != 0) //If we are unable to connect...
 	{
-		MessageBoxA(0, "Failed to Connect", "Error", MB_OK | MB_ICONERROR);
+		//MessageBoxA(0, "Failed to Connect", "Error", MB_OK | MB_ICONERROR);
 		return false;
 	}
 
