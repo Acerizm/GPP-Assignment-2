@@ -7,6 +7,7 @@ Client::Client(const char * ip, const int port)
 {
 	//Winsock Startup
 	WSAData wsaData;
+	//the version will be 2.1
 	WORD DllVersion = MAKEWORD(2, 1);
 	if (WSAStartup(DllVersion, &wsaData) != 0)
 	{
@@ -14,7 +15,7 @@ Client::Client(const char * ip, const int port)
 		exit(0);
 	}
 
-
+	//give the socket an address and port number here
 	inet_pton(AF_INET, ip, &m_addr.sin_addr.s_addr); //Server Address [127.0.0.1] = localhost
 	m_addr.sin_port = htons(port); //Port 
 	m_addr.sin_family = AF_INET; //IPv4 Socket
@@ -22,17 +23,22 @@ Client::Client(const char * ip, const int port)
 
 bool Client::Connect()
 {
+	//3. HQL
 	m_connection = socket(AF_INET, SOCK_STREAM, 0); //Set Connection socket
 	int sizeofaddr = sizeof(m_addr);
+	//connect is a WinSock API function
 	if (connect(m_connection, (SOCKADDR*)&m_addr, sizeofaddr) != 0) //If we are unable to connect...
 	{
 		//MessageBoxA(0, "Failed to Connect", "Error", MB_OK | MB_ICONERROR);
 		return false;
 	}
 
-	std::cout << "Connected!" << std::endl;
+	//std::cout << "Connected!" << std::endl;
 	m_pst = std::thread(PacketSenderThread, std::ref(*this)); //Create thread to send packets
+	// After creating the thread to send packets
+	// detach the packet so that the program does not need to wait for the thread to finish/ hang the main program
 	m_pst.detach();
+
 	m_ct = std::thread(ClientThread, std::ref(*this)); //Create thread to listen to server
 	m_ct.detach();
 	return true;

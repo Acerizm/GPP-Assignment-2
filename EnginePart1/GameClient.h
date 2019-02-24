@@ -16,6 +16,10 @@ public:
 	~GameClient();
 
 	void createClient() {
+		// 2.
+		//pass in the ip address and the port number
+		//change the ip address to match the server's private IP address
+		//both clients and the server must be in the same network - obviously
 		this->client = new Client("172.18.168.58", 1111);
 	}
 

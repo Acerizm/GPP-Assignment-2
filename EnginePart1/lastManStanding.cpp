@@ -51,6 +51,8 @@ LastManStanding::LastManStanding()
 	camera = new Camera(GAME_WIDTH, GAME_HEIGHT, 0, DirectX::XMFLOAT3(1.0f, 1.0f, 1.0f));
 	player2 = NULL;
 	player3 = NULL;
+	// HQL
+	// 1.
 	// Connect to the server //////////////////////////////////////////////////////////////
 	gameClient = new GameClient();
 	gameClient->createClient();

@@ -57,5 +57,6 @@ bool Client::GetString(std::string & str)
 		return false; //If get int fails, return false
 	if (bufferlength == 0) return true;
 	str.resize(bufferlength); //resize string to fit message
+	//8. get the message here
 	return recvall(&str[0], bufferlength);
 }

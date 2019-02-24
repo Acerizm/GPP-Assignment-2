@@ -9,6 +9,7 @@ bool Client::ProcessPacketType(PacketType packetType)
 	case PacketType::ChatMessage: //If PacketType is a chat message PacketType
 	{
 		std::string Message; //string to store our message we received
+		//7. Get the data
 		if (!GetString(Message)) //Get the chat message and store it in variable: Message
 			return false; //If we do not properly get the chat message, return false
 		//change the function here
@@ -16,7 +17,7 @@ bool Client::ProcessPacketType(PacketType packetType)
 		//std::cout << Message << std::endl; //Display the message to the user
 
 		//serialize the data here
-
+		// then set the data here
 		setData(Message);
 		break;
 	}
@@ -54,6 +55,7 @@ bool Client::ProcessPacketType(PacketType packetType)
 
 void Client::ClientThread(Client & client)
 {
+	//6.
 	PacketType PacketType;
 	while (true)
 	{
@@ -104,21 +106,26 @@ bool Client::RequestFile(const std::string & fileName)
 
 void Client::PacketSenderThread(Client & client) //Thread for all outgoing packets
 {
+	//4. HQL
+
 	while (true)
 	{
 		if (client.m_terminateThreads == true)
 			break;
 		while (client.m_pm.HasPendingPackets())
 		{
+			//5.
 			std::shared_ptr<Packet> p = client.m_pm.Retrieve();
 			if (!client.sendall((const char*)(&p->m_buffer[0]), p->m_buffer.size()))
 			{
-				std::cout << "Failed to send packet to server..." << std::endl;
+				//std::cout << "Failed to send packet to server..." << std::endl;
 				break;
 			}
 		}
 		Sleep(5);
 	}
+	// this only happens when the client closes the game
+	// aka release the thread
 	std::cout << "Packet thread closing..." << std::endl;
 }
 

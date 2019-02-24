@@ -20,6 +20,7 @@ void PacketManager::Append(std::shared_ptr<Packet> p)
 
 std::shared_ptr<Packet> PacketManager::Retrieve()
 {
+	//mutex can lock and unlock
 	std::lock_guard<std::mutex> lock(m_mutex_packets); //lock mutex so two threads dont access data at same time
 	std::shared_ptr<Packet> p = m_queue_packets.front(); //Get packet from front of queue
 	m_queue_packets.pop(); //Remove packet from front of queue
