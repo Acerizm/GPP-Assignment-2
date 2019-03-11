@@ -93,6 +93,13 @@ protected:
 	list<TextDX *> leaderboardTextList;
 	vector <string> nameVector;
 	vector <int> scoreVector;
+
+	struct Person {
+		std::string name;
+		int score;
+	};
+	vector <Person> personVector;
+
 	Timer *timer;
 	int currentTime = 0;
 	bool isShowingInstruction = false;

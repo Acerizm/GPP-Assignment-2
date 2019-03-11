@@ -24,7 +24,7 @@
 #include <iostream>
 #include <chrono>
 #include <ctime>    
-
+#include <algorithm>  
 using namespace std;
 using namespace rapidjson;
 //=============================================================================
@@ -183,6 +183,13 @@ void LastManStanding::initialize(HWND hwnd)
 		if (tempText->initialize(graphics, 30, false, false, "Arial") == false)
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tempText font"));
 		leaderboardTextList.push_back(tempText);
+		//init leaderboard
+		Person tempPerson;
+		tempPerson.name = tempPlayerName;
+		tempPerson.score = tempScore;
+
+		personVector.push_back(tempPerson);
+
 		nameVector.push_back(tempPlayerName);
 		scoreVector.push_back(tempScore);
 
@@ -1364,18 +1371,38 @@ void LastManStanding::render()
 	}
 	int testX = camera->getCameraX() - GAME_WIDTH / 2;
 	int testY = camera->getCameraY();
+	//showing leaderboard
 	if (isShowingLeaderBoard)
 	{
+		
 		BackgroundImage.draw();
 		int trolololol = 0;
-		for each(TextDX* tempTextDX in leaderboardTextList)
+		nameText->print("Name:", 300, 65);
+		quitText->print("Score:", 900, 65);
+		std::sort(personVector.begin(), personVector.end(),
+			[](auto const &a, auto const &b) { return a.score > b.score; });
+		int numberOfPlacings = 10;
+		if (leaderboardTextList.size() < numberOfPlacings)
 		{
-			nameText->print("Name:", 300, 0);
-			quitText->print("Score:", 900, 0);
-			tempTextDX->print(nameVector[trolololol], 300, GAME_HEIGHT/20 * (trolololol+1));
-			scoreText->print(to_string(scoreVector[trolololol]), 900, GAME_HEIGHT / 20 * (trolololol+1));
-			trolololol++;
+			numberOfPlacings = leaderboardTextList.size();
 		}
+		else
+		{
+			numberOfPlacings = 10;
+		}
+		
+		for(int i = 0; i< numberOfPlacings; i++)
+		{
+			
+			Person somePerson = personVector[i];
+			
+
+			nameText->print(somePerson.name, 300, 65+GAME_HEIGHT/20 * (i+1));
+			scoreText->print(to_string(somePerson.score), 900, 65+GAME_HEIGHT / 20 * (i+1));
+		}
+
+
+
 		scoreText->print("Please Press Esc to go back to Menu" , camera->getCameraX() - (GAME_WIDTH / 2), camera->getCameraY() + GAME_HEIGHT / 2 - 30);
 		
 	}
@@ -1432,4 +1459,5 @@ void LastManStanding::startGame(float cameraDifferenceX, float cameraDifferenceY
 	countDownTimer = COUNT_DOWN;
 	
 }
+
 
